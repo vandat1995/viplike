@@ -25,7 +25,7 @@ class Request
     
     public function post()
     {
-        
+        echo "cac";
     }
     
     private function __getRandUserAgent()
