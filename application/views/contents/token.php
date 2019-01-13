@@ -1,6 +1,6 @@
 <div class="row">
     <div class="col-lg-12 mb-6">
-        <div class="card card-small mb-6">
+        <div class="card card-small overflow-hidden mb-4">
             <div class="card-header border-bottom">
                 <h6 class="m-0">Import</h6>
             </div>
@@ -8,7 +8,7 @@
                 <li class="list-group-item p-3">
                     <div class="form-row">
                         <div class="form-group col-md-12">
-                            <label for="feDescription">List Token</label>
+                            <!-- <label for="feDescription">List Token</label> -->
                             <textarea placeholder="EAAAA..." id="list_token" class="form-control" rows="5" place></textarea>
                         </div>
                     </div>
@@ -17,6 +17,29 @@
             </ul>
         </div>
     </div>
+</div>
+<div class="row">
+	<div class="col">
+		<div class="card card-small overflow-hidden mb-4">
+			<div class="card-header">
+				<h6 class="m-0">List Token</h6>
+			</div>
+			<div class="card-body p-0 pb-3 text-center">
+				<table class="table mb-0">
+					<thead class="bg-light">
+						<tr>
+							<th scope="col" class="border-bottom-0">id</th>
+							<th scope="col" class="border-bottom-0">token</th>
+							<th scope="col" class="border-bottom-0">gender</th>
+							<th scope="col" class="border-bottom-0">status</th>
+						</tr>
+					</thead>
+					<tbody>
+					</tbody>
+				</table>
+			</div>
+		</div>
+	</div>
 </div>
 
 <script>

@@ -53,6 +53,12 @@ class Worker extends CI_Controller
 
     public function FireInTheHole()
     {
+        $this->__runTasks();
+        $this->__runProcessese();
+    }
+
+    private function __runTasks()
+    {
         $tasks = $this->task_model->getTasks();
         if(!$tasks)
         {
@@ -60,7 +66,7 @@ class Worker extends CI_Controller
         }
         foreach($tasks as $task)
         {
-            $tokens = $this->token_model->getTokens($task->quantity_like);
+            $tokens = $this->token_model->getTokens($task->quantity_per_cron);
             $id_post = $this->__getNewFeed($task->uid, $tokens[0]->token);
             if($this->__checkLiked($id_post))
             {
@@ -72,14 +78,34 @@ class Worker extends CI_Controller
             {
                 $this->__likeFeed($token->token, $id_post) ? $success++ : $fail++;
             }
-            $this->task_process_model->saveProcessDone(["id_task" => $task->id, "id_liked" => $id_post, "success" => $success, "fail" => $fail]);
+            $this->task_process_model->saveProcessDone(["id_task" => $task->id, "id_liked" => $id_post, "remain" => ($task->quantity - $task->quantity_per_cron),"success" => $success, "fail" => $fail]);
         }
-        
+    }
+
+    private function __runProcessese()
+    {
+        $processese = $this->task_process_model->getProcessese();
+        if(!$processese)
+        {
+            return;
+        }
+        foreach($processese as $process)
+        {
+            $tokens = $this->token_model->getTokens($process->quantity_per_cron);
+            $id_post = $process->id_liked;
+            $success = 0;
+            $fail = 0;
+            foreach($tokens as $token)
+            {
+                $this->__likeFeed($token->token, $id_post) ? $success++ : $fail++;
+            }
+            $this->task_process_model->update($process->id, ["remain" => ($process->remain - $process->quantity_per_cron), "success" => ($process->success + $success), "fail" => ($process->fail + $fail)]);
+        }
     }
 
     private function __checkLiked($id_post)
     {
-        return $this->task_process_model->checkExistId($id_post);
+        return $this->task_process_model->checkExistIdLiked($id_post);
     }
 
     

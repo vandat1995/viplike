@@ -26,7 +26,7 @@
             <ul class="nav flex-column">
               <li class="nav-item">
                 <a class="nav-link <?php if(strtolower($this->uri->segment(1)) == 'dashboard') echo 'active' ?>" href="dashboard">
-                  <i class="material-icons">edit</i>
+                  <i class="material-icons">dashboard</i>
                   <span>Dashboard</span>
                 </a>
               </li>

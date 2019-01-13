@@ -1,3 +1,4 @@
+        
         <main class="main-content col-lg-10 col-md-9 col-sm-12 p-0 offset-lg-2 offset-md-3">
           <div class="main-navbar sticky-top bg-white">
             <!-- Main Navbar -->
@@ -44,9 +45,12 @@
                   <div class="dropdown-menu dropdown-menu-small">
                     <a class="dropdown-item" href="javascript:void(0)">
                       <i class="material-icons">&#xE7FD;</i> Profile</a>
+                    <?php 
+                      if($this->session->userdata('role_id') == 1)
+                        echo '<a class="dropdown-item" href="Token">
+                        <i class="material-icons">note_add</i> Add Tokens</a>';
+                    ?>
                     
-                    <a class="dropdown-item" href="Token">
-                      <i class="material-icons">note_add</i> Add Tokens</a>
                     <div class="dropdown-divider"></div>
                     <a class="dropdown-item text-danger" href="logout">
                       <i class="material-icons text-danger">&#xE879;</i> Logout </a>

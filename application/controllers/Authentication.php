@@ -50,6 +50,7 @@ class Authentication extends CI_Controller
 						'full_name' 		=> $attempt->full_name,
 						'avatar' 			=> $attempt->avatar,
 						'balance' 			=> $attempt->balance,
+						'role_id'			=> $attempt->role_id,
 						'is_logged_in' 		=> true
 					];
 					if($remember == 1)

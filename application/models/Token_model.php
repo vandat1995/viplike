@@ -28,4 +28,17 @@ class Token_model extends CI_Model
         return ($query->num_rows() > 0) ? $query->result() : false;
     }
 
+    public function getAll()
+    {
+        $this->db->select("id, token, gender, status");
+        $query = $this->db->get($this->__table);
+        return ($query->num_rows() > 0) ? $query->result() : false;
+    }
+
+    public function count()
+    {
+        $this->db->select("count(*) total");
+        return $this->db->get($this->__table)->row()->total;
+    }
+
 }
