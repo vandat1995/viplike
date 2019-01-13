@@ -7,10 +7,10 @@ class Worker extends CI_Controller
     public function __construct()
     {
         parent::__construct();
-        if(!$this->input->is_cli_request())
-        {
-            redirect("dashboard");
-        }
+        // if(!$this->input->is_cli_request())
+        // {
+        //     redirect("dashboard");
+        // }
         $this->load->model("token_model");
         $this->load->model("task_model");
         $this->load->model("task_process_model");
@@ -78,7 +78,7 @@ class Worker extends CI_Controller
             {
                 $this->__likeFeed($token->token, $id_post) ? $success++ : $fail++;
             }
-            $this->task_process_model->saveProcessDone(["id_task" => $task->id, "id_liked" => $id_post, "remain" => ($task->quantity - $task->quantity_per_cron),"success" => $success, "fail" => $fail]);
+            $this->task_process_model->saveProcessDone(["task_id" => $task->id, "id_liked" => $id_post, "remain" => ($task->quantity_like - $task->quantity_per_cron),"success" => $success, "fail" => $fail]);
         }
     }
 

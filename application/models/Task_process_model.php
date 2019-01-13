@@ -20,7 +20,7 @@ class Task_process_model extends CI_Model
 
     public function getProcessese()
     {
-        $this->db->select("tp.id, tp.task_id, tp.remain, tp.success, tp.fail, t.quantity_like, t.quantity_per_cron");
+        $this->db->select("tp.id, tp.task_id, tp.id_liked, tp.remain, tp.success, tp.fail, t.quantity_like, t.quantity_per_cron");
         $this->db->from("task_process tp");
         $this->db->join("tasks t", "t.id = tp.task_id");
         $this->db->where("remain >", 0);
