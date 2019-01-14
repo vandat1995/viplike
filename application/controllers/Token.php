@@ -46,6 +46,17 @@ class Token extends CI_Controller
         }
     }
 
+    public function getTokens()
+    {
+        if($this->session->userdata('role_id') != 1) {
+            echo json_encode(["error" => ["message" => "Tính làm lồn gì đây thằng nhóc."]]);
+            return;
+        }
+        $tokens = $this->token_model->getAll();
+        echo json_encode(["error" => 0, "data" => $tokens, "message" => ""]);
+        
+    }
+
 
 
 }

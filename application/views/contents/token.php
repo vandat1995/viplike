@@ -22,19 +22,21 @@
 	<div class="col">
 		<div class="card card-small overflow-hidden mb-4">
 			<div class="card-header">
-				<h6 class="m-0">List Token</h6>
+				<h6 class="m-0">List Token 
+                <button type="button" id="btn_checkLive" class="btn btn-success">Check Live All Token and Delete if Die</button>
+                </h6>
 			</div>
 			<div class="card-body p-0 pb-3 text-center">
 				<table class="table mb-0">
 					<thead class="bg-light">
 						<tr>
-							<th scope="col" class="border-bottom-0">id</th>
+							<th scope="col" class="border-bottom-0">#</th>
 							<th scope="col" class="border-bottom-0">token</th>
 							<th scope="col" class="border-bottom-0">gender</th>
 							<th scope="col" class="border-bottom-0">status</th>
 						</tr>
 					</thead>
-					<tbody>
+					<tbody id="result">
 					</tbody>
 				</table>
 			</div>
@@ -43,6 +45,7 @@
 </div>
 
 <script>
+    var list_token;
     $(document).ready(() => {
         $("#btn_import").on("click", async () => {
             $("#btn_import").text("Processing...").prop("disabled", true);
@@ -75,6 +78,7 @@
             });
             
         });
+        loadToken();
     });
 
     function checkLive(token) {
@@ -93,6 +97,30 @@
                 data: JSON.stringify(data),
                 token: token
             }
+        });
+    }
+
+    function loadToken() {
+        $.ajax({
+            url: "<?php echo base_url('Token/getTokens'); ?>",
+            type: "GET",
+            dataType: "json"
+        }).done((res) => {
+            if( ! res.error) {
+                list_token = res.data;
+                let i = 1;
+                for(let token of res.data) {
+                    $("#result").append($("<tr>")
+                        .append($("<td>").html(i))
+                        .append($("<td>").html(`<input class="form-control" type="text" value="${token.token}">`))
+                        .append($("<td>").html(token.gender))
+                        .append($("<td>").html(`${token.status == 1 ? "live" : "die"}`))
+                    );
+                    i++;
+                }
+            }
+        }).fail((xhr, textStatus) => {
+            console.log(`${xhr}: ${textStatus}`);
         });
     }
 
