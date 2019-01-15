@@ -17,9 +17,8 @@ class Authentication extends CI_Controller
 	public function Login()
 	{
 		if($this->session->userdata('is_logged_in'))
-			redirect('dashboard');
-		else
-			$this->load->view('login');
+			redirect("dashboard");
+		$this->load->view('login');
 	}
 
 	public function Logout()
@@ -32,6 +31,8 @@ class Authentication extends CI_Controller
 
 	public function validate()
 	{
+		if($this->session->userdata('is_logged_in'))
+			redirect("dashboard");
 		$this->form_validation->set_rules('username', 'Username', 'required|max_length[50]');
 		$this->form_validation->set_rules('password', 'Password', 'required|max_length[50]');
 		if($this->form_validation->run() != false)
@@ -64,16 +65,16 @@ class Authentication extends CI_Controller
 					{
 						$this->session->set_userdata($userdata);
 					}
-					echo json_encode(['error' => 0, 'message' => 'Đăng nhập thành công.', 'url' => 'dashboard']);
+					echo json_encode(['error' => 0, 'message' => 'Loggin success.', 'url' => 'dashboard']);
 				}
 				else
 				{
-					echo json_encode(['error' => ['message' => 'Tài khoản này đã bị khóa', 'code' => 0], 'message' => '']);
+					echo json_encode(['error' => ['message' => 'User was blocked', 'code' => 0], 'message' => '']);
 				}
 			}
 			else
 			{
-				echo json_encode(['error' => ['message' => 'Sai username hoặc password', 'code' => 0], 'message' => '']);
+				echo json_encode(['error' => ['message' => 'Invalid username or password', 'code' => 0], 'message' => '']);
 			}
 		}
 		else
@@ -84,8 +85,13 @@ class Authentication extends CI_Controller
 
 	public function insertUser()
 	{
-		$data = ['username' => 'admin', 'password' => 'admin', 'full_name' => 'Dat Nguyen', 'permission_id' => 1];
-		$result = $this->user_model->save($data);
-		var_dump($result);
+		if($this->input->is_cli_request()) {
+			$data = ['username' => 'admin2', 'password' => md5('admin'), 'full_name' => 'Dat Nguyen', 'role_id' => 1];
+			$result = $this->user_model->save($data);
+			var_dump($result);
+		}
+		else {
+			echo "Địt mẹ mày tính làm gì vậy thằng nhóc.";
+		}
 	}
 }

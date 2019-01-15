@@ -45,7 +45,7 @@
 </div>
 
 <script>
-    var list_token;
+    var tokens;
     $(document).ready(() => {
         $("#btn_import").on("click", async () => {
             $("#btn_import").text("Processing...").prop("disabled", true);
@@ -78,7 +78,29 @@
             });
             
         });
+        $("#btn_checkLive").on("click", async () => {
+            $("#btn_checkLive").text("Processing...").prop("disabled", true);
+            let live = 0, die = 0;
+            for(let token of tokens) {
+                try {
+                    let data = await checkLive(token.token);
+                    //saveDb(token.token, data);
+                    live++;
+                } catch(e) {
+                    die++;
+                    deletTokenDie(token.id);
+                }
+            }
+            $("#btn_checkLive").text("Check Live All Token and Delete if Die").prop("disabled", false);
+            Swal({
+                text: `Live: ${live}, Die: ${die}`,
+                type: 'success',
+            });
+
+        });
+
         loadToken();
+
     });
 
     function checkLive(token) {
@@ -86,6 +108,17 @@
     		$.getJSON(`https://graph.facebook.com/v3.2/me?fields=id%2Cname%2Cpicture%7Burl%7D%2Cgender&access_token=${token}`, res => resolve(res))
             .fail(() => reject('Token die'));
     	});
+    }
+
+    function deletTokenDie(id) {
+        $.ajax({
+            url: "<?php echo base_url('Token/delete'); ?>",
+            type: "POST",
+            dataType: "json",
+            data: {
+                id: id
+            }
+        });
     }
 
     function saveDb(token, data) {
@@ -107,14 +140,14 @@
             dataType: "json"
         }).done((res) => {
             if( ! res.error) {
-                list_token = res.data;
+                tokens = res.data;
                 let i = 1;
                 for(let token of res.data) {
                     $("#result").append($("<tr>")
                         .append($("<td>").html(i))
                         .append($("<td>").html(`<input class="form-control" type="text" value="${token.token}">`))
                         .append($("<td>").html(token.gender))
-                        .append($("<td>").html(`${token.status == 1 ? "live" : "die"}`))
+                        .append($("<td>").html(`${token.status == 1 ? '<label class="badge badge-success">live</label>' : '<label class="badge badge-danger">die</label>'}`))
                     );
                     i++;
                 }

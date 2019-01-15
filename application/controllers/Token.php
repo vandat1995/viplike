@@ -10,6 +10,9 @@ class Token extends CI_Controller
         $this->load->model("token_model");
         $this->data['page_title'] = "Token Management";
         $this->data['sub_title'] = "";
+        if($this->session->userdata('role_id') != 1) {
+            redirect('dashboard');
+        }
     }
 
     public function index()
@@ -20,8 +23,8 @@ class Token extends CI_Controller
     public function import()
     {
         $data_token = $this->input->post("data");
-        $token = !empty($this->input->post("token")) ? $this->input->post("token") : false;
-        if(!$token) 
+        $token = ! empty($this->input->post("token")) ? $this->input->post("token") : false;
+        if( ! $token) 
         {
             echo json_encode(["error" => ["message" => "Invalid Token", "code" => 0], "message" => ""]);
             return;
@@ -46,15 +49,26 @@ class Token extends CI_Controller
         }
     }
 
-    public function getTokens()
+    public function delete()
     {
-        if($this->session->userdata('role_id') != 1) {
-            echo json_encode(["error" => ["message" => "Tính làm lồn gì đây thằng nhóc."]]);
+        $id = ! empty($this->input->post("id")) ? $this->input->post("id") : false;
+        if( ! $id) 
+        {
+            echo json_encode(["error" => ["message" => "Invalid token id", "code" => 0], "message" => ""]);
             return;
         }
+        if($this->token_model->delete($id)) {
+            echo json_encode(["error" => 0, "message" => "Delete success"]);
+        }
+        else {
+            echo json_encode(["error" => ["message" => "Delete fail", "code" => 0], "message" => ""]);
+        }
+    }
+
+    public function getTokens()
+    {
         $tokens = $this->token_model->getAll();
         echo json_encode(["error" => 0, "data" => $tokens, "message" => ""]);
-        
     }
 
 

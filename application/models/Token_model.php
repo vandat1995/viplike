@@ -10,6 +10,12 @@ class Token_model extends CI_Model
         return $this->db->insert($this->__table, $data) ? true : false;
     }
 
+    public function delete($id)
+    {
+        $this->db->where("id", $id);
+        return $this->db->delete($this->__table) ? true : false;
+    }
+
     public function getRandOneToken()
     {
         $this->db->select("token");
@@ -21,7 +27,7 @@ class Token_model extends CI_Model
 
     public function getTokens($quantity)
     {
-        $this->db->select("token");
+        $this->db->select("id, token");
         $this->db->order_by("RAND()");
         $this->db->limit($quantity);
         $query = $this->db->get($this->__table);
