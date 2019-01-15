@@ -91,7 +91,7 @@ class Authentication extends CI_Controller
 			var_dump($result);
 		}
 		else {
-			echo "Địt mẹ mày tính làm gì vậy thằng nhóc.";
+			echo "Địt mẹ mày tính làm gì vậy thằng nhóc..";
 		}
 	}
 }
