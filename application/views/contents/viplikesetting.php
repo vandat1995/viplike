@@ -25,7 +25,40 @@
                             <label for="feFirstName">Quantity like per crontab (5 mins) <span class="text-danger">*</span></label>
                             <input type="number" id="quantity_per_cron" class="form-control" placeholder="100" min="1"> 
                         </div>
-                        
+                    </div>
+                    <div class="form-row">
+                        <style>
+                            .custom-checkbox {
+                                margin-left: 20px;
+                            }
+                            .custom-checkbox img{
+                                margin-left: -10px;
+                            }
+                        </style>
+                        <div class="custom-control custom-checkbox mb-1">
+                            <input type="checkbox" class="custom-control-input" id="like" value="LIKE" name="reactions" checked>
+                            <label class="custom-control-label" for="like"><img src="assets/images/reactions/like.gif" height="50px" width="50px"></label>
+                        </div>
+                        <div class="custom-control custom-checkbox mb-1">
+                            <input type="checkbox" class="custom-control-input" id="love" value="LOVE" name="reactions">
+                            <label class="custom-control-label" for="love"><img src="assets/images/reactions/love.gif" height="50px" width="50px"></label>
+                        </div>
+                        <div class="custom-control custom-checkbox mb-1">
+                            <input type="checkbox" class="custom-control-input" id="wow" value="WOW" name="reactions">
+                            <label class="custom-control-label" for="wow"><img src="assets/images/reactions/wow.gif" height="50px" width="50px"></label>
+                        </div>
+                        <div class="custom-control custom-checkbox mb-1">
+                            <input type="checkbox" class="custom-control-input" id="haha" value="HAHA" name="reactions">
+                            <label class="custom-control-label" for="haha"><img src="assets/images/reactions/haha.gif" height="50px" width="50px"></label>
+                        </div>
+                        <div class="custom-control custom-checkbox mb-1">
+                            <input type="checkbox" class="custom-control-input" id="cry" value="CRY" name="reactions">
+                            <label class="custom-control-label" for="cry"><img src="assets/images/reactions/cry.gif" height="50px" width="50px"></label>
+                        </div>
+                        <div class="custom-control custom-checkbox mb-1">
+                            <input type="checkbox" class="custom-control-input" id="angry" value="ANGRY" name="reactions">
+                            <label class="custom-control-label" for="angry"><img src="assets/images/reactions/angry.gif" height="50px" width="50px"></label>
+                        </div>
                     </div>
                     <button type="button" id="btn_submit" class="btn btn-accent">Submit</button>
                 </li>

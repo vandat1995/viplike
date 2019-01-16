@@ -74,11 +74,11 @@ $active_group = 'default';
 $query_builder = TRUE;
 
 $db['default'] = array(
-	'dsn'	=> 'mysql:host=localhost;dbname=viplike',
+	'dsn'	=> 'mysql:host=localhost;dbname=viplikedat',
 	'hostname' => 'localhost',
 	'username' => 'root',
 	'password' => '',
-	'database' => 'viplike',
+	'database' => 'viplikedat',
 	'dbdriver' => 'pdo',
 	'port'	   => '3306',
 	'dbprefix' => '',
