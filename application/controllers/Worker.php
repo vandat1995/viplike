@@ -8,13 +8,14 @@ class Worker extends CI_Controller
     public function __construct()
     {
         parent::__construct();
-        if( ! $this->input->is_cli_request())
-        {
-            redirect("dashboard");
-        }
+        // if( ! $this->input->is_cli_request())
+        // {
+        //     redirect("dashboard");
+        // }
         $this->load->model("token_model");
         $this->load->model("task_model");
-        $this->load->model("task_process_model");
+        $this->load->model("taskprocess_model");
+        $this->load->model("tokenprocessmap_model");
         $this->load->library("request");
     }
 
@@ -26,65 +27,68 @@ class Worker extends CI_Controller
     public function FireInTheHole()
     {
         $this->__runTasks();
-        $this->__runProcessese();
+        //$this->__runProcessese();
     }
 
     private function __runTasks()
     {
-        $tasks = $this->task_model->getTasks();
+        $tasks = $this->task_model->getActiveTasks();
         if(!$tasks)
         {
             return;
         }
         foreach($tasks as $task)
         {
-            $tokens = $this->token_model->getTokens($task->quantity_per_cron);
-            $id_post = $this->__getNewFeed($task->uid, $tokens[0]->token);
-            if($this->__checkLiked($id_post))
+            $tokens = $this->token_model->getTokens(($task->quantity_like + 6));
+            $post_id = $this->__getNewFeed($task->uid, $tokens[array_rand($tokens)]->token);
+            if($this->__checkProcessExist($post_id) || !$post_id)
             {
-                break;
+                continue;
             }
-            $success = 0;
-            $fail = 0;
-            foreach($tokens as $token)
+            $total_token = count($tokens);
+
+            //Create process
+            $process_id = $this->taskprocess_model->insert(["task_id" => $task->id, "post_id" => $post_id]);
+            if( ! $process_id) {
+                log_message("ERROR", "Create Process Fail: [{$process_id}]");
+                continue;
+            }
+            $reactions = json_decode($task->reactions, true);
+            $tmp = 0;
+            foreach($reactions as $key => $val)
             {
-                $this->__likeFeed($token->token, $id_post) ? $success++ : $fail++;
+                for($i = $tmp; $i < ($val + $tmp); $i++)
+                {
+                    $this->tokenprocessmap_model->insert(["process_id" => $process_id, "token_id" => $tokens[$i]->id, "reaction" => $key]);
+                }
+                $tmp += $val;
             }
-            $this->task_process_model->saveProcessDone(["task_id" => $task->id, "id_liked" => $id_post, "remain" => ($task->quantity_like - $task->quantity_per_cron), "success" => $success, "fail" => $fail]);
         }
     }
 
     private function __runProcessese()
     {
-        $processese = $this->task_process_model->getProcessese();
+        $processese = $this->taskprocess_model->getActiveProcessese();
         if(!$processese)
         {
             return;
         }
         foreach($processese as $process)
         {
-            $tokens = $this->token_model->getTokens($process->quantity_per_cron);
-            $id_post = $process->id_liked;
-            $success = 0;
-            $fail = 0;
-            foreach($tokens as $token)
-            {
-                $this->__likeFeed($token->token, $id_post) ? $success++ : $fail++;
-            }
-            $this->task_process_model->update($process->id, ["remain" => ($process->remain - $process->quantity_per_cron), "success" => ($process->success + $success), "fail" => ($process->fail + $fail)]);
+            
         }
     }
 
-    private function __checkLiked($id_post)
+    private function __checkProcessExist($post_id)
     {
-        return $this->task_process_model->checkExistIdLiked($id_post);
+        return $this->taskprocess_model->checkExistPostId($post_id);
     }
 
     private function __getNewFeed($vip_uid, $token)
     {
         $url = "https://graph.facebook.com/{$vip_uid}/feed?limit=1&fields=id,story,privacy,message&method=get&access_token={$token}";
         $feed = json_decode($this->request->get($url), true);
-        $privacy = $feed["data"][0]["privacy"]["value"];
+        $privacy = !empty($feed["data"][0]["privacy"]["value"]) ? $feed["data"][0]["privacy"]["value"] : false;
         if(isset($feed["data"][0]["id"]) && $privacy == "EVERYONE")
         {
             $uid = explode("_", $feed["data"][0]["id"])[0];
@@ -92,15 +96,14 @@ class Worker extends CI_Controller
             {
                 return false;
             }
-            $id_post = $feed["data"][0]["id"];
-            return $id_post;
+            return $feed["data"][0]["id"];
         }
         return false;
     }
 
-    private function __likeFeed($token, $id_post)
+    private function __likeFeed($token, $post_id)
     {
-        $url = "https://graph.facebook.com/{$id_post}/likes?access_token={$token}&method=post";
+        $url = "https://graph.facebook.com/{$post_id}/likes?access_token={$token}&method=post";
         $like = json_decode($this->request->get($url), true);
         if($like == "true")
         {
