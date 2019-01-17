@@ -16,6 +16,12 @@ class Token_model extends CI_Model
         return $this->db->delete($this->__table) ? true : false;
     }
 
+    public function count()
+    {
+        $this->db->select("count(*) total");
+        return $this->db->get($this->__table)->row()->total;
+    }
+
     public function getRandOneToken()
     {
         $this->db->select("token");
@@ -41,10 +47,6 @@ class Token_model extends CI_Model
         return ($query->num_rows() > 0) ? $query->result() : false;
     }
 
-    public function count()
-    {
-        $this->db->select("count(*) total");
-        return $this->db->get($this->__table)->row()->total;
-    }
+    
 
 }

@@ -10,6 +10,7 @@ class VipLikeSetting extends CI_Controller
         $this->data['page_title'] = "Setup vip like";
         $this->data['sub_title'] = "";
         $this->load->model("task_model");
+        $this->load->model("token_model");
     }
 
     public function index()
@@ -23,7 +24,8 @@ class VipLikeSetting extends CI_Controller
         $quantity = !empty($this->input->post("quantity")) ? (int)$this->input->post("quantity") : false;
         $time = !empty($this->input->post("time")) ? (int)$this->input->post("time") : false;
         $quantity_per_cron = !empty($this->input->post("quantity_per_cron")) ? (int)$this->input->post("quantity_per_cron") : false;
-        if(!$uid || !$quantity || !$time || !$quantity_per_cron)
+        $reactions = !empty($this->input->post("reactions")) ? $this->input->post("reactions") : false;
+        if( !$uid || !$quantity || !$time || !$quantity_per_cron || !$reactions)
         {
             echo json_encode(["error" => ["message" => "Invalid data", "code" => 0], "message" => ""]);
             return;
@@ -39,13 +41,22 @@ class VipLikeSetting extends CI_Controller
             return;
         }
 
+        $total_token = $this->token_model->count();
+        if(($quantity + 6) > $total_token)
+        {
+            echo json_encode(["error" => ["message" => "Quantity cann't more than current total token", "code" => 0], "message" => ""]);
+            return;
+        }
+
+        $reactions = $this->__parseReactions($reactions, $quantity);
         $data = [
-            "uid" => $uid,
-            "quantity_like" => $quantity,
+            "uid"               => $uid,
+            "quantity_like"     => $quantity,
             "quantity_per_cron" => $quantity_per_cron,
-            "start_day" => date("Y-m-d H:i:s"),
-            "end_day" => date("Y-m-d H:i:s", strtotime("+". $time ." days")),
-            "user_id" => $this->session->userdata('user_id')
+            "reactions"         => $reactions,
+            "start_day"         => date("Y-m-d H:i:s"),
+            "end_day"           => date("Y-m-d H:i:s", strtotime("+". $time ." days")),
+            "user_id"           => $this->session->userdata('user_id')
         ];
 
         if($this->task_model->insert($data))
@@ -58,6 +69,24 @@ class VipLikeSetting extends CI_Controller
             echo json_encode(["error" => ["message" => "Create Vip like Task Fail", "code" => 0], "message" => ""]);
             return;
         }
+    }
+
+    private function __parseReactions($reactions, $quantity) 
+    {
+        $result = [];
+        $count = count($reactions);
+        foreach($reactions as $r)
+        {
+            if($r != "LIKE" && $r != "LOVE" && $r != "WOW" && $r != "HAHA" && $r != "CRY" && $r != "ANGRY")
+            {
+                return false;
+            } 
+            else 
+            {
+                $result[$r] = $r == "LIKE" ?  ceil(0.8 * $quantity) : ceil((0.2 / ($count - 1 )) * $quantity);
+            }
+        }
+        return json_encode($result);
     }
 
     public function listTask()

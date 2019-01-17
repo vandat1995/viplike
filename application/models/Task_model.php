@@ -16,9 +16,9 @@ class Task_model extends CI_Model
         return $this->db->delete($this->__table) ? true : false;
     }
 
-    public function getTasks()
+    public function getActiveTasks()
     {
-        $this->db->select("id, uid, quantity_like, quantity_per_cron");
+        $this->db->select("id, uid, quantity_like, quantity_per_cron, reactions");
         $this->db->from($this->__table);
         $this->db->where("(end_day - NOW()) > 1");
         $query = $this->db->get();

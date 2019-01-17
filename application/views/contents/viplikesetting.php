@@ -106,7 +106,9 @@
         let quantity = $("#quantity").val().trim() || false;
         let time = $("#time").val().trim() || false;
         let quantity_per_cron = $("#quantity_per_cron").val().trim() || false;
-        if(!uid || !quantity || !time || !quantity_per_cron) {
+        let reactions = getReactions();
+        
+        if(!uid || !quantity || !time || !quantity_per_cron || !reactions) {
             Swal({
                 text: `Invalid data`,
                 type: 'error',
@@ -115,10 +117,10 @@
             });
             return false;
         }
-        addVip(uid, quantity, time, quantity_per_cron);
+        addVip(uid, quantity, time, quantity_per_cron, reactions);
     }
 
-    function addVip(uid, quantity, time, quantity_per_cron) {
+    function addVip(uid, quantity, time, quantity_per_cron, reactions) {
         $.ajax({
             url: "<?php echo base_url('VipLikeSetting/addTask'); ?>",
             type: "POST",
@@ -127,7 +129,8 @@
                 uid: uid,
                 quantity: quantity,
                 time: time,
-                quantity_per_cron: quantity_per_cron
+                quantity_per_cron: quantity_per_cron,
+                reactions: reactions
             },
             beforeSend: () => {
                 $("#btn_submit").text("Processing...").prop("disabled", true);
@@ -158,6 +161,14 @@
             $("#btn_submit").text("Submit").prop("disabled", false);
             loadListVip();
         });
+    }
+
+    function getReactions() {
+        let reactions = [];
+        $('input[name="reactions"]:checked').map((i, e) => {
+            return reactions.push($(e).val());
+        });
+        return reactions.length > 0 ? reactions : false;
     }
 
     function loadListVip() {
