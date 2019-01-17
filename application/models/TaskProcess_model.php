@@ -37,19 +37,6 @@ class TaskProcess_model extends CI_Model
             return false;
     }
 
-
-    public function getProcessese()
-    {
-        $this->db->select("tp.id, tp.task_id, tp.post_id, t.quantity_like, t.quantity_per_cron");
-        $this->db->from("task_process tp");
-        $this->db->join("tasks t", "t.id = tp.task_id");
-        $query = $this->db->get();
-        if($query->num_rows() > 0)
-            return $query->result();
-        else
-            return false;
-    }
-
     public function count()
     {
         $this->db->select("count(*) total");

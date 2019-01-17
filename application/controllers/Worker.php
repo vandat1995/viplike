@@ -27,7 +27,7 @@ class Worker extends CI_Controller
     public function FireInTheHole()
     {
         $this->__runTasks();
-        //$this->__runProcessese();
+        $this->__runProcessese();
     }
 
     private function __runTasks()
@@ -75,7 +75,18 @@ class Worker extends CI_Controller
         }
         foreach($processese as $process)
         {
-            
+            $datas = $this->tokenprocessmap_model->getRandByProcessId($process->id, $process->quantity_per_cron);
+            if( ! $datas) {
+                //Done 1 task process
+                $this->taskprocess_model->update($process->id, ["is_done" => 1]);
+                continue;
+            }
+
+            foreach($datas as $data)
+            {
+                $res = $this->__reactionPost($data->token, $data->post_id, $data->reaction);
+                $this->tokenprocessmap_model->update($data->id, ["status" => (int)$res, "is_runned" => 1]);
+            }
         }
     }
 
@@ -101,21 +112,11 @@ class Worker extends CI_Controller
         return false;
     }
 
-    private function __likeFeed($token, $post_id)
+    private function __reactionPost($token, $post_id, $reaction)
     {
-        $url = "https://graph.facebook.com/{$post_id}/likes?access_token={$token}&method=post";
-        $like = json_decode($this->request->get($url), true);
-        if($like == "true")
-        {
-            return true;
-        }
-        return false;
+        $url = "https://graph.facebook.com/{$post_id}/reactions?type={$reaction}&access_token={$token}&method=post";
+        $fire = json_decode($this->request->get($url), true);
+        return !empty($fire["success"]) ? $fire["success"] : false;
     }
-
-    
-
-    
-
-
 
 }
