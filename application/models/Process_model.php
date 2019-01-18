@@ -1,9 +1,9 @@
 <?php 
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class TaskProcess_model extends CI_Model
+class Process_model extends CI_Model
 {
-	private $__table = "task_process";
+	private $__table = "processes";
 
     public function checkExistPostId($post_id)
     {
@@ -24,14 +24,14 @@ class TaskProcess_model extends CI_Model
         return $this->db->update($this->__table, $data) ? true : false;
     }
 
-    public function getActiveProcessese()
+    public function getActiveProcesses()
     {
         $this->db->select("tp.id, tp.task_id, tp.post_id, t.quantity_like, t.quantity_per_cron");
-        $this->db->from("task_process tp");
+        $this->db->from("$this->__table tp");
         $this->db->join("tasks t", "t.id = tp.task_id");
         $this->db->where("tp.is_done", 0);
         $query = $this->db->get();
-        if($query->num_rows() > 0)
+        if( $query->num_rows() > 0 )
             return $query->result();
         else
             return false;

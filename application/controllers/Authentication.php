@@ -16,7 +16,7 @@ class Authentication extends CI_Controller
 
 	public function Login()
 	{
-		if($this->session->userdata('is_logged_in'))
+		if( $this->session->userdata('is_logged_in') )
 			redirect("dashboard");
 		$this->load->view('login');
 	}
@@ -31,19 +31,19 @@ class Authentication extends CI_Controller
 
 	public function validate()
 	{
-		if($this->session->userdata('is_logged_in'))
+		if( $this->session->userdata('is_logged_in') )
 			redirect("dashboard");
 		$this->form_validation->set_rules('username', 'Username', 'required|max_length[50]');
 		$this->form_validation->set_rules('password', 'Password', 'required|max_length[50]');
-		if($this->form_validation->run() != false)
+		if( $this->form_validation->run() != false )
 		{
 			$username = $this->input->post('username');
 			$password = $this->input->post('password');
 			$remember = empty($this->input->post('remember')) ? 1 : 0;
 			$attempt = $this->user_model->attempt($username, md5($password));
-			if($attempt)
+			if( $attempt )
 			{
-				if($attempt->active == 1)
+				if( $attempt->active == 1 )
 				{
 					$userdata = [
 						'user_id'			=> $attempt->id,
@@ -54,10 +54,10 @@ class Authentication extends CI_Controller
 						'role_id'			=> $attempt->role_id,
 						'is_logged_in' 		=> true
 					];
-					if($remember == 1)
+					if( $remember == 1 )
 					{
 						$this->session->set_userdata($userdata);
-						//Lưu đăng nhập 1 tháng
+						// Lưu đăng nhập 1 tháng
 						set_cookie('username', $attempt->username, 3600*24*30);
 						set_cookie('token', $attempt->password, 3600*24*30);
 					}
@@ -85,7 +85,7 @@ class Authentication extends CI_Controller
 
 	public function insertUser()
 	{
-		if($this->input->is_cli_request()) {
+		if( $this->input->is_cli_request() ) {
 			$data = ['username' => 'admin2', 'password' => md5('admin'), 'full_name' => 'Dat Nguyen', 'role_id' => 1];
 			$result = $this->user_model->save($data);
 			var_dump($result);

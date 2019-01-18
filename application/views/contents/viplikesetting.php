@@ -8,21 +8,21 @@
                 <li class="list-group-item p-3">
                     <div class="form-row">
                         <div class="form-group col-md-6">
-                            <label for="feFirstName">UID profile <span class="text-danger">*</span></label>
+                            <label>UID profile <span class="text-danger">*</span></label>
                             <input type="text" id="uid" class="form-control" placeholder="10000413926789"> 
                         </div>
                         <div class="form-group col-md-6">
-                            <label for="feLastName">Quantity like <span class="text-danger">*</span></label>
+                            <label>Quantity like <span class="text-danger">*</span></label>
                             <input type="number" id="quantity" class="form-control" placeholder="100"> 
                         </div>
                     </div>
                     <div class="form-row">
                         <div class="form-group col-md-6">
-                            <label for="feFirstName">Time (days) <span class="text-danger">*</span></label>
+                            <label>Time (days) <span class="text-danger">*</span></label>
                             <input type="number" id="time" class="form-control" placeholder="30" min="1"> 
                         </div>
                         <div class="form-group col-md-6">
-                            <label for="feFirstName">Quantity like per crontab (5 mins) <span class="text-danger">*</span></label>
+                            <label>Quantity like per crontab (5 mins) <span class="text-danger">*</span></label>
                             <input type="number" id="quantity_per_cron" class="form-control" placeholder="100" min="1"> 
                         </div>
                     </div>

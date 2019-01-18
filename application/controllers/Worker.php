@@ -8,13 +8,13 @@ class Worker extends CI_Controller
     public function __construct()
     {
         parent::__construct();
-        // if( ! $this->input->is_cli_request())
+        // if( !$this->input->is_cli_request() )
         // {
         //     redirect("dashboard");
         // }
         $this->load->model("token_model");
         $this->load->model("task_model");
-        $this->load->model("taskprocess_model");
+        $this->load->model("process_model");
         $this->load->model("tokenprocessmap_model");
         $this->load->library("request");
     }
@@ -27,13 +27,13 @@ class Worker extends CI_Controller
     public function FireInTheHole()
     {
         $this->__runTasks();
-        $this->__runProcessese();
+        $this->__runProcesses();
     }
 
     private function __runTasks()
     {
         $tasks = $this->task_model->getActiveTasks();
-        if(!$tasks)
+        if( !$tasks)
         {
             return;
         }
@@ -41,21 +41,21 @@ class Worker extends CI_Controller
         {
             $tokens = $this->token_model->getTokens(($task->quantity_like + 6));
             $post_id = $this->__getNewFeed($task->uid, $tokens[array_rand($tokens)]->token);
-            if($this->__checkProcessExist($post_id) || !$post_id)
+            if( $this->__checkProcessExist($post_id) || !$post_id )
             {
                 continue;
             }
             $total_token = count($tokens);
 
-            //Create process
-            $process_id = $this->taskprocess_model->insert(["task_id" => $task->id, "post_id" => $post_id]);
-            if( ! $process_id) {
+            // Create process
+            $process_id = $this->process_model->insert(["task_id" => $task->id, "post_id" => $post_id]);
+            if( !$process_id ) {
                 log_message("ERROR", "Create Process Fail: [{$process_id}]");
                 continue;
             }
             $reactions = json_decode($task->reactions, true);
             $tmp = 0;
-            foreach($reactions as $key => $val)
+            foreach( $reactions as $key => $val )
             {
                 for($i = $tmp; $i < ($val + $tmp); $i++)
                 {
@@ -66,23 +66,23 @@ class Worker extends CI_Controller
         }
     }
 
-    private function __runProcessese()
+    private function __runProcesses()
     {
-        $processese = $this->taskprocess_model->getActiveProcessese();
-        if(!$processese)
+        $processes = $this->process_model->getActiveProcesses();
+        if( !$processes )
         {
             return;
         }
-        foreach($processese as $process)
+        foreach( $processes as $process )
         {
             $datas = $this->tokenprocessmap_model->getRandByProcessId($process->id, $process->quantity_per_cron);
-            if( ! $datas) {
-                //Done 1 task process
-                $this->taskprocess_model->update($process->id, ["is_done" => 1]);
+            if( !$datas ) {
+                // Done 1 task process
+                $this->process_model->update($process->id, ["is_done" => 1]);
                 continue;
             }
 
-            foreach($datas as $data)
+            foreach( $datas as $data )
             {
                 $res = $this->__reactionPost($data->token, $data->post_id, $data->reaction);
                 $this->tokenprocessmap_model->update($data->id, ["status" => (int)$res, "is_runned" => 1]);
@@ -92,7 +92,7 @@ class Worker extends CI_Controller
 
     private function __checkProcessExist($post_id)
     {
-        return $this->taskprocess_model->checkExistPostId($post_id);
+        return $this->process_model->checkExistPostId($post_id);
     }
 
     private function __getNewFeed($vip_uid, $token)
@@ -100,7 +100,7 @@ class Worker extends CI_Controller
         $url = "https://graph.facebook.com/{$vip_uid}/feed?limit=1&fields=id,story,privacy,message&method=get&access_token={$token}";
         $feed = json_decode($this->request->get($url), true);
         $privacy = !empty($feed["data"][0]["privacy"]["value"]) ? $feed["data"][0]["privacy"]["value"] : false;
-        if(isset($feed["data"][0]["id"]) && $privacy == "EVERYONE")
+        if( isset($feed["data"][0]["id"]) && $privacy == "EVERYONE" )
         {
             $uid = explode("_", $feed["data"][0]["id"])[0];
             if($uid != $vip_uid)
