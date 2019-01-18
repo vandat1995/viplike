@@ -25,30 +25,36 @@ class VipLikeSetting extends CI_Controller
         $time = !empty($this->input->post("time")) ? (int)$this->input->post("time") : false;
         $quantity_per_cron = !empty($this->input->post("quantity_per_cron")) ? (int)$this->input->post("quantity_per_cron") : false;
         $reactions = !empty($this->input->post("reactions")) ? $this->input->post("reactions") : false;
-        if( !$uid || !$quantity || !$time || !$quantity_per_cron || !$reactions)
+        if( !$uid || !$quantity || !$time || !$quantity_per_cron || !$reactions )
         {
             echo json_encode(["error" => ["message" => "Invalid data", "code" => 0], "message" => ""]);
             return;
         }
-        if($time < 1 || $quantity < 1 || $quantity_per_cron > $quantity || $quantity_per_cron < 1)
+        if( $time < 1 || $quantity < 1 || $quantity_per_cron > $quantity || $quantity_per_cron < 1 )
         {
             echo json_encode(["error" => ["message" => "Invalid time, quantity", "code" => 0], "message" => ""]);
             return;
         }
-        if($this->task_model->checkExistUID($uid))
+        if( $this->task_model->checkExistUID($uid) )
         {
             echo json_encode(["error" => ["message" => "UID was Exist", "code" => 0], "message" => ""]);
             return;
         }
 
+        $reactions = $this->__parseReactions($reactions, $quantity);
+        if( $reactions === false)
+        {
+            echo json_encode(["error" => ["message" => "Địt mẹ mày tính làm gì đây nhóc", "code" => 0], "message" => ""]);
+            return;
+        }
+
         $total_token = $this->token_model->count();
-        if(($quantity + 6) > $total_token)
+        if( ($quantity + 6) > $total_token )
         {
             echo json_encode(["error" => ["message" => "Quantity cann't more than current total token", "code" => 0], "message" => ""]);
             return;
         }
 
-        $reactions = $this->__parseReactions($reactions, $quantity);
         $data = [
             "uid"               => $uid,
             "quantity_like"     => $quantity,
@@ -59,7 +65,7 @@ class VipLikeSetting extends CI_Controller
             "user_id"           => $this->session->userdata('user_id')
         ];
 
-        if($this->task_model->insert($data))
+        if( $this->task_model->insert($data) )
         {
             echo json_encode(["error" => 0, "message" => "Create Vip like Task Success"]);
             return;
@@ -75,9 +81,9 @@ class VipLikeSetting extends CI_Controller
     {
         $result = [];
         $count = count($reactions);
-        foreach($reactions as $r)
+        foreach( $reactions as $r )
         {
-            if($r != "LIKE" && $r != "LOVE" && $r != "WOW" && $r != "HAHA" && $r != "CRY" && $r != "ANGRY")
+            if( $r != "LIKE" && $r != "LOVE" && $r != "WOW" && $r != "HAHA" && $r != "CRY" && $r != "ANGRY" )
             {
                 return false;
             } 
@@ -92,7 +98,7 @@ class VipLikeSetting extends CI_Controller
     public function listTask()
     {
         $list_task = $this->task_model->getListUidByUser($this->session->userdata('user_id'), $this->session->userdata('role_id'));
-        if(!$list_task)
+        if( !$list_task )
         {
             echo json_encode(["error" => 0, "data" => [], "message" => ""]);
             return;
@@ -103,13 +109,13 @@ class VipLikeSetting extends CI_Controller
     public function deleteTask()
     {
         $task_id = $this->input->post("task_id");
-        if($this->session->userdata("role_id") != 1)
+        if( $this->session->userdata("role_id") != 1 )
         {
             echo json_encode(["error" => ["message" => "You don't have permission.", "code" => 0], "message" => ""]);
             return;
         }
 
-        if($this->task_model->delete($task_id))
+        if( $this->task_model->delete($task_id) )
         {
             echo json_encode(["error" => 0, "message" => "Delete task success"]);
             return;

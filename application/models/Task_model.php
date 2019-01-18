@@ -43,7 +43,7 @@ class Task_model extends CI_Model
     {
         $this->db->select("t.id, t.uid, t.quantity_like, t.quantity_per_cron, t.start_day, t.end_day");
         $this->db->from("tasks t");
-        if($role_id != 1)
+        if( $role_id != 1 )
         {
             $this->db->join("users u", "u.id = t.user_id");
             $this->db->where("t.user_id", $user_id);
