@@ -12,7 +12,7 @@ class User_model extends CI_Model
 		return $query->num_rows() > 0 ? $query->row() : false;
 	}
 
-	public function ínert($data)
+	public function insert($data)
 	{
 		return $this->db->insert($this->__table, $data);
 	}
