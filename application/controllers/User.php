@@ -28,7 +28,7 @@ class User extends CI_Controller
     public function create()
     {
         $this->form_validation->set_rules("username", "Username", "required|max_length[50]|is_unique[users.username]");
-        $this->form_validation->set_rules("password", "Password", "required|max_length[50]");
+        $this->form_validation->set_rules("password", "Password", "required|max_length[50]|min_length[6]");
         $this->form_validation->set_rules("fullname", "Full name", "required|max_length[50]");
         $this->form_validation->set_rules("avatar", "Avatar", "max_length[255]");
         $this->form_validation->set_rules("permissions", "Permissions", "required|greater_than[0]|less_than[4]");
