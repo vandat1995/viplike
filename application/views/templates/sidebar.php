@@ -36,12 +36,15 @@
                   <span>VIP LIKE</span>
                 </a>
               </li>
+
+              <?php if( $this->session->userdata("role_id") == 1 ) { ?>
               <li class="nav-item">
                 <a class="nav-link <?php if(strtolower($this->uri->segment(1)) == 'user') echo 'active' ?>" href="user">
                   <i class="material-icons">people</i>
                   <span>USER</span>
                 </a>
               </li>
+              <?php } ?>
 
             </ul>
           </div>

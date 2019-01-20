@@ -50,14 +50,14 @@ class Authentication extends CI_Controller
 						'username' 			=> $attempt->username,
 						'full_name' 		=> $attempt->full_name,
 						'avatar' 			=> $attempt->avatar,
-						'balance' 			=> $attempt->balance,
+						'balance' 			=> number_format($attempt->balance),
 						'role_id'			=> $attempt->role_id,
 						'is_logged_in' 		=> true
 					];
 					if( $remember == 1 )
 					{
 						$this->session->set_userdata($userdata);
-						// Lưu đăng nhập 1 tháng
+						// Remember login 1 month
 						set_cookie('username', $attempt->username, 3600*24*30);
 						set_cookie('token', $attempt->password, 3600*24*30);
 					}

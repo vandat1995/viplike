@@ -10,10 +10,63 @@ class Task_model extends CI_Model
         return $this->db->insert($this->__table, $data) ? true : false;
     }
 
+    public function count()
+    {
+        $this->db->select("count(*) total");
+        return $this->db->get($this->__table)->row()->total;
+    }
+
     public function delete($id)
     {
         $this->db->where("id", $id);
         return $this->db->delete($this->__table) ? true : false;
+    }
+
+    public function getById($id)
+    {
+        $this->db->where("id", $id);
+        $query = $this->db->get($this->__table);
+        return $query->num_rows() ? $query->row() : false;
+    }
+
+    public function createTransaction($data_task, $data_user, $user_id)
+    {
+        $this->db->trans_start();
+        $this->db->insert($this->__table, $data_task);
+        $this->db->update("users", $data_user, "id = {$user_id}");
+        $this->db->trans_complete();
+        return $this->db->trans_status() === FALSE ? false : true;
+    }
+
+    public function deleteTransaction($task_id, $data_user, $user_id)
+    {
+        if( $this->__isOwner($task_id, $user_id) )
+        {
+            $this->db->trans_start();
+            $this->db->delete($this->__table, ["id" => $task_id]);
+            $prs = $this->__getProcessIdByTaskId($task_id);
+            if( $prs )
+            {
+                $this->db->delete("processes", ["task_id" => $task_id]);
+                foreach( $prs as $pr )
+                {
+                    $this->db->delete("token_process_map", ["process_id" => $pr->id]);
+                }
+            }
+            $this->db->update("users", $data_user, "id = {$user_id}");
+            $this->db->trans_complete();
+            return $this->db->trans_status() === FALSE ? false : true;
+        }
+        return false;
+    }
+
+    private function __getProcessIdByTaskId($task_id)
+    {
+        $this->db->select("id");
+        $this->db->from("processes");
+        $this->db->where("task_id", $task_id);
+        $query = $this->db->get();
+        return $query->num_rows() > 0 ? $query->result() : false;
     }
 
     public function getActiveTasks()
@@ -33,12 +86,6 @@ class Task_model extends CI_Model
         return ($query->num_rows() > 0) ? true : false;
     }
 
-    public function count()
-    {
-        $this->db->select("count(*) total");
-        return $this->db->get($this->__table)->row()->total;
-    }
-
     public function getListUidByUser($user_id, $role_id)
     {
         $this->db->select("t.id, t.uid, t.quantity_like, t.quantity_per_cron, t.start_day, t.end_day");
@@ -50,6 +97,15 @@ class Task_model extends CI_Model
         }
         $query = $this->db->get();
         return ($query->num_rows() > 0) ? $query->result() : false;
+    }
+
+    private function __isOwner($task_id, $user_id)
+    {
+        $this->db->from("$this->__table t");
+        $this->db->join("users u", "u.id = t.user_id");
+        $this->db->where(["t.id" => $task_id, "t.user_id" => $user_id]);
+        $query = $this->db->get();
+        return $query->num_rows() > 0 ? true : false;
     }
 
 }

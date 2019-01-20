@@ -35,7 +35,7 @@ class Authenticate
 						'username' 		=> $attempt->username,
 						'full_name' 	=> $attempt->full_name,
 						'avatar' 		=> $attempt->avatar,
-						'balance' 		=> $attempt->balance,
+						'balance' 		=> number_format($attempt->balance),
 						'role_id'		=> $attempt->role_id,
 						'is_logged_in' 	=> true
 					];

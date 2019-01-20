@@ -17,10 +17,10 @@ class User_model extends CI_Model
 		return $this->db->insert($this->__table, $data);
 	}
 
-	public function getBalance($username)
+	public function getBalance($id)
 	{
 		$this->db->select('balance');
-		$this->db->where('username', $username);
+		$this->db->where('id', $id);
 		return $this->db->get($this->__table)->row()->balance;
 	}
 

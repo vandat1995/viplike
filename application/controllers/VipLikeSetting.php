@@ -11,6 +11,7 @@ class VipLikeSetting extends CI_Controller
         $this->data['sub_title'] = "";
         $this->load->model("task_model");
         $this->load->model("token_model");
+        $this->load->model("user_model");
     }
 
     public function index()
@@ -42,7 +43,7 @@ class VipLikeSetting extends CI_Controller
         }
 
         $reactions = $this->__parseReactions($reactions, $quantity);
-        if( $reactions === false)
+        if( $reactions === false )
         {
             echo json_encode(["error" => ["message" => "Địt mẹ mày tính làm gì đây nhóc", "code" => 0], "message" => ""]);
             return;
@@ -52,6 +53,15 @@ class VipLikeSetting extends CI_Controller
         if( ($quantity + 6) > $total_token )
         {
             echo json_encode(["error" => ["message" => "Quantity cann't more than current total token", "code" => 0], "message" => ""]);
+            return;
+        }
+
+        $price = $quantity * $time * PRICE_PER_LIKE;
+        $current_balance = $this->user_model->getBalance($this->session->userdata("user_id"));
+        $new_balance = $current_balance - $price;
+        if( $new_balance < 0 ) 
+        {
+            echo json_encode(["error" => ["message" => "Your money is not enough", "code" => 0], "message" => ""]);
             return;
         }
 
@@ -65,8 +75,9 @@ class VipLikeSetting extends CI_Controller
             "user_id"           => $this->session->userdata('user_id')
         ];
 
-        if( $this->task_model->insert($data) )
+        if( $this->task_model->createTransaction($data, ["balance" => $new_balance], $this->session->userdata("user_id")) )
         {
+            $this->session->set_userdata(["balance" => number_format($new_balance)]);
             echo json_encode(["error" => 0, "message" => "Create Vip like Task Success"]);
             return;
         }
@@ -83,7 +94,7 @@ class VipLikeSetting extends CI_Controller
         $count = count($reactions);
         foreach( $reactions as $r )
         {
-            if( $r != "LIKE" && $r != "LOVE" && $r != "WOW" && $r != "HAHA" && $r != "CRY" && $r != "ANGRY" )
+            if( $r != "LIKE" && $r != "LOVE" && $r != "WOW" && $r != "HAHA" && $r != "SAD" && $r != "ANGRY" )
             {
                 return false;
             } 
@@ -108,16 +119,30 @@ class VipLikeSetting extends CI_Controller
 
     public function deleteTask()
     {
-        $task_id = $this->input->post("task_id");
-        if( $this->session->userdata("role_id") != 1 )
+        $task_id = !empty($this->input->post("task_id")) ? $this->input->post("task_id") : false;
+        if( !$task_id )
         {
-            echo json_encode(["error" => ["message" => "You don't have permission.", "code" => 0], "message" => ""]);
+            echo json_encode(["error" => ["message" => "Địt mẹ mày tính làm gì đây con chó", "code" => 0], "message" => ""]);
             return;
         }
 
-        if( $this->task_model->delete($task_id) )
+        $task = $this->task_model->getById($task_id);
+        if( !$task )
         {
-            echo json_encode(["error" => 0, "message" => "Delete task success"]);
+            echo json_encode(["error" => ["message" => "UID does not exist.", "code" => 0], "message" => ""]);
+            return;
+        }
+
+        $days_left = strtotime($task->end_day) - strtotime(date("Y-m-d H:i:s"));
+        $days_left = (int)($days_left / 60 / 60 / 24);
+        $refund = $days_left * (int)$task->quantity_like * PRICE_PER_LIKE;
+        $current_balance = $this->user_model->getBalance($this->session->userdata("user_id"));
+        $new_balance = $current_balance + $refund;
+
+        if( $this->task_model->deleteTransaction($task_id, ["balance" => $new_balance], $this->session->userdata("user_id")) )
+        {
+            $this->session->set_userdata(["balance" => number_format($new_balance)]);
+            echo json_encode(["error" => 0, "message" => "Delete task success."]);
             return;
         }
         else

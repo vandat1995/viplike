@@ -39,7 +39,7 @@
                   <div class="card-body p-0 d-flex">
                     <div class="d-flex flex-column m-auto">
                       <div class="stats-small__data text-center">
-                        <span class="stats-small__label text-uppercase">PROCESS LIKE</span>
+                        <span class="stats-small__label text-uppercase">POSTS</span>
                         <h6 class="stats-small__value count my-3"><?= $total_process ?></h6>
                       </div>
                       <div class="stats-small__data">
@@ -71,7 +71,7 @@
                   <div class="card-body p-0 d-flex">
                     <div class="d-flex flex-column m-auto">
                       <div class="stats-small__data text-center">
-                        <span class="stats-small__label text-uppercase">Subscribers</span>
+                        <span class="stats-small__label text-uppercase">Processes done</span>
                         <h6 class="stats-small__value count my-3">17,281</h6>
                       </div>
                       <div class="stats-small__data">

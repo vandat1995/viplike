@@ -8,6 +8,14 @@
         </main>
       </div>
     </div>
-
+  <script>
+    function loading(id_element, status, text) {
+      if( status == "show" ) {
+        $(`#${id_element}`).text(text).prop("disable", true);
+      } else if( status == "hide" ) {
+        $(`#${id_element}`).text(text).prop("disable", false);
+      }
+    }
+  </script>
   </body>
 </html>

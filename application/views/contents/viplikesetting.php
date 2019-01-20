@@ -9,21 +9,21 @@
                     <div class="form-row">
                         <div class="form-group col-md-6">
                             <label>UID profile <span class="text-danger">*</span></label>
-                            <input type="text" id="uid" class="form-control" placeholder="10000413926789"> 
+                            <input type="text" id="uid" class="form-control" placeholder=""> 
                         </div>
                         <div class="form-group col-md-6">
                             <label>Quantity like <span class="text-danger">*</span></label>
-                            <input type="number" id="quantity" class="form-control" placeholder="100"> 
+                            <input type="number" id="quantity" class="form-control" placeholder="100" value="100"> 
                         </div>
                     </div>
                     <div class="form-row">
                         <div class="form-group col-md-6">
                             <label>Time (days) <span class="text-danger">*</span></label>
-                            <input type="number" id="time" class="form-control" placeholder="30" min="1"> 
+                            <input type="number" id="time" class="form-control" placeholder="" min="1" value="30"> 
                         </div>
                         <div class="form-group col-md-6">
                             <label>Quantity like per crontab (5 mins) <span class="text-danger">*</span></label>
-                            <input type="number" id="quantity_per_cron" class="form-control" placeholder="100" min="1"> 
+                            <input type="number" id="quantity_per_cron" class="form-control" min="1" value="20"> 
                         </div>
                     </div>
                     <div class="form-row">
@@ -52,8 +52,8 @@
                             <label class="custom-control-label" for="haha"><img src="assets/images/reactions/haha.gif" height="50px" width="50px"></label>
                         </div>
                         <div class="custom-control custom-checkbox mb-1">
-                            <input type="checkbox" class="custom-control-input" id="cry" value="CRY" name="reactions">
-                            <label class="custom-control-label" for="cry"><img src="assets/images/reactions/cry.gif" height="50px" width="50px"></label>
+                            <input type="checkbox" class="custom-control-input" id="sad" value="SAD" name="reactions">
+                            <label class="custom-control-label" for="sad"><img src="assets/images/reactions/sad.gif" height="50px" width="50px"></label>
                         </div>
                         <div class="custom-control custom-checkbox mb-1">
                             <input type="checkbox" class="custom-control-input" id="angry" value="ANGRY" name="reactions">
@@ -61,6 +61,39 @@
                         </div>
                     </div>
                     <button type="button" id="btn_submit" class="btn btn-accent">Submit</button>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <div class="col-lg-6 mb-6">
+        <div class="card card-small mb-4">
+            <div class="card-header border-bottom">
+                <h6 class="m-0">Billing Information</h6>
+            </div>
+            <ul class="list-group list-group-flush">
+                <li class="list-group-item p-3">
+                    <span class="d-flex mb-2">
+                        <strong class="mr-1">UID:</strong>
+                        <strong class="ml-auto" id="bill_uid"></strong>
+                    </span>
+                </li>
+                <li class="list-group-item p-3">
+                    <span class="d-flex mb-2">
+                        <strong class="mr-1">Quantity reactions:</strong>
+                        <strong class="ml-auto" id="bill_quantity">0</strong>
+                    </span>
+                </li>
+                <li class="list-group-item p-3">
+                    <span class="d-flex mb-2">
+                        <strong class="mr-1">Expiry day:</strong>
+                        <strong class="ml-auto" id="bill_time">0</strong><strong>&nbsp;days</strong>
+                    </span>
+                </li>
+                <li class="list-group-item p-3">
+                    <span class="d-flex mb-2">
+                        <strong class="mr-1">Total amount:</strong>
+                        <strong class="ml-auto" id="bill_amount">0</strong><strong>&nbsp;VND</strong>
+                    </span>
                 </li>
             </ul>
         </div>
@@ -94,11 +127,22 @@
 </div>
 
 <script>
+    const price = 15;
     $(document).ready(() => {
         $("#btn_submit").on("click", () => {
             main();
         });
         loadListVip();
+
+        $("#uid, #quantity, #time").on("keyup", () => {
+            let quantity = $("#quantity").val().trim();
+            let time = $("#time").val().trim();
+            $("#bill_uid").text($("#uid").val().trim());
+            $("#bill_quantity").text(quantity);
+            $("#bill_time").text(time);
+            $("#bill_amount").text(parseInt(quantity) * parseInt(time) * price);
+        });
+
     });
 
     function main() {

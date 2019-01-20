@@ -12,7 +12,7 @@
                             <input type="text" id="username" class="form-control"> 
                         </div>
                         <div class="form-group col-md-6">
-                            <label>Password<span class="text-danger">*</span></label>
+                            <label>Password <span class="text-danger">*</span></label>
                             <input type="password" id="password" class="form-control" placeholder=""> 
                         </div>
                     </div>
@@ -30,7 +30,7 @@
                         <div class="form-group col-md-6">
                             <label>Permissions <span class="text-danger">*</span></label>
                             <select id="permissions" class="form-control">
-                                <option selected>Choose...</option>
+                                <option></option>
                                 <option value="1">Admin</option>
                                 <option value="2">CTV</option>
                                 <option value="3">Member</option>
@@ -43,6 +43,28 @@
                     </div>
                     
                     <button type="button" id="btn_submit" class="btn btn-accent">Submit</button>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <div class="col-lg-6 mb-6">
+        <div class="card card-small mb-4">
+            <div class="card-header border-bottom">
+                <h6 class="m-0">Deposit</h6>
+            </div>
+            <ul class="list-group list-group-flush">
+                <li class="list-group-item p-3">
+                    <div class="form-row">
+                        <div class="form-group col-md-6">
+                            <label>Username <span class="text-danger">*</span></label>
+                            <input type="text" id="dep_user" class="form-control"> 
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label>Amount <span class="text-danger">*</span></label>
+                            <input type="number" id="dep_amount" class="form-control" placeholder=""> 
+                        </div>
+                    </div>
+                    <button type="button" id="btn_deposit" class="btn btn-accent">Submit</button>
                 </li>
             </ul>
         </div>
@@ -81,9 +103,74 @@
 <script>
     $(document).ready(() => {
         loadListUser();
+
+        $("#btn_submit").on("click", () => {
+            createUser();
+        });
     });
 
+    function createUser() {
+        let username    = $("#username").val().trim();
+        let password    = $("#password").val().trim();
+        let fullname    = $("#fullname").val().trim();
+        let avatar      = $("#avatar").val().trim();
+        let per         = $("#permissions").val().trim();
+        let bl          = parseInt($("#balance").val().trim());
+        if( !username || !password || !fullname || !per || bl < 0 ) {
+            Swal({
+                text: `Invalid data`,
+                type: 'error',
+                animation: false,
+                customClass: 'animated tada'
+            });
+            return;
+        }
+        $.ajax({
+            url: "User/create",
+            type: "POST",
+            dataType: "json",
+            data: {
+                username: username,
+                password: password,
+                fullname: fullname,
+                avatar: avatar,
+                permissions: per,
+                balance: bl
+            },
+            beforeSend: () => loading("btn_submit", "show", "Processing")
+        }).done((res) => {
+            if(res.error) {
+                Swal({
+                    html: `${res.error.message}`,
+                    type: 'error',
+                    animation: false,
+                    customClass: 'animated tada'
+                });
+            } else {
+                Swal({
+                    html: `${res.message}`,
+                    type: 'success',
+                });
+            }
+        }).fail((xhr, textStatus, errorThrown) => {
+            Swal({
+                html: `${xhr.status} ${textStatus}: ${errorThrown}`,
+                type: 'error',
+                animation: false,
+                customClass: 'animated tada'
+            });
+        }).always(() => {
+            loadListUser();
+            loading("btn_submit", "hide", "Submit");
+        });
+    }
+
+    function deposit() {
+        
+    }
+
     function loadListUser() {
+        $("#result").empty();
         $.getJSON("User/listUser", (res) => {
             if( res.data ) {
                 let i = 1;

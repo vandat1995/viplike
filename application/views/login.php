@@ -138,7 +138,7 @@
             }).done((res) => {
                 if(res.error) {
                     Swal({
-                        text: res.error.message,
+                        html: res.error.message,
                         type: 'error',
                         animation: false,
                         customClass: 'animated tada'
