@@ -1,7 +1,7 @@
 <?php 
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class TokenProcessMap_model extends CI_Model
+class Tokenprocessmap_model extends CI_Model
 {
     
     private $__table = "token_process_map";

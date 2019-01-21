@@ -107,6 +107,10 @@
         $("#btn_submit").on("click", () => {
             createUser();
         });
+
+        $("#btn_deposit").on("click", () => {
+            deposit();
+        });
     });
 
     function createUser() {
@@ -166,7 +170,78 @@
     }
 
     function deposit() {
-        
+        let username    = $("#dep_user").val().trim();
+        let amount      = $("#dep_amount").val().trim();
+        $.ajax({
+            url: "User/deposit",
+            type: "POST",
+            dataType: "json",
+            data: {
+                username: username,
+                amount: amount
+            },
+            beforeSend: () => loading("btn_deposit", "show", "Processing")
+        }).done((res) => {
+            if(res.error) {
+                Swal({
+                    html: `${res.error.message}`,
+                    type: 'error',
+                    animation: false,
+                    customClass: 'animated tada'
+                });
+            } else {
+                Swal({
+                    html: `${res.message}`,
+                    type: 'success',
+                });
+            }
+        }).fail((xhr, textStatus, errorThrown) => {
+            Swal({
+                html: `${xhr.status} ${textStatus}: ${errorThrown}`,
+                type: 'error',
+                animation: false,
+                customClass: 'animated tada'
+            });
+        }).always(() => {
+            loadListUser();
+            loading("btn_deposit", "hide", "Submit");
+        });
+    }
+
+    function deleteUser(user_id) {
+        if( confirm("Are you sure?") ) {
+            $.ajax({
+                url: "User/delete",
+                type: "POST",
+                dataType: "json",
+                data: {
+                    user_id: user_id
+                }
+            }).done((res) => {
+                if(res.error) {
+                    Swal({
+                        html: `${res.error.message}`,
+                        type: 'error',
+                        animation: false,
+                        customClass: 'animated tada'
+                    });
+                } else {
+                    Swal({
+                        html: `${res.message}`,
+                        type: 'success',
+                    });
+                }
+            }).fail((xhr, textStatus, errorThrown) => {
+                Swal({
+                    html: `${xhr.status} ${textStatus}: ${errorThrown}`,
+                    type: 'error',
+                    animation: false,
+                    customClass: 'animated tada'
+                });
+            }).always(() => {
+                loadListUser(); 
+            });
+        }
     }
 
     function loadListUser() {
