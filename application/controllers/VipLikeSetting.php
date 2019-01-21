@@ -21,11 +21,11 @@ class VipLikeSetting extends CI_Controller
 
     public function addTask()
     {
-        $uid = !empty($this->input->post("uid")) ? $this->input->post("uid") : false;
-        $quantity = !empty($this->input->post("quantity")) ? (int)$this->input->post("quantity") : false;
-        $time = !empty($this->input->post("time")) ? (int)$this->input->post("time") : false;
-        $quantity_per_cron = !empty($this->input->post("quantity_per_cron")) ? (int)$this->input->post("quantity_per_cron") : false;
-        $reactions = !empty($this->input->post("reactions")) ? $this->input->post("reactions") : false;
+        $uid = !empty($this->input->post("uid")) ? xss_clean($this->input->post("uid")) : false;
+        $quantity = !empty($this->input->post("quantity")) ? xss_clean((int)$this->input->post("quantity")) : false;
+        $time = !empty($this->input->post("time")) ? xss_clean((int)$this->input->post("time")) : false;
+        $quantity_per_cron = !empty($this->input->post("quantity_per_cron")) ? xss_clean((int)$this->input->post("quantity_per_cron")) : false;
+        $reactions = !empty($this->input->post("reactions")) ? xss_clean($this->input->post("reactions")) : false;
         if( !$uid || !$quantity || !$time || !$quantity_per_cron || !$reactions )
         {
             echo json_encode(["error" => ["message" => "Invalid data", "code" => 0], "message" => ""]);
@@ -54,7 +54,7 @@ class VipLikeSetting extends CI_Controller
         {
             echo json_encode(["error" => ["message" => "Quantity cann't more than current total token", "code" => 0], "message" => ""]);
             return;
-        }
+        }        
 
         $price = $quantity * $time * PRICE_PER_LIKE;
         $current_balance = $this->user_model->getBalance($this->session->userdata("user_id"));

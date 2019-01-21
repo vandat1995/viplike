@@ -16,6 +16,16 @@ class User_model extends CI_Model
 	{
 		return $this->db->insert($this->__table, $data);
 	}
+	
+	public function update($data, $username)
+	{
+		return $this->db->update($this->__table, $data, ["username" => $username]);
+	}
+
+	public function delete($id)
+	{
+		return $this->db->delete($this->__table, ["id" => $id]);
+	}
 
 	public function getBalance($id)
 	{
@@ -32,6 +42,13 @@ class User_model extends CI_Model
 		$this->db->order_by("r.name", "asc");
 		$query = $this->db->get();
 		return $query->num_rows() > 0 ? $query->result() : false;
+	}
+
+	public function findByUsername($username)
+	{
+		$this->db->where("username", $username);
+		$query = $this->db->get($this->__table);
+		return $query->num_rows() > 0 ? $query->row() : false;
 	}
 
 	public function save($data)
