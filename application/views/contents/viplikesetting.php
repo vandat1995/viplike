@@ -236,7 +236,7 @@
                         .append($("<tr>")
                             .append($("<td>").html(vip.id))
                             .append($("<td>").html(vip.uid))
-                            .append($("<td>").html(vip.quantity_like))
+                            .append($("<td>").html(vip.quantity))
                             .append($("<td>").html(vip.quantity_per_cron))
                             .append($("<td>").html(vip.start_day))
                             .append($("<td>").html(vip.end_day))

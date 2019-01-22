@@ -39,7 +39,7 @@ class Worker extends CI_Controller
         }
         foreach($tasks as $task)
         {
-            $tokens = $this->token_model->getTokens(($task->quantity_like + 6));
+            $tokens = $this->token_model->getTokens(($task->quantity + 6));
             $post_id = $this->__getNewFeed($task->uid, $tokens[array_rand($tokens)]->token);
             if( $this->__checkProcessExist($post_id) || !$post_id )
             {
@@ -48,7 +48,7 @@ class Worker extends CI_Controller
             $total_token = count($tokens);
 
             // Create process
-            $process_id = $this->process_model->insert(["task_id" => $task->id, "post_id" => $post_id]);
+            $process_id = $this->process_model->insert(["vip_type" => "like", "task_id" => $task->id, "post_id" => $post_id]);
             if( !$process_id ) {
                 log_message("ERROR", "Create Process Fail: [{$process_id}]");
                 continue;
@@ -66,9 +66,14 @@ class Worker extends CI_Controller
         }
     }
 
+    private function __runTasksCmt()
+    {
+        
+    }
+
     private function __runProcesses()
     {
-        $processes = $this->process_model->getActiveProcesses();
+        $processes = $this->process_model->getActiveVipLikeProcesses();
         if( !$processes )
         {
             return;
@@ -117,6 +122,11 @@ class Worker extends CI_Controller
         $url = "https://graph.facebook.com/{$post_id}/reactions?type={$reaction}&access_token={$token}&method=post";
         $fire = json_decode($this->request->get($url), true);
         return !empty($fire["success"]) ? $fire["success"] : false;
+    }
+
+    private function __cmtPost($token, $post_id, $msg)
+    {
+        
     }
 
 }

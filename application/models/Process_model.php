@@ -24,12 +24,12 @@ class Process_model extends CI_Model
         return $this->db->update($this->__table, $data) ? true : false;
     }
 
-    public function getActiveProcesses()
+    public function getActiveVipLikeProcesses()
     {
-        $this->db->select("tp.id, tp.task_id, tp.post_id, t.quantity_like, t.quantity_per_cron");
+        $this->db->select("p.id, p.task_id, p.post_id, t.quantity, t.quantity_per_cron");
         $this->db->from("$this->__table tp");
-        $this->db->join("tasks t", "t.id = tp.task_id");
-        $this->db->where("tp.is_done", 0);
+        $this->db->join("tasks t", "t.id = p.task_id");
+        $this->db->where(["p.is_done" => 0, "vip_type" => "like"]);
         $query = $this->db->get();
         if( $query->num_rows() > 0 )
             return $query->result();

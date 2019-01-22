@@ -36,6 +36,12 @@
                   <span>VIP LIKE</span>
                 </a>
               </li>
+              <li class="nav-item">
+                <a class="nav-link <?php if(strtolower($this->uri->segment(1)) == 'vipcomment') echo 'active' ?>" href="vipcomment">
+                  <i class="material-icons">comment</i>
+                  <span>VIP COMMENT</span>
+                </a>
+              </li>
 
               <?php if( $this->session->userdata("role_id") == 1 ) { ?>
               <li class="nav-item">

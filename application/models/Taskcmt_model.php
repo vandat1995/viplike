@@ -1,19 +1,13 @@
 <?php 
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class Task_model extends CI_Model
+class Taskcmt_model extends CI_Model
 {
-	private $__table = 'tasks';
+	private $__table = 'tasks_cmt';
 
     public function insert($data)
     {
         return $this->db->insert($this->__table, $data) ? true : false;
-    }
-
-    public function count()
-    {
-        $this->db->select("count(*) total");
-        return $this->db->get($this->__table)->row()->total;
     }
 
     public function delete($id)
@@ -22,7 +16,13 @@ class Task_model extends CI_Model
         return $this->db->delete($this->__table) ? true : false;
     }
 
-    public function getById($id)
+    public function count()
+    {
+        $this->db->select("count(*) total");
+        return $this->db->get($this->__table)->row()->total;
+    }
+
+    public function getById()
     {
         $this->db->where("id", $id);
         $query = $this->db->get($this->__table);
@@ -107,5 +107,8 @@ class Task_model extends CI_Model
         $query = $this->db->get();
         return $query->num_rows() > 0 ? true : false;
     }
+    
+
+    
 
 }
