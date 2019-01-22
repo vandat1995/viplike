@@ -67,7 +67,7 @@ class VipLikeSetting extends CI_Controller
 
         $data = [
             "uid"               => $uid,
-            "quantity_like"     => $quantity,
+            "quantity"          => $quantity,
             "quantity_per_cron" => $quantity_per_cron,
             "reactions"         => $reactions,
             "start_day"         => date("Y-m-d H:i:s"),
@@ -135,7 +135,7 @@ class VipLikeSetting extends CI_Controller
 
         $days_left = strtotime($task->end_day) - strtotime(date("Y-m-d H:i:s"));
         $days_left = (int)($days_left / 60 / 60 / 24);
-        $refund = $days_left * (int)$task->quantity_like * PRICE_PER_LIKE;
+        $refund = $days_left * (int)$task->quantity * PRICE_PER_LIKE;
         $current_balance = $this->user_model->getBalance($this->session->userdata("user_id"));
         $new_balance = $current_balance + $refund;
 
