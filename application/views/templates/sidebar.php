@@ -42,6 +42,12 @@
                   <span>VIP COMMENT</span>
                 </a>
               </li>
+              <li class="nav-item">
+                <a class="nav-link <?php if(strtolower($this->uri->segment(1)) == 'price') echo 'active' ?>" href="price">
+                  <i class="material-icons">attach_money</i>
+                  <span>PRICE</span>
+                </a>
+              </li>
 
               <?php if( $this->session->userdata("role_id") == 1 ) { ?>
               <li class="nav-item">

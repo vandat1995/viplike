@@ -126,7 +126,7 @@ class Worker extends CI_Controller
 
     private function __cmtPost($token, $post_id, $msg)
     {
-        
+        $url = "https://graph.facebook.com/{$post_id}/";
     }
 
 }

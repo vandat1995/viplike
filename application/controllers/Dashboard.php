@@ -21,4 +21,9 @@ class Dashboard extends CI_Controller
     {
         $this->load->template("dashboard", $this->data);
     }
+
+    public function price()
+    {
+        $this->load->template("price", ["page_title" => "Price", "sub_title" => ""]);
+    }
 }

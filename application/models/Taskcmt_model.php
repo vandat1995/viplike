@@ -22,7 +22,7 @@ class Taskcmt_model extends CI_Model
         return $this->db->get($this->__table)->row()->total;
     }
 
-    public function getById()
+    public function getById($id)
     {
         $this->db->where("id", $id);
         $query = $this->db->get($this->__table);

@@ -28,7 +28,7 @@
                     </div>
                     <div class="form-row">
                         <div class="form-group col-md-12">
-                            <label>Messages comment (1 msg per line) <span class="text-danger">*</span></label>
+                            <label>Messages comment (1 msg per line, max 4000 char) <span class="text-danger">*</span></label>
                             <textarea id="msg_cmt" class="form-control" rows="5"></textarea>
                         </div>
                         
@@ -99,3 +99,147 @@
 		</div>
 	</div>
 </div>
+
+<script>
+    const price = parseInt("<?= PRICE_PER_CMT ?>");
+
+    $(() => {
+        $("#btn_submit").on("click", () => {
+            main();
+        });
+        loadListVip();
+        
+        $("#uid, #quantity, #time").on("keyup", () => {
+            let quantity = $("#quantity").val().trim();
+            let time = $("#time").val().trim();
+            $("#bill_uid").text($("#uid").val().trim());
+            $("#bill_quantity").text(quantity);
+            $("#bill_time").text(time);
+            $("#bill_amount").text(parseInt(quantity) * parseInt(time) * price);
+        });
+    });
+
+    function main() {
+        let uid                 = $("#uid").val().trim() || false;
+        let quantity            = $("#quantity").val().trim() || false;
+        let time                = $("#time").val().trim() || false;
+        let quantity_per_cron   = $("#quantity_per_cron").val().trim() || false;
+        let msg_cmt             = $("#msg_cmt").val().trim() || false;
+        
+        if(!uid || !quantity || !time || !quantity_per_cron || !msg_cmt) {
+            Swal({
+                text: `Invalid data`,
+                type: 'error'
+            });
+            return false;
+        }
+        addVip(uid, quantity, time, quantity_per_cron, msg_cmt);
+    }
+
+    function addVip(uid, quantity, time, quantity_per_cron, msg_cmt) {
+        $.ajax({
+            url: "VipComment/addTask",
+            type: "POST",
+            dataType: "json",
+            data: {
+                uid: uid,
+                quantity: quantity,
+                time: time,
+                quantity_per_cron: quantity_per_cron,
+                msg_cmt: msg_cmt
+            },
+            beforeSend: () => {
+                loading("btn_submit", "show", "Processing...");
+            }
+        }).done((res) => {
+            if(res.error) {
+                Swal({
+                    html: `${res.error.message}`,
+                    type: 'error',
+                });
+            }
+            else {
+                Swal({
+                    text: res.message,
+                    type: 'success'
+                });
+            }
+        }).fail((xhr, textStatus, thrown) => {
+            Swal({
+                html: `${xhr} ${textStatus}: ${thrown}`,
+                type: 'error',
+            });
+        }).always(() => {
+            loadListVip();
+            loading("btn_submit", "hide", "Submit");
+        });
+    }
+
+    function loadListVip() {
+        $("#vip_cmt").empty();
+        $.ajax({
+            url: "VipComment/listTask",
+            type: "GET",
+            dataType: "json"
+        }).done((res) => {
+            if(res.error) {
+                Swal({
+                    html: `${res.error.message}`,
+                    type: 'error',
+                });
+            }
+            else {
+                for(let vip of res.data) {
+                    $("#vip_cmt")
+                        .append($("<tr>")
+                            .append($("<td>").html(vip.id))
+                            .append($("<td>").html(vip.uid))
+                            .append($("<td>").html(vip.quantity))
+                            .append($("<td>").html(vip.quantity_per_cron))
+                            .append($("<td>").html(vip.start_day))
+                            .append($("<td>").html(vip.end_day))
+                            .append($("<td>").html(`<button onclick="editVip(${vip.id})" type="button" class="mb-2 btn btn-sm btn-warning mr-1"><i class="material-icons">edit</i></button> <button onclick="deleteVip(${vip.id})" type="button" class="mb-2 btn btn-sm btn-danger mr-1"><i class="material-icons">delete</i></button>`))
+                        );
+                }
+            }
+        }).fail((xhr, textStatus, thrown) => {
+            Swal({
+                html: `Server error: ${thrown}`,
+                type: 'error'
+            });
+        });
+    }
+
+    function deleteVip(id) {
+        if(confirm("Are you sure?")) {
+            $.ajax({
+                url: "VipComment/deleteTask",
+                type: "POST",
+                data: {
+                    task_id: id
+                },
+                dataType: "json"
+            }).done((res) => {
+                if(res.error) {
+                    Swal({
+                        html: `${res.error.message}`,
+                        type: 'error',
+                    });
+                }
+                else {
+                    Swal({
+                        text: `${res.message}`,
+                        type: 'success'
+                    });
+                }
+            }).fail((xhr, textStatus, thrown) => {
+                Swal({
+                    html: `Server error: ${thrown}`,
+                    type: 'error'
+                });
+            }).always(() => loadListVip());
+        }
+    }
+
+
+</script>
