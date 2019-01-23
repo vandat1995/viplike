@@ -89,3 +89,4 @@ defined('EXIT__AUTO_MAX')      OR define('EXIT__AUTO_MAX', 125); // highest auto
  * Custom constant VIP LIKE
  */
 define('PRICE_PER_LIKE', 15); // price per like per day
+define('PRICE_PER_CMT', 20); // price per cmt per day

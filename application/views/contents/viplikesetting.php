@@ -127,7 +127,7 @@
 </div>
 
 <script>
-    const price = 15;
+    const price = parseInt("<?= PRICE_PER_LIKE ?>");
     $(document).ready(() => {
         $("#btn_submit").on("click", () => {
             main();

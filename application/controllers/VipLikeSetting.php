@@ -129,7 +129,7 @@ class VipLikeSetting extends CI_Controller
         $task = $this->task_model->getById($task_id);
         if( !$task )
         {
-            echo json_encode(["error" => ["message" => "UID does not exist.", "code" => 0], "message" => ""]);
+            echo json_encode(["error" => ["message" => "Task does not exist.", "code" => 0], "message" => ""]);
             return;
         }
 

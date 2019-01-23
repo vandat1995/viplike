@@ -56,3 +56,5 @@ $route['translate_uri_dashes'] = FALSE;
 $route['(?i)login'] = 'Authentication/Login';
 $route['(?i)logout'] = 'Authentication/Logout';
 $route['(?i)viplikesetting'] = 'VipLikeSetting';
+
+$route['(?i)price'] = 'Dashboard/price';
