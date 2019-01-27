@@ -33,7 +33,7 @@ class Worker extends CI_Controller
     private function __runTasks()
     {
         $tasks = $this->task_model->getActiveTasks();
-        if( !$tasks)
+        if( !$tasks )
         {
             return;
         }
