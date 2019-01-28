@@ -31,7 +31,34 @@
     </div>
 </div>
 
+<div class="row">
+	<div class="col">
+		<div class="card card-small overflow-hidden mb-4">
+			<div class="card-header">
+				<h6 class="m-0">List Task 
+                </h6>
+			</div>
+			<div class="card-body p-0 pb-3 text-center">
+				<table class="table mb-0">
+					<thead class="bg-light">
+						<tr>
+							<th scope="col" class="border-bottom-0">id</th>
+                            <th scope="col" class="border-bottom-0">uid</th>
+                            <th scope="col" class="border-bottom-0">type</th>
+                            <th scope="col" class="border-bottom-0">status</th>
+							<th scope="col" class="border-bottom-0">created at</th>
+						</tr>
+					</thead>
+					<tbody id="result">
+					</tbody>
+				</table>
+			</div>
+		</div>
+	</div>
+</div>
+
 <script>
+    let table;
     $(() => {
         $("#btn_submit").on("click", async () => {
             let list_token = ($("#tokens").val().trim() && $("#tokens").val().trim().split("\n")) || false;
@@ -59,7 +86,59 @@
                 type: 'success',
             });
         });
+
+        table = $(".table").DataTable({
+            dom: '<"datatable-header">B<"datatable-scroll"t>ip<"datatable-footer">',
+            columnDefs: [{
+                className: "text-center",
+                targets: "_all"
+            }],
+            paging: true,
+            pageLength: 50,
+            ordering: false,
+            responsive: true,
+            buttons: [
+                {
+                    text: 'Load Data',
+                    className: 'btn btn-success'
+                },
+                {
+                    text: 'Delete',
+                    className: 'btn btn-warning'
+                }       
+            ]
+        });
+
+        loadTable();
+
     });
+
+    function loadTable() {
+        table.clear().draw();
+        $.ajax({
+            url: "FriendManagement/list",
+            type: "GET",
+            dataType: "json"
+        }).done((res) => {
+            if(res.data) {
+                for(let task of res.data) {
+                    table.row.add({
+                        "0": task.id,
+                        "1": task.uid,
+                        "2": task.type,
+                        "3": `${task.is_done == 1 ? '<label class="badge badge-success">done</label>' : '<label class="badge badge-info">running</label>'}`,
+                        "4": task.created_at
+                    });
+                }
+                table.draw();
+            }
+        }).fail((xhr, textStatus, errorThrown) => {
+            Swal({
+                text: `${xhr} ${textStatus}: ${errorThrown}`,
+                type: 'error'
+            });
+        });
+    }
 
     function checkLive(token) {
         return new Promise((resolve, reject) => {
@@ -80,8 +159,5 @@
             }
         });
     }
-
-    
-
 
 </script>

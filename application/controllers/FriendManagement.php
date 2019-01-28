@@ -44,6 +44,12 @@ class FriendManagement extends CI_Controller
        
     }
 
+    public function list()
+    {
+        $datas = $this->taskacceptunfriend_model->getAll();
+        echo !$datas ? json_encode(["error" => 0, "data" => "", "message" => "No data"]) : json_encode(["error" => 0, "data" => $datas]);
+    }
+
 
 
     
