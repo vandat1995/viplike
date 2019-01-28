@@ -15,9 +15,14 @@
     <link rel="stylesheet" href="assets/styles/extras.1.1.0.min.css">
     <link rel="stylesheet" type="text/css" href="assets/login/vendor/animate/animate.css">
     <link rel="stylesheet" type="text/css" href="//cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css">
+    <link rel="stylesheet" type="text/css" href="//cdn.datatables.net/buttons/1.3.1/css/buttons.dataTables.min.css">
+    <link rel="stylesheet" type="text/css" href="//cdn.datatables.net/buttons/1.5.3/css/buttons.bootstrap.min.css">
+
     <script async defer src="assets/scripts/buttons.js"></script>
     <script src="assets/scripts/jquery-3.3.1.min.js"></script>
     <script src="//cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
+    <script src="//cdn.datatables.net/buttons/1.3.1/js/dataTables.buttons.min.js"></script>
+    <script src="//cdn.datatables.net/buttons/1.5.3/js/buttons.bootstrap.min.js"></script>
     <script src="assets/login/vendor/animsition/js/animsition.min.js"></script>
     <script src="assets/scripts/popper.min.js"></script>
     <script src="assets/scripts/bootstrap.min.js"></script>
