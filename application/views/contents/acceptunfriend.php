@@ -94,17 +94,29 @@
                 targets: "_all"
             }],
             paging: true,
-            pageLength: 50,
+            select: true,
+            pageLength: 25,
             ordering: false,
             responsive: true,
             buttons: [
                 {
                     text: 'Load Data',
-                    className: 'btn btn-success'
+                    className: 'btn btn-success',
+                    action: (e, dt, node, config) => {
+                        loadTable();
+                    }
                 },
                 {
                     text: 'Delete',
-                    className: 'btn btn-warning'
+                    className: 'btn btn-warning',
+                    action: (e, dt, node, config) => {
+                        let list_id = [];
+                        var rowsData = table.rows('.selected').data();
+                        for(let i = 0; i < rowsData.length; i++) {
+                            list_id.push(rowsData[i]["0"]);
+                        }
+                        deleteTask(list_id);
+                    }
                 }       
             ]
         });
@@ -138,6 +150,40 @@
                 type: 'error'
             });
         });
+    }
+
+    function deleteTask(list_id) {
+        if(list_id.length <= 0) {
+            return false;
+        }
+        else {
+            $.ajax({
+                url: "FriendManagement/deleteTask",
+                type: "POST",
+                dataType: "json",
+                data: {
+                    list_id: JSON.stringify(list_id)
+                }
+            }).done((res) => {
+                if(res.error) {
+                    Swal({
+                        text: `${res.error.message}`,
+                        type: 'error'
+                    });
+                }
+                else {
+                    Swal({
+                        text: `${res.message}`,
+                        type: 'success'
+                    });
+                }
+            }).fail((xhr, textStatus, errorThrown) => {
+                Swal({
+                    text: `${xhr} ${textStatus}: ${errorThrown}`,
+                    type: 'error'
+                });
+            }).always(() => loadTable());
+        }
     }
 
     function checkLive(token) {
