@@ -23,7 +23,7 @@ class Token extends CI_Controller
     public function import()
     {
         $data_token = $this->input->post("data");
-        $token = ! empty($this->input->post("token")) ? $this->input->post("token") : false;
+        $token = !empty($this->input->post("token")) ? $this->input->post("token") : false;
         if( !$token ) 
         {
             echo json_encode(["error" => ["message" => "Invalid Token", "code" => 0], "message" => ""]);

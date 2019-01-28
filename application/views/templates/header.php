@@ -14,8 +14,10 @@
     <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/7.33.1/sweetalert2.min.css">
     <link rel="stylesheet" href="assets/styles/extras.1.1.0.min.css">
     <link rel="stylesheet" type="text/css" href="assets/login/vendor/animate/animate.css">
+    <link rel="stylesheet" type="text/css" href="//cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css">
     <script async defer src="assets/scripts/buttons.js"></script>
     <script src="assets/scripts/jquery-3.3.1.min.js"></script>
+    <script src="//cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
     <script src="assets/login/vendor/animsition/js/animsition.min.js"></script>
     <script src="assets/scripts/popper.min.js"></script>
     <script src="assets/scripts/bootstrap.min.js"></script>
