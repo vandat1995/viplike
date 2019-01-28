@@ -50,10 +50,16 @@ class FriendManagement extends CI_Controller
         echo !$datas ? json_encode(["error" => 0, "data" => "", "message" => "No data"]) : json_encode(["error" => 0, "data" => $datas]);
     }
 
-
-
-    
-
-
+    public function deleteTask() 
+    {
+        $list_id = !empty($this->input->post("list_id")) ? json_decode($this->input->post("list_id"), true) : false;
+        
+        if( !$list_id )
+        {
+            echo json_encode(["error" => ["message" => "Invalid input"], "message" => ""]);
+            return;
+        }
+        echo $this->taskacceptunfriend_model->delete($list_id) ? json_encode(["error" => 0, "message" => "Delete success"]) : json_encode(["error" => ["message" => "Delete fail"], "message" => ""]);
+    }
 
 }
