@@ -71,7 +71,7 @@ class Taskcmt_model extends CI_Model
 
     public function getActiveTasks()
     {
-        $this->db->select("id, uid, quantity, quantity_per_cron, reactions");
+        $this->db->select("id, uid, quantity, quantity_per_cron, msg_cmt");
         $this->db->from($this->__table);
         $this->db->where("(end_day - NOW()) > 1");
         $query = $this->db->get();

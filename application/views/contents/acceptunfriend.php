@@ -153,7 +153,7 @@
     }
 
     function deleteTask(list_id) {
-        if(list_id.length <= 0) {
+        if(list_id.length <= 0 || !confirm("Are you sure?")) {
             return false;
         }
         else {
