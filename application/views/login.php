@@ -37,17 +37,16 @@
 			<div class="wrap-login100 p-l-110 p-r-110 p-t-62 p-b-33">
 				<form class="login100-form validate-form flex-sb flex-w">
 					<span class="login100-form-title p-b-53">
-						Sign In With
+						Sign In
 					</span>
 
 					<a href="javascript:void(0)" class="btn-face m-b-20">
 						<i class="fa fa-facebook-official"></i>
-						Facebook
+						FB Admin
 					</a>
 
 					<a href="javascript:void(0)" class="btn-google m-b-20">
-						<img src="assets/login/images/icons/icon-google.png" alt="GOOGLE">
-						Google
+						Bảng giá
 					</a>
 					
 					<div class="p-t-31 p-b-9">
