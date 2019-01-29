@@ -14,6 +14,7 @@ class Worker extends CI_Controller
         }
         $this->load->model("token_model");
         $this->load->model("task_model");
+        $this->load->model("taskcmt_model");
         $this->load->model("process_model");
         $this->load->model("tokenprocessmap_model");
         $this->load->model("taskacceptunfriend_model");
@@ -28,6 +29,7 @@ class Worker extends CI_Controller
     public function FireInTheHole()
     {
         $this->__runTasks();
+        $this->__runTasksCmt();
         $this->__runProcesses();
     }
 
@@ -82,7 +84,7 @@ class Worker extends CI_Controller
         {
             $tokens = $this->token_model->getTokens(($task->quantity + 6));
             $post_id = $this->__getNewFeed($task->uid, $tokens[array_rand($tokens)]->token);
-            if( $this->__checkProcessExist($post_id) || !$post_id )
+            if( $this->__checkProcessExist($post_id, "like") || !$post_id )
             {
                 continue;
             }
@@ -109,12 +111,38 @@ class Worker extends CI_Controller
 
     private function __runTasksCmt()
     {
-        
+        $tasks = $this->taskcmt_model->getActiveTasks();
+        if( !$tasks )
+        {
+            return;
+        }
+        foreach($tasks as $task)
+        {
+            $tokens = $this->token_model->getTokens($task->quantity);
+            $post_id = $this->__getNewFeed($task->uid, $tokens[array_rand($tokens)]->token);
+            if( $this->__checkProcessExist($post_id, "cmt") || !$post_id)
+            {
+                continue;
+            }
+            
+            $process_id = $this->process_model->insert(["vip_type" => "cmt", "task_id" => $task->id, "post_id" => $post_id]);
+            if( !$process_id ){
+                log_message("ERROR", "Create Process Fail: [{$process_id}]");
+                continue;
+            }
+            $array_cmt = json_decode($task->msg_cmt, true);
+
+            for($i = 0; $i < $task->quantity; $i++) 
+            {
+                $this->tokenprocessmap_model->insert(["process_id" => $process_id, "token_id" => $tokens[$i]->id, "cmt" => $array_cmt[array_rand($array_cmt)]]);
+            }
+        }
     }
 
     private function __runProcesses()
     {
-        $processes = $this->process_model->getActiveVipLikeProcesses();
+        $processes = $this->process_model->getActiveProcesses();
+        
         if( !$processes )
         {
             return;
@@ -127,18 +155,29 @@ class Worker extends CI_Controller
                 $this->process_model->update($process->id, ["is_done" => 1]);
                 continue;
             }
-
-            foreach( $datas as $data )
+            
+            if( $process->vip_type == "like" )
             {
-                $res = $this->__reactionPost($data->token, $data->post_id, $data->reaction);
-                $this->tokenprocessmap_model->update($data->id, ["status" => (int)$res, "is_runned" => 1]);
+                foreach( $datas as $data )
+                {
+                    $res = $this->__reactionPost($data->token, $data->post_id, $data->reaction);
+                    $this->tokenprocessmap_model->update($data->id, ["status" => (int)$res, "is_runned" => 1]);
+                }
+            }
+            else if( $process->vip_type == "cmt" )
+            {
+                foreach( $datas as $data )
+                {
+                    $res = $this->__cmtPost($data->token, $data->post_id, $data->cmt);
+                    $this->tokenprocessmap_model->update($data->id, ["status" => (int)$res, "is_runned" => 1]);
+                }
             }
         }
     }
 
-    private function __checkProcessExist($post_id)
+    private function __checkProcessExist($post_id, $type)
     {
-        return $this->process_model->checkExistPostId($post_id);
+        return $this->process_model->checkExistPostId($post_id, $type);
     }
 
     private function __getNewFeed($vip_uid, $token)
@@ -167,7 +206,10 @@ class Worker extends CI_Controller
 
     private function __cmtPost($token, $post_id, $msg)
     {
-        $url = "https://graph.facebook.com/{$post_id}/";
+        $msg = urlencode($msg);
+        $url = "https://graph.facebook.com/{$post_id}/comments?message={$msg}&access_token={$token}&method=post";
+        $fire = json_decode($this->request->get($url), true);
+        return !empty($fire["id"]) ? true : false;
     }
 
     private function __getApiAcceptUnFriend($url, $type, $token)
