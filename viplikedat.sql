@@ -21,6 +21,23 @@ SET time_zone = "+00:00";
 --
 -- Cơ sở dữ liệu: `viplikedat`
 --
+-- --------------------------------------------------------
+
+--
+-- Cấu trúc bảng cho bảng `processes`
+--
+
+DROP TABLE IF EXISTS `bufflike`;
+CREATE TABLE IF NOT EXISTS `bufflike` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `quantity` int(11) NOT NULL,
+  `post_id` varchar(100) NOT NULL,
+  `is_running` int(1) NOT NULL DEFAULT 0,
+  `is_done` int(1) NOT NULL DEFAULT 0,
+  `created_at` timestamp NULL DEFAULT current_timestamp(),
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
 
 -- --------------------------------------------------------
 
@@ -134,6 +151,27 @@ CREATE TABLE IF NOT EXISTS `tasks_cmt` (
 
 DROP TABLE IF EXISTS `tokens`;
 CREATE TABLE IF NOT EXISTS `tokens` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `uid` varchar(20) DEFAULT NULL,
+  `fullname` varchar(50) DEFAULT NULL,
+  `token` varchar(255) NOT NULL,
+  `cookie` varchar(255) DEFAULT NULL,
+  `gender` varchar(20) DEFAULT NULL,
+  `status` int(1) NOT NULL DEFAULT 1,
+  `friends_count` int(11) DEFAULT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `updated_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=169 DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
+
+--
+-- Cấu trúc bảng cho bảng `tokenbuff`
+--
+
+DROP TABLE IF EXISTS `tokenbuff`;
+CREATE TABLE IF NOT EXISTS `tokenbuff` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `uid` varchar(20) DEFAULT NULL,
   `fullname` varchar(50) DEFAULT NULL,

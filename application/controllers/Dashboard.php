@@ -10,11 +10,13 @@ class Dashboard extends CI_Controller
         $this->load->model("task_model");
         $this->load->model("taskcmt_model");
         $this->load->model("process_model");
+        $this->load->model("tokenprocessmap_model");
         $this->data['page_title'] = "Dashboard";
         $this->data['sub_title'] = "";
         $this->data['total_token'] = $this->token_model->count();
         $this->data['total_vip'] = $this->task_model->count() + $this->taskcmt_model->count();
         $this->data['total_process'] = $this->process_model->count();
+        $this->data['total_like_process'] = $this->tokenprocessmap_model->count();
     }
 
     public function index()

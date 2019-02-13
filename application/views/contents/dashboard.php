@@ -72,7 +72,7 @@
                     <div class="d-flex flex-column m-auto">
                       <div class="stats-small__data text-center">
                         <span class="stats-small__label text-uppercase">Processes done</span>
-                        <h6 class="stats-small__value count my-3">17,281</h6>
+                        <h6 class="stats-small__value count my-3"><?= $total_like_process ?></h6>
                       </div>
                       <div class="stats-small__data">
                         <span class="stats-small__percentage stats-small__percentage--decrease">2.4%</span>
@@ -89,7 +89,7 @@
               <div class="col-lg-8 col-md-12 col-sm-12 mb-4">
                 <div class="card card-small">
                   <div class="card-header border-bottom">
-                    <h6 class="m-0">Users</h6>
+                    <h6 class="m-0">Like Processes</h6>
                   </div>
                   <div class="card-body pt-0">
                     <div class="row border-bottom py-2 bg-light">

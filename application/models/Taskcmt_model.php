@@ -40,7 +40,7 @@ class Taskcmt_model extends CI_Model
 
     public function deleteTransaction($task_id, $data_user, $user_id)
     {
-        if( $this->__isOwner($task_id, $user_id) )
+        if( $this->__isOwner($task_id, $user_id) || $this->session->userdata("role_id") == 1 )
         {
             $this->db->trans_start();
             $this->db->delete($this->__table, ["id" => $task_id]);

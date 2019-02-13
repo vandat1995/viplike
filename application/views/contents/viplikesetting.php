@@ -112,7 +112,8 @@
 							<th scope="col" class="border-bottom-0">id</th>
 							<th scope="col" class="border-bottom-0">uid</th>
                             <th scope="col" class="border-bottom-0">quantity like</th>
-                            <th scope="col" class="border-bottom-0">like per crontab</th>
+                            <th scope="col" class="border-bottom-0">like per run</th>
+                            <th scope="col" class="border-bottom-0">status</th>
                             <th scope="col" class="border-bottom-0">start day</th>
                             <th scope="col" class="border-bottom-0">end day</th>
                             <th scope="col" class="border-bottom-0">actions</th>
@@ -128,11 +129,11 @@
 
 <script>
     const price = parseInt("<?= PRICE_PER_LIKE ?>");
+    let table;
     $(document).ready(() => {
         $("#btn_submit").on("click", () => {
             main();
         });
-        loadListVip();
 
         $("#uid, #quantity, #time").on("keyup", () => {
             let quantity = $("#quantity").val().trim();
@@ -142,6 +143,34 @@
             $("#bill_time").text(time);
             $("#bill_amount").text(parseInt(quantity) * parseInt(time) * price);
         });
+
+        table = $(".table").DataTable({
+            dom: '<"datatable-header"B><"datatable-scroll"t>ip<"datatable-footer">',
+            columnDefs: [{
+                className: "text-center",
+                targets: "_all"
+            }],
+            lengthMenu: [
+                [ 10, 25, 50, -1 ],
+                [ '10 rows', '25 rows', '50 rows', 'Show all' ]
+            ],
+            paging: true,
+            select: true,
+            pageLength: 25,
+            ordering: false,
+            responsive: true,
+            buttons: [
+                'pageLength',
+                {
+                    text: 'Load Data',
+                    className: 'btn btn-success',
+                    action: (e, dt, node, config) => {
+                        loadListVip();
+                    }
+                }     
+            ]
+        });
+        loadListVip();
 
     });
 
@@ -216,42 +245,34 @@
     }
 
     function loadListVip() {
-        $("#vip_uid").empty();
+        table.clear().draw();
         $.ajax({
-            url: "<?php echo base_url('VipLikeSetting/listTask'); ?>",
+            url: "VipLikeSetting/listTask",
             type: "GET",
             dataType: "json"
         }).done((res) => {
-            if(res.error) {
-                Swal({
-                    text: `${res.error.message}`,
-                    type: 'error',
-                    animation: false,
-                    customClass: 'animated tada'
-                });
-            }
-            else {
+            if(res.data) {
                 for(let vip of res.data) {
-                    $("#vip_uid")
-                        .append($("<tr>")
-                            .append($("<td>").html(vip.id))
-                            .append($("<td>").html(vip.uid))
-                            .append($("<td>").html(vip.quantity))
-                            .append($("<td>").html(vip.quantity_per_cron))
-                            .append($("<td>").html(vip.start_day))
-                            .append($("<td>").html(vip.end_day))
-                            .append($("<td>").html(`<button onclick="editVip(${vip.id})" type="button" class="mb-2 btn btn-sm btn-warning mr-1"><i class="material-icons">edit</i></button> <button onclick="deleteVip(${vip.id})" type="button" class="mb-2 btn btn-sm btn-danger mr-1"><i class="material-icons">delete</i></button>`))
-                        );
+                    table.row.add({
+                        "0": vip.id,
+                        "1": vip.uid,
+                        "2": vip.quantity,
+                        "3": vip.quantity_per_cron,
+                        "4": `${parseInt(vip.expired) > 1 ? '<label class="badge badge-success">running</label>' : '<label class="badge badge-warning">done</label>'}`,
+                        "5": vip.start_day,
+                        "6": vip.end_day,
+                        "7": `<button onclick="deleteVip(${vip.id})" type="button" class="mb-2 btn btn-sm btn-danger mr-1"><i class="material-icons">delete</i></button>`
+                    });
                 }
+                table.draw();
             }
-        }).fail((xhr, textStatus) => {
+        }).fail((xhr, textStatus, errorThrown) => {
             Swal({
-                text: `Server error: ${textStatus}`,
-                type: 'error',
-                animation: false,
-                customClass: 'animated tada'
+                text: `${xhr} ${textStatus}: ${errorThrown}`,
+                type: 'error'
             });
         });
+        
     }
 
     function deleteVip(id) {
