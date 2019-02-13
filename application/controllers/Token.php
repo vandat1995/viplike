@@ -8,6 +8,7 @@ class Token extends CI_Controller
     {
         parent::__construct();
         $this->load->model("token_model");
+        $this->load->model("tokenbuff_model");
         $this->data['page_title'] = "Token Management";
         $this->data['sub_title'] = "";
         if( $this->session->userdata('role_id') != 1 ) {
@@ -68,6 +69,62 @@ class Token extends CI_Controller
     public function getTokens()
     {
         $tokens = $this->token_model->getAll();
+        echo json_encode(["error" => 0, "data" => $tokens, "message" => ""]);
+    }
+
+    public function buff()
+    {
+        $this->load->template("tokenbuff", ["page_title" => "Token buff management", "sub_title" => ""]);
+    }
+
+    public function importBuff()
+    {
+        $data_token = $this->input->post("data");
+        $token = !empty($this->input->post("token")) ? $this->input->post("token") : false;
+        if( !$token ) 
+        {
+            echo json_encode(["error" => ["message" => "Invalid Token", "code" => 0], "message" => ""]);
+            return;
+        }
+        $data_token = json_decode($data_token, true);
+        
+        $data = [
+            "token" => $token, 
+            "uid" => $data_token["id"],
+            "fullname" => $data_token["name"],
+            "gender" => $data_token["gender"]
+        ];
+        if( $this->tokenbuff_model->insert($data) )
+        {
+            echo json_encode(["error" => 0, "message" => "Insert DB success"]);
+            return;
+        }
+        else
+        {
+            echo json_encode(["error" => ["message" => "Insert DB fail", "code" => 0], "message" => ""]);
+            return;
+        }
+    }
+
+    public function deleteBuff()
+    {
+        $id = !empty($this->input->post("id")) ? $this->input->post("id") : false;
+        if( !$id ) 
+        {
+            echo json_encode(["error" => ["message" => "Invalid token id", "code" => 0], "message" => ""]);
+            return;
+        }
+        if( $this->tokenbuff_model->delete($id) ) {
+            echo json_encode(["error" => 0, "message" => "Delete success"]);
+        }
+        else {
+            echo json_encode(["error" => ["message" => "Delete fail", "code" => 0], "message" => ""]);
+        }
+    }
+
+    public function getTokensBuff()
+    {
+        $tokens = $this->tokenbuff_model->getAll();
         echo json_encode(["error" => 0, "data" => $tokens, "message" => ""]);
     }
 

@@ -51,6 +51,10 @@
                     <a class="dropdown-item" href="Token">
                       <i class="material-icons">note_add</i> Add Tokens</a>
                     <?php } ?>
+                    <?php if($this->session->userdata('role_id') == 1) { ?>
+                    <a class="dropdown-item" href="Token/buff">
+                      <i class="material-icons">note_add</i> Add Tokens Buff</a>
+                    <?php } ?>
                     
                     <div class="dropdown-divider"></div>
                     <a class="dropdown-item text-danger" href="logout">

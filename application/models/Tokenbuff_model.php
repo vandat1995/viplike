@@ -23,7 +23,21 @@ class Tokenbuff_model extends CI_Model
         return $this->db->get($this->__table)->row()->total;
     }
 
-    
+    public function getTokens($quantity)
+    {
+        $this->db->select("id, token");
+        $this->db->order_by("RAND()");
+        $this->db->limit($quantity);
+        $query = $this->db->get($this->__table);
+        return ($query->num_rows() > 0) ? $query->result() : false;
+    }
+
+    public function getAll()
+    {
+        $this->db->select("id, token, gender, status");
+        $query = $this->db->get($this->__table);
+        return ($query->num_rows() > 0) ? $query->result() : false;
+    }
 
     
 

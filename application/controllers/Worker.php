@@ -18,19 +18,25 @@ class Worker extends CI_Controller
         $this->load->model("process_model");
         $this->load->model("tokenprocessmap_model");
         $this->load->model("taskacceptunfriend_model");
+        $this->load->model("bufflike_model");
+        $this->load->model("tokenbuff_model");
         $this->load->library("request");
     }
 
     public function index()
     {
-        $this->FireInTheHole();
+        $this->__runTasks();
     }
 
     public function FireInTheHole()
     {
-        $this->__runTasks();
-        $this->__runTasksCmt();
+        //$this->__runTasksCmt();
         $this->__runProcesses();
+    }
+
+    public function TaskBuffLike()
+    {
+        $this->__runTaskBuffLike();
     }
 
     public function TaskAcceptFriend()
@@ -231,6 +237,19 @@ class Worker extends CI_Controller
             }
         }
         return false;
+    }
+
+    private function __runTaskBuffLike()
+    {
+        $task = $this->bufflike_model->getOne();
+        if( !$task ) return;
+        $this->bufflike_model->update($task->id, ["is_running" => 1]);
+        $tokens = $this->tokenbuff_model->getTokens($task->quantity);
+        foreach($tokens as $token) 
+        {
+            $this->__reactionPost($token->token, $task->post_id, "LIKE");
+        }
+        $this->bufflike_model->update($task->id, ["is_done" => 1]);
     }
 
 }
