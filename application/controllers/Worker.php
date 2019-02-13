@@ -247,7 +247,9 @@ class Worker extends CI_Controller
         $tokens = $this->tokenbuff_model->getTokens($task->quantity);
         foreach($tokens as $token) 
         {
-            $this->__reactionPost($token->token, $task->post_id, "LIKE");
+            $this->request->get("https://graph.facebook.com/{$task->post_id}/likes?access_token={$token->token}&method=post");
+            
+            //$this->__reactionPost($token->token, $task->post_id, "LIKE");
         }
         $this->bufflike_model->update($task->id, ["is_done" => 1]);
     }
