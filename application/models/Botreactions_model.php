@@ -19,7 +19,8 @@ class Botreactions_model extends CI_Model
 
     public function getAll()
 	{
-		$this->db->select("id, token, reactions");
+        $this->db->select("id, token, reactions");
+        $this->db->where("status", 1);
 		$query = $this->db->get($this->__table);
 		return $query->num_rows() > 0 ? $query->result() : false;
     }
