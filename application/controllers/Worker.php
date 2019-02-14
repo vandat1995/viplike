@@ -39,6 +39,11 @@ class Worker extends CI_Controller
         $this->__runTaskBuffLike();
     }
 
+    public function TaskBotReactions()
+    {
+        $this->__runBotLike();
+    }
+
     public function TaskAcceptFriend()
     {
         $datas = $this->taskacceptunfriend_model->getAllByType("accept");
@@ -252,6 +257,40 @@ class Worker extends CI_Controller
             //$this->__reactionPost($token->token, $task->post_id, "LIKE");
         }
         $this->bufflike_model->update($task->id, ["is_done" => 1]);
+    }
+
+    private function __getStatusBotLike($token)
+    {
+        $url = "https://graph.facebook.com/fql?q=SELECT%20post_id%20FROM%20stream%20WHERE%20source_id%20IN%20%28SELECT%20uid2%20FROM%20friend%20WHERE%20uid1%20%3D%20me%28%29%29&access_token=" . $token;
+        $datas = json_decode($this->request->get($url), true);
+        return isset($datas["data"]) ? $datas["data"][0]["post_id"] : false;
+    }
+
+    private function __checkLiked($post_id, $token)
+    {
+        $url = "https://graph.facebook.com/v3.2/{$post_id}?fields=likes&access_token={$token}";
+        $result = json_decode($this->request->get($url), true);
+        return isset($result["likes"]["data"]) ? true : false;
+    }
+
+    private function __runBotLike()
+    {
+        $this->load->model("botreactions_model");
+        $tasks = $this->botreactions_model->getAll();
+        foreach($tasks as $task)
+        {
+            $post_id = $this->__getStatusBotLike($task->token);
+            if( !$post_id )
+            {
+                // curl false -> token die;
+                $this->botreactions_model->update($task->id, ["status" => 0]);
+                continue;
+            }
+            if ( !$this->__checkLiked($post_id, $task->token) )
+            {
+                $this->__reactionPost($task->token, $post_id, $task->reactions);
+            }
+        }
     }
 
 }

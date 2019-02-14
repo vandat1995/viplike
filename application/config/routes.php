@@ -59,5 +59,6 @@ $route['(?i)viplikesetting'] = 'VipLikeSetting';
 $route['(?i)friendmanagement'] = 'FriendManagement';
 $route['(?i)vipcomment'] = 'VipComment';
 $route['(?i)bufflike'] = 'BuffLike';
+$route['(?i)botreactions'] = 'BotReactions';
 
 $route['(?i)price'] = 'Dashboard/price';

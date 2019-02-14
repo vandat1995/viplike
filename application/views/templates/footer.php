@@ -11,9 +11,9 @@
   <script>
     function loading(id_element, status, text) {
       if( status == "show" ) {
-        $(`#${id_element}`).text(text).prop("disable", true);
+        $(`#${id_element}`).text(text).prop("disabled", true);
       } else if( status == "hide" ) {
-        $(`#${id_element}`).text(text).prop("disable", false);
+        $(`#${id_element}`).text(text).prop("disabled", false);
       }
     }
   </script>

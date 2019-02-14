@@ -18,9 +18,10 @@ class Request
         curl_setopt($this->curl, CURLOPT_SSL_VERIFYPEER, false);
         curl_setopt($this->curl, CURLOPT_SSL_VERIFYHOST, false);
         $result = curl_exec($this->curl);
+        $httpcode = curl_getinfo($this->curl, CURLINFO_HTTP_CODE);
         curl_close($this->curl);
         $this->curl = null;
-        return $result;
+        return $httpcode == 200 ? $result : false;
     }
     
     public function post()

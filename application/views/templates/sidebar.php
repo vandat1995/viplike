@@ -43,6 +43,12 @@
                 </a>
               </li>
               <li class="nav-item">
+                <a class="nav-link <?php if(strtolower($this->uri->segment(1)) == 'botreactions') echo 'active' ?>" href="botreactions">
+                  <i class="material-icons">insert_emoticon</i>
+                  <span>BOT REACTIONS</span>
+                </a>
+              </li>
+              <li class="nav-item">
                 <a class="nav-link <?php if(strtolower($this->uri->segment(1)) == 'vipcomment') echo 'active' ?>" href="vipcomment">
                   <i class="material-icons">comment</i>
                   <span>VIP COMMENT</span>
