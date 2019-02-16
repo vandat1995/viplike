@@ -92,3 +92,6 @@ define('PRICE_PER_LIKE', 15); // Giá vip mỗi like mỗi ngày
 define('PRICE_PER_CMT', 20); // Giá vip mỗi cmt mỗi ngày
 define('PRICE_PER_LIKE_BUFF', 100); // Giá buff 1 like
 define('PRICE_BOT_PER_DAY', 1000); // Giá bot cảm xúc 1 ngày
+
+define('MAX_UID_VIP', 100);
+define('MAX_UID_BOT', 100);

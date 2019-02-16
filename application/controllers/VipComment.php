@@ -21,6 +21,11 @@ class VipComment extends CI_Controller
 
     public function addTask()
     {
+        if( $this->config_model->countCurrentVip() >= MAX_UID_VIP )
+        {
+            echo json_encode(["error" => ["message" => "Has reached the system threshold", "code" => 0], "message" => ""]);
+            return;
+        }
         $this->form_validation->set_rules("uid", "UID", "required|max_length[20]");
         $this->form_validation->set_rules("quantity", "Quantity", "required|max_length[10]|numeric|greater_than[0]");
         $this->form_validation->set_rules("time", "Time", "required|max_length[10]|numeric|greater_than[0]");

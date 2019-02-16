@@ -310,8 +310,8 @@ class Worker extends CI_Controller
     }
     public function test()
     {
-        $a = "";
-        if($a == false) echo "minh sai";
+        $this->load->model("config_model");
+        echo $this->config_model->countCurrentVip();
     }
 
 }

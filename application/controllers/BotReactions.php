@@ -20,6 +20,11 @@ class BotReactions extends CI_Controller
 
     public function import()
     {
+        if( $this->config_model->countCurrentBot() >= MAX_UID_BOT )
+        {
+            echo json_encode(["error" => ["message" => "Has reached the system threshold", "code" => 0], "message" => ""]);
+            return;
+        }
         $data_token = !empty($this->input->post("data")) ? $this->input->post("data") : false;
         $token = !empty($this->input->post("token")) ? $this->input->post("token") : false;
         $reactions = !empty($this->input->post("reactions")) ? $this->input->post("reactions") : false;
