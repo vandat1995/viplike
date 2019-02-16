@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Máy chủ: 127.0.0.1:3306
--- Thời gian đã tạo: Th2 14, 2019 lúc 04:34 PM
+-- Thời gian đã tạo: Th2 15, 2019 lúc 04:27 PM
 -- Phiên bản máy phục vụ: 10.3.9-MariaDB
 -- Phiên bản PHP: 7.2.10
 
@@ -37,17 +37,12 @@ CREATE TABLE IF NOT EXISTS `botlike` (
   `cookie` text DEFAULT NULL,
   `reactions` varchar(20) DEFAULT NULL,
   `status` tinyint(1) NOT NULL DEFAULT 1,
+  `start_day` timestamp NULL DEFAULT NULL,
+  `end_day` timestamp NULL DEFAULT NULL,
   `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
   `user_id` int(11) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=14 DEFAULT CHARSET=utf8;
-
---
--- Đang đổ dữ liệu cho bảng `botlike`
---
-
-INSERT INTO `botlike` (`id`, `uid`, `name`, `token`, `cookie`, `reactions`, `status`, `created_at`, `user_id`) VALUES
-(13, '100004139261394', 'Đạt Văn Nguyễn', 'EAAAAAYsX7TsBAJWPLwdHQ4b22Gs5rqFQZBruUgufJC2xMyg970ZCIuMmCOM47pfeZCHZCQTrODGDLdpulpV61MZCFiamsmhsfcHz3TuXvUgoTlavs3T27hpp3eBiJXRbER7sZCvVefeZBfzXn5kg2wixbH9d0pSCtPZBsF12NwcQRVZAAEnZAUFSNIPcFaKilOVImnTEV6ZBArk6tlM17uBLcA5', NULL, 'LOVE', 1, '2019-02-14 16:25:50', 1);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -64,7 +59,25 @@ CREATE TABLE IF NOT EXISTS `bufflike` (
   `is_done` int(1) NOT NULL DEFAULT 0,
   `created_at` timestamp NULL DEFAULT current_timestamp(),
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
+
+--
+-- Cấu trúc bảng cho bảng `history`
+--
+
+DROP TABLE IF EXISTS `history`;
+CREATE TABLE IF NOT EXISTS `history` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `action` varchar(10) DEFAULT NULL,
+  `amount` varchar(20) DEFAULT NULL,
+  `module` varchar(20) DEFAULT NULL,
+  `detail` varchar(255) DEFAULT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `user_id` int(11) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -127,28 +140,7 @@ CREATE TABLE IF NOT EXISTS `tasks` (
   `updated_at` timestamp NULL DEFAULT NULL,
   `user_id` int(11) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=16 DEFAULT CHARSET=utf8;
-
---
--- Đang đổ dữ liệu cho bảng `tasks`
---
-
-INSERT INTO `tasks` (`id`, `uid`, `quantity`, `quantity_per_cron`, `reactions`, `start_day`, `end_day`, `created_at`, `updated_at`, `user_id`) VALUES
-(1, '23456', 100, 20, '{\"LIKE\":80}', '2019-02-13 05:42:37', '2019-03-15 05:42:37', '2019-02-13 12:42:37', NULL, 1),
-(2, 'asddas', 100, 20, '{\"LIKE\":80}', '2019-02-13 05:56:55', '2019-03-15 05:56:55', '2019-02-13 12:56:55', NULL, 1),
-(3, 'asddasdsa', 100, 20, '{\"LIKE\":80}', '2019-02-13 06:04:17', '2019-03-15 06:04:17', '2019-02-13 13:04:17', NULL, 1),
-(4, 'asddasdsaa', 100, 20, '{\"LIKE\":80}', '2019-02-13 06:04:19', '2019-03-15 06:04:19', '2019-02-13 13:04:19', NULL, 1),
-(5, 'asddasdsaaa', 100, 20, '{\"LIKE\":80}', '2019-02-13 06:04:22', '2019-03-15 06:04:22', '2019-02-13 13:04:22', NULL, 1),
-(6, 'asddasdsaaaaas', 100, 20, '{\"LIKE\":80}', '2019-02-13 06:04:24', '2019-03-15 06:04:24', '2019-02-13 13:04:24', NULL, 1),
-(7, 'asddasdsaaaaasasd', 100, 20, '{\"LIKE\":80}', '2019-02-13 06:04:28', '2019-03-15 06:04:28', '2019-02-13 13:04:28', NULL, 1),
-(8, 'asddas2asd', 100, 20, '{\"LIKE\":80}', '2019-02-13 06:04:30', '2019-03-15 06:04:30', '2019-02-13 13:04:30', NULL, 1),
-(9, 'asddas2asd2', 100, 20, '{\"LIKE\":80}', '2019-02-13 06:04:33', '2019-03-15 06:04:33', '2019-02-13 13:04:33', NULL, 1),
-(10, 'asddas2asd22', 100, 20, '{\"LIKE\":80}', '2019-02-13 06:04:34', '2019-03-15 06:04:34', '2019-02-13 13:04:34', NULL, 1),
-(11, 'asddas2asd2221', 100, 20, '{\"LIKE\":80}', '2019-02-13 06:04:37', '2019-03-15 06:04:37', '2019-02-13 13:04:37', NULL, 1),
-(12, 'asddas2asd222121', 100, 20, '{\"LIKE\":80}', '2019-02-13 06:04:39', '2019-03-15 06:04:39', '2019-02-13 13:04:39', NULL, 1),
-(13, 'asddas2asd22212121', 100, 20, '{\"LIKE\":80}', '2019-02-13 06:04:41', '2019-03-15 06:04:41', '2019-02-13 13:04:41', NULL, 1),
-(14, 'asddas2asd222121212', 100, 20, '{\"LIKE\":80}', '2019-02-13 06:04:42', '2019-03-15 06:04:42', '2019-02-13 13:04:42', NULL, 1),
-(15, 'asddas2asd2221212122', 100, 20, '{\"LIKE\":80}', '2019-02-13 06:04:45', '2019-03-15 06:04:45', '2019-02-13 13:04:45', NULL, 1);
+) ENGINE=InnoDB AUTO_INCREMENT=20 DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -197,7 +189,7 @@ CREATE TABLE IF NOT EXISTS `tasks_cmt` (
   `updated_at` timestamp NULL DEFAULT NULL,
   `user_id` int(11) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -567,7 +559,7 @@ CREATE TABLE IF NOT EXISTS `users` (
 --
 
 INSERT INTO `users` (`id`, `username`, `password`, `full_name`, `active`, `role_id`, `avatar`, `balance`, `created_at`, `updated_at`) VALUES
-(1, 'admin', '21232f297a57a5a743894a0e4a801fc3', 'Đạt Nguyễn', 1, 1, 'https://i.imgur.com/cMznN9G.png', 4965020, '2019-01-11 16:34:17', NULL),
+(1, 'admin', '21232f297a57a5a743894a0e4a801fc3', 'Đạt Nguyễn', 1, 1, 'https://i.imgur.com/cMznN9G.png', 70500, '2019-01-11 16:34:17', NULL),
 (2, 'user', 'ee11cbb19052e40b07aac0ca060c23ee', 'Nguoi dung', 1, 2, '', 123447000, '2019-01-15 03:22:01', NULL);
 COMMIT;
 

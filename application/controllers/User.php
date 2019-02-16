@@ -72,8 +72,15 @@ class User extends CI_Controller
             echo json_encode(["error" => ["message" => "Username doesn't exist", "code" => 0], "message" => ""]);
             return;
         }
-
-        echo $this->user_model->update(["balance" => (int)$userdata->balance + (int)$amount], $username) ? json_encode(["error" => 0, "message" => "Deposit success"]) : json_encode(["error" => ["message" => "Deposit fail", "code" => 0], "message" => ""]);
+        if( $this->user_model->update(["balance" => (int)$userdata->balance + (int)$amount], $username) )
+        {
+            $this->history_model->log("+", $amount, "deposit", "Deposit", $userdata->id);
+            echo json_encode(["error" => 0, "message" => "Deposit success"]);
+        }
+        else
+        {
+            echo json_encode(["error" => ["message" => "Deposit fail", "code" => 0], "message" => ""]);
+        }
     }
 
     public function delete()

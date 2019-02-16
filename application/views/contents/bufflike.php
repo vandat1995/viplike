@@ -22,6 +22,33 @@
             </ul>
         </div>
     </div>
+    <div class="col-lg-6 mb-6">
+        <div class="card card-small mb-4">
+            <div class="card-header border-bottom">
+                <h6 class="m-0">Billing Information</h6>
+            </div>
+            <ul class="list-group list-group-flush">
+                <li class="list-group-item p-3">
+                    <span class="d-flex mb-2">
+                        <strong class="mr-1">Post ID:</strong>
+                        <strong class="ml-auto" id="bill_post_id"></strong>
+                    </span>
+                </li>
+                <li class="list-group-item p-3">
+                    <span class="d-flex mb-2">
+                        <strong class="mr-1">Quantity like:</strong>
+                        <strong class="ml-auto" id="bill_quantity">0</strong>
+                    </span>
+                </li>
+                <li class="list-group-item p-3">
+                    <span class="d-flex mb-2">
+                        <strong class="mr-1">Total amount:</strong>
+                        <strong class="ml-auto" id="bill_amount">0</strong><strong>&nbsp;VND</strong>
+                    </span>
+                </li>
+            </ul>
+        </div>
+    </div>
 </div>
 <div class="row">
 	<div class="col">
@@ -51,9 +78,17 @@
 
 <script>
     let table;
+    const price = "<?= PRICE_PER_LIKE_BUFF ?>";
     $(() => {
         $("#btn_submit").on("click", () => {
             createTask();
+        });
+
+        $("#post_id, #quantity").on("keyup", () => {
+            let quantity = $("#quantity").val().trim();
+            $("#bill_post_id").text($("#post_id").val().trim());
+            $("#bill_quantity").text(quantity);
+            $("#bill_amount").text(parseInt(quantity) * parseInt(price));
         });
 
         table = $(".table").DataTable({

@@ -12,6 +12,13 @@
                             <textarea id="tokens" class="form-control" rows="5" placeholder="EAAAA..."></textarea>
                         </div>
                     </div>
+                    <div class="form-row">
+                        <div class="form-group col-md-12">
+                            <label>Time (days) <span class="text-danger">*</span></label>
+                            <input type="number" id="time" class="form-control" placeholder="" min="1" value="30"> 
+                        </div>
+                        
+                    </div>
                     
                     <label>Reactions type<span class="text-danger"> *</span></label>
                     <div class="form-row">
@@ -53,6 +60,7 @@
             </ul>
         </div>
     </div>
+    
 </div>
 <div class="row">
 	<div class="col">
@@ -70,7 +78,8 @@
                             <th scope="col" class="border-bottom-0">uid</th>
                             <th scope="col" class="border-bottom-0">reactions</th>
                             <th scope="col" class="border-bottom-0">status</th>
-							<th scope="col" class="border-bottom-0">created at</th>
+							<th scope="col" class="border-bottom-0">start day</th>
+                            <th scope="col" class="border-bottom-0">end day</th>
 						</tr>
 					</thead>
 					<tbody id="result">
@@ -88,7 +97,8 @@
         $("#btn_submit").on("click", async () => {
             let list_token = ($("#tokens").val().trim() && $("#tokens").val().trim().split("\n")) || false;
             let reactions = getReactions();
-            if(!list_token || !reactions) {
+            let duration = $("#time").val().trim();
+            if(!list_token || !reactions || !duration) {
                 Swal({
                     text: `Invalid data input`,
                     type: 'error',
@@ -100,7 +110,7 @@
             for(let token of list_token) {
                 try {
                     let data = await checkLive(token);
-                    saveDb(reactions, token, data);
+                    saveDb(reactions, token, data, duration);
                     live++;
                 } catch(e) {
                     die++;
@@ -166,7 +176,8 @@
                         "2": task.uid,
                         "3": task.reactions,
                         "4": `${task.status == 1 ? '<label class="badge badge-success">live</label>' : '<label class="badge badge-danger">die</label>'}`,
-                        "5": task.created_at
+                        "5": task.start_day,
+                        "6": task.end_day
                     });
                 }
                 table.draw();
@@ -213,13 +224,14 @@
         }
     }
 
-    function saveDb(reactions, token, data) {
+    function saveDb(reactions, token, data, duration) {
         $.ajax({
             url: "BotReactions/import",
             type: "POST",
             dataType: "json",
             data: {
                 reactions: reactions,
+                duration: duration,
                 data: JSON.stringify(data),
                 token: token
             }

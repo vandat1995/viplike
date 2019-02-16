@@ -11,6 +11,7 @@ class BuffLike extends CI_Controller
         $this->data['sub_title'] = "";
         $this->load->model("bufflike_model");
         $this->load->model("tokenbuff_model");
+        $this->load->model("user_model");
     }
 
     public function index()
@@ -37,12 +38,33 @@ class BuffLike extends CI_Controller
             return;
         }
 
+        $price = $quantity * PRICE_PER_LIKE_BUFF;
+        $current_balance = $this->user_model->getBalance($this->session->userdata("user_id"));
+        $new_balance = $current_balance - $price;
+        if( $new_balance < 0 ) 
+        {
+            echo json_encode(["error" => ["message" => "Your money is not enough", "code" => 0], "message" => ""]);
+            return;
+        }
+
         $data = [
             "post_id" => $post_id,
             "quantity" => $quantity
         ];
-
-        echo $this->bufflike_model->insert($data) ? json_encode(["error" => 0, "message" => "Create Buff Like Task Success"]) : json_encode(["error" => ["message" => "Create Buff Like Task Fail", "code" => 0], "message" => ""]);
+        if( $this->bufflike_model->insert($data) )
+        {
+            if( $this->user_model->updateById(["balance" => $new_balance], $this->session->userdata("user_id")) ) 
+            {
+                $this->session->set_userdata(["balance" => number_format($new_balance)]);
+                $this->history_model->log("-", $price, "bufflike", "Buff for {$post_id} - {$quantity} like.", $this->session->userdata("user_id"));
+            }
+            echo json_encode(["error" => 0, "message" => "Create Buff Like Task Success"]);
+            return;
+        }
+        else 
+        {
+            echo json_encode(["error" => ["message" => "Create Buff Like Task Fail", "code" => 0], "message" => ""]);
+        }
         
     }
 

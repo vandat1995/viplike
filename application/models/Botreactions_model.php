@@ -21,8 +21,21 @@ class Botreactions_model extends CI_Model
 	{
         $this->db->select("id, token, reactions");
         $this->db->where("status", 1);
+        $this->db->where("(end_day - NOW()) > 1");
 		$query = $this->db->get($this->__table);
 		return $query->num_rows() > 0 ? $query->result() : false;
+    }
+
+    public function find($id)
+    {
+        if( $this->__isOwner($id, $this->session->userdata("user_id")) === true )
+        {
+            $this->db->where("id", $id);
+            $query = $this->db->get($this->__table);
+            return $query->num_rows() > 0 ? $query->row() : false;
+        }
+        else
+            return false;
     }
     
     public function delete($id, $user_id)

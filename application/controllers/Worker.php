@@ -280,10 +280,11 @@ class Worker extends CI_Controller
     {
         $this->load->model("botreactions_model");
         $tasks = $this->botreactions_model->getAll();
+        if( !$tasks ) return;
         foreach($tasks as $task)
         {
             $post_id = $this->__getStatusBotLike($task->token);
-            if( $post_id == false )
+            if( $post_id === false )
             {
                 // curl false -> token die;
                 $this->botreactions_model->update($task->id, ["status" => 0]);
@@ -297,16 +298,20 @@ class Worker extends CI_Controller
             {
                 if ( !$this->__checkLiked($post_id, $task->token) )
                 {
-                    $this->__reactionPost($task->token, $post_id, $task->reactions);
+					// Neu id la avatar thi ...
+                    if( $this->__reactionPost($task->token, $post_id, $task->reactions) != "true" )
+					{
+						$post_id = explode("_", $post_id)[1];
+						$this->__reactionPost($task->token, $post_id, $task->reactions);
+					}
                 }
             }
         }
     }
     public function test()
     {
-        $a = false;
-        $b = json_decode($a, true);
-        print_r($b);
+        $a = "";
+        if($a == false) echo "minh sai";
     }
 
 }

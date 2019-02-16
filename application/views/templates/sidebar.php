@@ -79,6 +79,13 @@
               </li>
               <?php } ?>
 
+              <li class="nav-item">
+                <a class="nav-link <?php if(strtolower($this->uri->segment(1)) == 'history') echo 'active' ?>" href="history">
+                  <i class="material-icons">history</i>
+                  <span>HISTORY</span>
+                </a>
+              </li>
+
             </ul>
           </div>
         </aside>

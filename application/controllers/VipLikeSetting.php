@@ -78,6 +78,7 @@ class VipLikeSetting extends CI_Controller
         if( $this->task_model->createTransaction($data, ["balance" => $new_balance], $this->session->userdata("user_id")) )
         {
             $this->session->set_userdata(["balance" => number_format($new_balance)]);
+            $this->history_model->log("-", $price, "viplike", "Create Vip {$uid} - {$quantity} like, {$time} days.", $this->session->userdata("user_id"));
             echo json_encode(["error" => 0, "message" => "Create Vip like Task Success"]);
             return;
         }
@@ -142,6 +143,7 @@ class VipLikeSetting extends CI_Controller
         if( $this->task_model->deleteTransaction($task_id, ["balance" => $new_balance], $this->session->userdata("user_id")) )
         {
             $this->session->set_userdata(["balance" => number_format($new_balance)]);
+            $this->history_model->log("+", $refund, "viplike", "Refund vip {$task->uid} - {$task->quantity} like, {$days_left} days left.", $this->session->userdata("user_id"));
             echo json_encode(["error" => 0, "message" => "Delete task success."]);
             return;
         }

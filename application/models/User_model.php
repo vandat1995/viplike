@@ -22,6 +22,11 @@ class User_model extends CI_Model
 		return $this->db->update($this->__table, $data, ["username" => $username]);
 	}
 
+	public function updateById($data, $user_id)
+	{
+		return $this->db->update($this->__table, $data, ["id" => $user_id]);
+	}
+
 	public function delete($id)
 	{
 		return $this->db->delete($this->__table, ["id" => $id]);

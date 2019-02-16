@@ -88,5 +88,7 @@ defined('EXIT__AUTO_MAX')      OR define('EXIT__AUTO_MAX', 125); // highest auto
 /**
  * Custom constant VIP LIKE
  */
-define('PRICE_PER_LIKE', 15); // price per like per day
-define('PRICE_PER_CMT', 20); // price per cmt per day
+define('PRICE_PER_LIKE', 15); // Giá vip mỗi like mỗi ngày
+define('PRICE_PER_CMT', 20); // Giá vip mỗi cmt mỗi ngày
+define('PRICE_PER_LIKE_BUFF', 100); // Giá buff 1 like
+define('PRICE_BOT_PER_DAY', 1000); // Giá bot cảm xúc 1 ngày

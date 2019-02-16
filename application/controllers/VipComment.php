@@ -79,6 +79,7 @@ class VipComment extends CI_Controller
         if( $this->taskcmt_model->createTransaction($data, ["balance" => $new_balance], $this->session->userdata("user_id")) )
         {
             $this->session->set_userdata(["balance" => number_format($new_balance)]);
+            $this->history_model->log("-", $price, "vipcmt", "Create Vip {$uid} - {$quantity} comment, {$time} days.", $this->session->userdata("user_id"));
             echo json_encode(["error" => 0, "message" => "Create Vip Cmt Task Success"]);
             return;
         }
@@ -126,6 +127,7 @@ class VipComment extends CI_Controller
         if( $this->taskcmt_model->deleteTransaction($task_id, ["balance" => $new_balance], $this->session->userdata("user_id")) )
         {
             $this->session->set_userdata(["balance" => number_format($new_balance)]);
+            $this->history_model->log("+", $refund, "vipcmt", "Refund vip {$task->uid} - {$task->quantity} comment, {$days_left} days left.", $this->session->userdata("user_id"));
             echo json_encode(["error" => 0, "message" => "Delete task success."]);
             return;
         }
