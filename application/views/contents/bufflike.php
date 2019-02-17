@@ -2,7 +2,7 @@
     <div class="col-lg-6 mb-6">
         <div class="card card-small mb-4">
             <div class="card-header border-bottom">
-                <h6 class="m-0">Add UID Vip Like</h6>
+                <h6 class="m-0">Add UID Buff Like</h6>
             </div>
             <ul class="list-group list-group-flush">
                 <li class="list-group-item p-3">
