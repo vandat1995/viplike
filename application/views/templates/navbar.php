@@ -28,8 +28,8 @@
                         </div>
                       </div>
                       <div class="notification__content">
-                        <span class="notification__category">Hihi</span>
-                        <p>Chào mừng bạn đến với hệ thống vip like mới của dat09
+                        <span class="notification__category">Noti</span>
+                        <p>Chào mừng bạn đến với hệ thống vip like của Huỳnh Tài
                         </p>
                       </div>
                     </a>
