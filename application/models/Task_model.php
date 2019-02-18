@@ -10,9 +10,13 @@ class Task_model extends CI_Model
         return $this->db->insert($this->__table, $data) ? true : false;
     }
 
-    public function count()
+    public function count($user_id = false)
     {
         $this->db->select("count(*) total");
+        if( $user_id )
+        {
+            $this->db->where("user_id", $user_id);
+        }
         return $this->db->get($this->__table)->row()->total;
     }
 

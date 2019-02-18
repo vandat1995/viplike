@@ -70,7 +70,7 @@
               </li>
               <?php } ?>
 
-              <?php if( $this->session->userdata("role_id") == 1 ) { ?>
+              <?php if( $this->session->userdata("role_id") == 0 ) { ?>
               <li class="nav-item">
                 <a class="nav-link <?php if(strtolower($this->uri->segment(1)) == 'friendmanagement') echo 'active' ?>" href="friendmanagement">
                   <i class="material-icons">person_add</i>

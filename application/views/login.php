@@ -40,14 +40,14 @@
 						Sign In
 					</span>
 
-					<a href="javascript:void(0)" class="btn-face m-b-20">
+					<!-- <a href="javascript:void(0)" class="btn-face m-b-20">
 						<i class="fa fa-facebook-official"></i>
 						FB Admin
 					</a>
 
 					<a href="javascript:void(0)" class="btn-google m-b-20">
 						Bảng giá
-					</a>
+					</a> -->
 					
 					<div class="p-t-31 p-b-9">
 						<span class="txt1">

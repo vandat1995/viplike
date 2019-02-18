@@ -12,6 +12,8 @@ class VipLikeSetting extends CI_Controller
         $this->load->model("task_model");
         $this->load->model("token_model");
         $this->load->model("user_model");
+        $this->load->model("setting_model");
+        $this->data["prices"] = $this->setting_model->getAll();
     }
 
     public function index()
@@ -60,8 +62,21 @@ class VipLikeSetting extends CI_Controller
             echo json_encode(["error" => ["message" => "Quantity cann't more than current total token", "code" => 0], "message" => ""]);
             return;
         }        
-
-        $price = $quantity * $time * PRICE_PER_LIKE;
+        $price_month = 0;
+        foreach($this->data["prices"] as $val)
+        {
+            if($val->quantity == $quantity)
+            {
+                $price_month = $val->price_per_month;
+                break;
+            }     
+        }
+        if($price_month == 0) 
+        {
+            echo json_encode(["error" => ["message" => "Địt mẹ mày bug clg đây hả con chó.", "code" => 0], "message" => ""]);
+            return;
+        }
+        $price = $time * $price_month;
         $current_balance = $this->user_model->getBalance($this->session->userdata("user_id"));
         $new_balance = $current_balance - $price;
         if( $new_balance < 0 ) 
@@ -69,7 +84,7 @@ class VipLikeSetting extends CI_Controller
             echo json_encode(["error" => ["message" => "Your money is not enough", "code" => 0], "message" => ""]);
             return;
         }
-
+        $time = $time * 30;
         $data = [
             "uid"               => $uid,
             "quantity"          => $quantity,
@@ -139,9 +154,18 @@ class VipLikeSetting extends CI_Controller
             return;
         }
 
+        $price_month = 0;
+        foreach($this->data["prices"] as $val)
+        {
+            if($val->quantity == $task->quantity)
+            {
+                $price_month = $val->price_per_month;
+                break;
+            }     
+        }
         $days_left = strtotime($task->end_day) - strtotime(date("Y-m-d H:i:s"));
         $days_left = (int)($days_left / 60 / 60 / 24);
-        $refund = $days_left * (int)$task->quantity * PRICE_PER_LIKE;
+        $refund = (int)(($days_left / 30) * $price_month);
         $current_balance = $this->user_model->getBalance($this->session->userdata("user_id"));
         $new_balance = $current_balance + $refund;
 

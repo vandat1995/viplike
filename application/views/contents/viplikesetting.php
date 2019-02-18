@@ -12,17 +12,34 @@
                             <input type="text" id="uid" class="form-control" placeholder=""> 
                         </div>
                         <div class="form-group col-md-6">
-                            <label>Quantity like <span class="text-danger">*</span></label>
-                            <input type="number" id="quantity" class="form-control" placeholder="100" value="100"> 
+                            <label>Quantity reactions <span class="text-danger">*</span></label>
+                            <!-- <input type="number" id="quantity" class="form-control" placeholder="100" value="100">  -->
+                            <select id="quantity" class="form-control">
+                                <option></option>
+                                <?php 
+                                    if($prices) 
+                                    {
+                                        foreach($prices as $price)
+                                        {
+                                            echo '<option value="'. $price->quantity .'">' . $price->quantity . '</option>';
+                                        }
+                                    }
+                                ?>
+                            </select>
                         </div>
                     </div>
                     <div class="form-row">
                         <div class="form-group col-md-6">
                             <label>Time (days) <span class="text-danger">*</span></label>
-                            <input type="number" id="time" class="form-control" placeholder="" min="1" value="30"> 
+                            <select id="time" class="form-control">
+                                <option value="1">30</option>
+                                <option value="2">60</option>
+                                <option value="3">90</option>
+                            </select>
+                            <!-- <input type="number" id="time" class="form-control" placeholder="" min="1" value="30">  -->
                         </div>
                         <div class="form-group col-md-6">
-                            <label>Quantity like per crontab (5 mins) <span class="text-danger">*</span></label>
+                            <label>Number like every 5 minutes <span class="text-danger">*</span></label>
                             <input type="number" id="quantity_per_cron" class="form-control" min="1" value="20"> 
                         </div>
                     </div>
@@ -86,7 +103,7 @@
                 <li class="list-group-item p-3">
                     <span class="d-flex mb-2">
                         <strong class="mr-1">Expiry day:</strong>
-                        <strong class="ml-auto" id="bill_time">0</strong><strong>&nbsp;days</strong>
+                        <strong class="ml-auto" id="bill_time">0</strong><strong>&nbsp;month</strong>
                     </span>
                 </li>
                 <li class="list-group-item p-3">
@@ -111,7 +128,7 @@
 						<tr>
 							<th scope="col" class="border-bottom-0">id</th>
 							<th scope="col" class="border-bottom-0">uid</th>
-                            <th scope="col" class="border-bottom-0">quantity like</th>
+                            <th scope="col" class="border-bottom-0">quantity reactions</th>
                             <th scope="col" class="border-bottom-0">like per run</th>
                             <th scope="col" class="border-bottom-0">status</th>
                             <th scope="col" class="border-bottom-0">start day</th>
@@ -128,20 +145,27 @@
 </div>
 
 <script>
-    const price = parseInt("<?= PRICE_PER_LIKE ?>");
+    const prices = JSON.parse('<?php echo json_encode($prices); ?>');
     let table;
     $(document).ready(() => {
         $("#btn_submit").on("click", () => {
             main();
         });
 
-        $("#uid, #quantity, #time").on("keyup", () => {
+        $("#quantity, #time").on("change", () => {
             let quantity = $("#quantity").val().trim();
             let time = $("#time").val().trim();
             $("#bill_uid").text($("#uid").val().trim());
             $("#bill_quantity").text(quantity);
             $("#bill_time").text(time);
-            $("#bill_amount").text(parseInt(quantity) * parseInt(time) * price);
+            let price;
+            for(let pri of prices) {
+                if(pri.quantity == quantity) {
+                    price = pri.price_per_month;
+                    break;
+                }
+            }
+            $("#bill_amount").text(parseInt(time) * price);
         });
 
         table = $(".table").DataTable({

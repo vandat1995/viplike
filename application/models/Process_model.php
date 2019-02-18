@@ -39,10 +39,19 @@ class Process_model extends CI_Model
             return false;
     }
 
-    public function count()
+    public function count($user_id = false)
     {
         $this->db->select("count(*) total");
-        return $this->db->get($this->__table)->row()->total;
+        if( $user_id )
+        {
+            $this->db->from("{$this->__table} p");
+            $this->db->join("tasks t", "t.id = p.task_id");
+            $this->db->where("t.user_id", $user_id);
+        }
+        else {
+            $this->db->from($this->__table);
+        }
+        return $this->db->get()->row()->total;
     }
 
 }

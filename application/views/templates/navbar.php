@@ -49,11 +49,15 @@
                       <i class="material-icons">&#xE7FD;</i> Profile</a>
                     <?php if($this->session->userdata('role_id') == 1) { ?>
                     <a class="dropdown-item" href="Token">
-                      <i class="material-icons">note_add</i> Add Tokens</a>
+                      <i class="material-icons">note_add</i> Add Tokens Vip</a>
                     <?php } ?>
                     <?php if($this->session->userdata('role_id') == 1) { ?>
                     <a class="dropdown-item" href="Token/buff">
                       <i class="material-icons">note_add</i> Add Tokens Buff</a>
+                    <?php } ?>
+                    <?php if($this->session->userdata('role_id') == 1) { ?>
+                    <a class="dropdown-item" href="setting">
+                      <i class="material-icons">settings</i> Setting</a>
                     <?php } ?>
                     
                     <div class="dropdown-divider"></div>

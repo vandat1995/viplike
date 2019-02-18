@@ -30,10 +30,20 @@ class Tokenprocessmap_model extends CI_Model
         return $query->num_rows() > 0 ? $query->result() : false;
     }
 
-    public function count()
+    public function count($user_id = false)
     {
         $this->db->select("count(*) total");
-        return $this->db->get($this->__table)->row()->total;
+        if( $user_id )
+        {
+            $this->db->from("{$this->__table} tpm");
+            $this->db->join("processes p", "p.id = tpm.process_id");
+            $this->db->join("tasks t", "t.id = p.task_id");
+            $this->db->where("t.user_id", $user_id);
+        }
+        else {
+            $this->db->from($this->__table);
+        }
+        return $this->db->get()->row()->total;
     }
 
 }
