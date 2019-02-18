@@ -17,15 +17,16 @@
 					<tbody id="result">
                     <?php
                         $i = 1;
-                        if(!$prices) return;
-                        foreach($prices as $val) {
-                            echo '<tr>';
-                            echo '<td>'. $i .'</td>';
-                            echo '<td>'. $val->quantity .'</td>';
-                            echo '<td>'. number_format($val->price_per_month) .' đ</td>';
-                            echo '</tr>';
-                            $i++;
-                        }
+                        if($prices){
+							foreach($prices as $val) {
+								echo '<tr>';
+								echo '<td>'. $i .'</td>';
+								echo '<td>'. $val->quantity .'</td>';
+								echo '<td>'. number_format($val->price_per_month) .' đ</td>';
+								echo '</tr>';
+								$i++;
+							}
+						}
                     ?>
 					</tbody>
 				</table>
