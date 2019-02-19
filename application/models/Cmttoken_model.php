@@ -23,6 +23,7 @@ class Cmttoken_model extends CI_Model
         $this->db->where("status", 1);
         $this->db->where("(NOW() - last_used) > 3000");
         $this->db->limit($limit);
+        $this->db->order_by("RAND()");
         $query = $this->db->get($this->__table);
         return $query->num_rows() > 0 ? $query->result() : false;
     }
