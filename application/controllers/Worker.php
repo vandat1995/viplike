@@ -310,8 +310,7 @@ class Worker extends CI_Controller
     }
     public function test()
     {
-        $this->load->model("config_model");
-        echo $this->config_model->countCurrentVip();
+        echo $this->request->__getRandUserAgent();
     }
 
 }

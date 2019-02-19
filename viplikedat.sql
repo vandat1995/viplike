@@ -45,8 +45,27 @@ CREATE TABLE IF NOT EXISTS `botlike` (
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
-
+DROP TABLE IF EXISTS `uids`;
+CREATE TABLE IF NOT EXISTS `uids` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `uid` varchar(20),
+  `status` int(1) DEFAULT 1,
+  `commented` int(1) DEFAULT 0,
+  `last_comment` timestamp NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB;
 --
+
+DROP TABLE IF EXISTS `cmt_tokens`;
+CREATE TABLE IF NOT EXISTS `cmt_tokens` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `token` varchar(255) DEFAULT NULL,
+  `status` int(1) DEFAULT 1,
+  `last_used` timestamp NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB;
 -- Cấu trúc bảng cho bảng `bufflike`
 --
 

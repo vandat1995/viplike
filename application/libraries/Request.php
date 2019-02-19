@@ -1,5 +1,7 @@
 <?php 
 
+require_once APPPATH . "/third_party/UserAgent.php";
+
 class Request
 {
     private $curl;
@@ -26,11 +28,13 @@ class Request
     
     public function post()
     {
-        echo "cac";
+        
     }
     
     private function __getRandUserAgent()
     {
+        return \Campo\UserAgent::random();
+        /*
         $user_agent = [
             'Mozilla/5.0 (Macintosh; U; PPC Mac OS X; en) AppleWebKit/48 (like Gecko) Safari/48',
             'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/60.0.3112.113 Safari/537.36',
@@ -81,5 +85,6 @@ class Request
             'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_5) AppleWebKit/601.6.17 (KHTML, like Gecko) Version/9.1.1 Safari/601.6.17'
         ];
         return $user_agent[array_rand($user_agent)];
+        */
     }
 }
