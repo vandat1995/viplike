@@ -2,33 +2,33 @@
     <div class="col-lg-6 mb-6">
         <div class="card card-small mb-4">
             <div class="card-header border-bottom">
-                <h6 class="m-0">Add UID Vip Comment</h6>
+                <h6 class="m-0">Thêm mới VIP Comment</h6>
             </div>
             <ul class="list-group list-group-flush">
                 <li class="list-group-item p-3">
                     <div class="form-row">
                         <div class="form-group col-md-6">
-                            <label>UID profile <span class="text-danger">*</span></label>
+                            <label>UID VIP <span class="text-danger">*</span></label>
                             <input type="text" id="uid" class="form-control" placeholder=""> 
                         </div>
                         <div class="form-group col-md-6">
-                            <label>Quantity comment <span class="text-danger">*</span></label>
+                            <label>Số lượng comment <span class="text-danger">*</span></label>
                             <input type="number" id="quantity" class="form-control" placeholder="100" value="100"> 
                         </div>
                     </div>
                     <div class="form-row">
                         <div class="form-group col-md-6">
-                            <label>Time (days) <span class="text-danger">*</span></label>
+                            <label>Số ngày thuê <span class="text-danger">*</span></label>
                             <input type="number" id="time" class="form-control" placeholder="" min="1" value="30"> 
                         </div>
                         <div class="form-group col-md-6">
-                            <label>Quantity comment per crontab (5 mins) <span class="text-danger">*</span></label>
+                            <label>Tốc độ comment mỗi 5 phút <span class="text-danger">*</span></label>
                             <input type="number" id="quantity_per_cron" class="form-control" min="1" value="20"> 
                         </div>
                     </div>
                     <div class="form-row">
                         <div class="form-group col-md-12">
-                            <label>Messages comment (1 msg per line, max 4000 char) <span class="text-danger">*</span></label>
+                            <label>Nội dung comment (mỗi cmt 1 dòng, Tối đa 4000 kí tự) <span class="text-danger">*</span></label>
                             <textarea id="msg_cmt" class="form-control" rows="5"></textarea>
                         </div>
                         
@@ -42,7 +42,7 @@
     <div class="col-lg-6 mb-6">
         <div class="card card-small mb-4">
             <div class="card-header border-bottom">
-                <h6 class="m-0">Billing Information</h6>
+                <h6 class="m-0">Thông tin đơn hàng</h6>
             </div>
             <ul class="list-group list-group-flush">
                 <li class="list-group-item p-3">
@@ -53,19 +53,19 @@
                 </li>
                 <li class="list-group-item p-3">
                     <span class="d-flex mb-2">
-                        <strong class="mr-1">Quantity comment:</strong>
+                        <strong class="mr-1">Số lượng comment:</strong>
                         <strong class="ml-auto" id="bill_quantity">0</strong>
                     </span>
                 </li>
                 <li class="list-group-item p-3">
                     <span class="d-flex mb-2">
-                        <strong class="mr-1">Expiry day:</strong>
+                        <strong class="mr-1">Số ngày thuê:</strong>
                         <strong class="ml-auto" id="bill_time">0</strong><strong>&nbsp;days</strong>
                     </span>
                 </li>
                 <li class="list-group-item p-3">
                     <span class="d-flex mb-2">
-                        <strong class="mr-1">Total amount:</strong>
+                        <strong class="mr-1">Tổng tiền phải trả:</strong>
                         <strong class="ml-auto" id="bill_amount">0</strong><strong>&nbsp;VND</strong>
                     </span>
                 </li>
@@ -77,19 +77,19 @@
 	<div class="col">
 		<div class="card card-small overflow-hidden mb-4">
 			<div class="card-header">
-				<h6 class="m-0">List Vip UID</h6>
+				<h6 class="m-0">Danh sách VIP đã cài</h6>
 			</div>
 			<div class="card-body p-0 pb-3 text-center">
 				<table class="table mb-0">
 					<thead class="bg-light">
 						<tr>
-							<th scope="col" class="border-bottom-0">id</th>
+							<th scope="col" class="border-bottom-0">#</th>
 							<th scope="col" class="border-bottom-0">uid</th>
-                            <th scope="col" class="border-bottom-0">quantity cmt</th>
-                            <th scope="col" class="border-bottom-0">like per crontab</th>
-                            <th scope="col" class="border-bottom-0">start day</th>
-                            <th scope="col" class="border-bottom-0">end day</th>
-                            <th scope="col" class="border-bottom-0">actions</th>
+                            <th scope="col" class="border-bottom-0">Số lượng cmt</th>
+                            <th scope="col" class="border-bottom-0">Tốc độ cmt / 5 phút</th>
+                            <th scope="col" class="border-bottom-0">Ngày bắt đầu</th>
+                            <th scope="col" class="border-bottom-0">Ngày kết thúc</th>
+                            <th scope="col" class="border-bottom-0">Hành động</th>
 						</tr>
 					</thead>
 					<tbody id="vip_cmt">
@@ -189,10 +189,11 @@
                 });
             }
             else {
+                let i = 1;
                 for(let vip of res.data) {
                     $("#vip_cmt")
                         .append($("<tr>")
-                            .append($("<td>").html(vip.id))
+                            .append($("<td>").html(i))
                             .append($("<td>").html(vip.uid))
                             .append($("<td>").html(vip.quantity))
                             .append($("<td>").html(vip.quantity_per_cron))
@@ -200,6 +201,7 @@
                             .append($("<td>").html(vip.end_day))
                             .append($("<td>").html(`<button onclick="editVip(${vip.id})" type="button" class="mb-2 btn btn-sm btn-warning mr-1"><i class="material-icons">edit</i></button> <button onclick="deleteVip(${vip.id})" type="button" class="mb-2 btn btn-sm btn-danger mr-1"><i class="material-icons">delete</i></button>`))
                         );
+                    i++;
                 }
             }
         }).fail((xhr, textStatus, thrown) => {
@@ -211,7 +213,7 @@
     }
 
     function deleteVip(id) {
-        if(confirm("Are you sure?")) {
+        if(confirm("Bạn có chắc muốn xóa?")) {
             $.ajax({
                 url: "VipComment/deleteTask",
                 type: "POST",

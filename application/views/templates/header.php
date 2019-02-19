@@ -7,6 +7,7 @@
     <meta name="description" content="A high-quality &amp; free Bootstrap admin dashboard template pack that comes with lots of templates and components.">
     <base href="<?php echo base_url(); ?>">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="shortcut icon" href="https://www.shareicon.net/download/2017/06/28/888039_logo.ico"/>
     <link href="https://use.fontawesome.com/releases/v5.0.6/css/all.css" rel="stylesheet">
     <link href="assets/styles/icon.css" rel="stylesheet">
     <link rel="stylesheet" href="assets/styles/bootstrap.min.css">

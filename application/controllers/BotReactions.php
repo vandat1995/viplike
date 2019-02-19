@@ -7,7 +7,7 @@ class BotReactions extends CI_Controller
     public function __construct()
     {
         parent::__construct();
-        $this->data['page_title'] = "Bot Reactions";
+        $this->data['page_title'] = "Bot Cảm Xúc";
         $this->data['sub_title'] = "";
         $this->load->model("botreactions_model");
         $this->load->model("user_model");

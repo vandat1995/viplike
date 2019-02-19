@@ -2,7 +2,7 @@
     <div class="col-lg-6 mb-6">
         <div class="card card-small mb-4">
             <div class="card-header border-bottom">
-                <h6 class="m-0">Create new price</h6>
+                <h6 class="m-0">Tạo mới giá vip cảm xúc</h6>
             </div>
             <ul class="list-group list-group-flush">
                 <li class="list-group-item p-3">
@@ -28,7 +28,7 @@
 	<div class="col">
 		<div class="card card-small overflow-hidden mb-4">
 			<div class="card-header">
-				<h6 class="m-0">Price list 
+				<h6 class="m-0">Danh sách bảng giá 
                 </h6>
 			</div>
 			<div class="card-body p-0 pb-3 text-center">

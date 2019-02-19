@@ -2,7 +2,7 @@
     <div class="col-lg-6 mb-6">
         <div class="card card-small mb-4">
             <div class="card-header border-bottom">
-                <h6 class="m-0">Add UID Buff Like</h6>
+                <h6 class="m-0">Thêm mới id buff like</h6>
             </div>
             <ul class="list-group list-group-flush">
                 <li class="list-group-item p-3">
@@ -12,7 +12,7 @@
                             <input type="text" id="post_id" class="form-control" placeholder=""> 
                         </div>
                         <div class="form-group col-md-6">
-                            <label>Quantity like <span class="text-danger">*</span></label>
+                            <label>Số lượng like <span class="text-danger">*</span></label>
                             <input type="number" id="quantity" class="form-control" placeholder="100" value="100"> 
                         </div>
                     </div>
@@ -25,7 +25,7 @@
     <div class="col-lg-6 mb-6">
         <div class="card card-small mb-4">
             <div class="card-header border-bottom">
-                <h6 class="m-0">Billing Information</h6>
+                <h6 class="m-0">Thông tin đơn hàng</h6>
             </div>
             <ul class="list-group list-group-flush">
                 <li class="list-group-item p-3">
@@ -36,13 +36,13 @@
                 </li>
                 <li class="list-group-item p-3">
                     <span class="d-flex mb-2">
-                        <strong class="mr-1">Quantity like:</strong>
+                        <strong class="mr-1">Số lượng like:</strong>
                         <strong class="ml-auto" id="bill_quantity">0</strong>
                     </span>
                 </li>
                 <li class="list-group-item p-3">
                     <span class="d-flex mb-2">
-                        <strong class="mr-1">Total amount:</strong>
+                        <strong class="mr-1">Tổng tiền phải trả:</strong>
                         <strong class="ml-auto" id="bill_amount">0</strong><strong>&nbsp;VND</strong>
                     </span>
                 </li>
@@ -54,18 +54,18 @@
 	<div class="col">
 		<div class="card card-small overflow-hidden mb-4">
 			<div class="card-header">
-				<h6 class="m-0">List Task</h6>
+				<h6 class="m-0">List bài buff like</h6>
 			</div>
 			<div class="card-body p-0 pb-3 text-center">
 				<table class="table mb-0">
 					<thead class="bg-light">
 						<tr>
-							<th scope="col" class="border-bottom-0">id</th>
+							<th scope="col" class="border-bottom-0">#</th>
 							<th scope="col" class="border-bottom-0">post id</th>
-                            <th scope="col" class="border-bottom-0">quantity like</th>
-                            <th scope="col" class="border-bottom-0">status</th>
-                            <th scope="col" class="border-bottom-0">created at</th>
-                            <th scope="col" class="border-bottom-0">actions</th>
+                            <th scope="col" class="border-bottom-0">Số lượng like</th>
+                            <th scope="col" class="border-bottom-0">Trạng thái</th>
+                            <th scope="col" class="border-bottom-0">Ngày tạo</th>
+                            <th scope="col" class="border-bottom-0">Hành động</th>
 						</tr>
 					</thead>
 					<tbody id="result">
@@ -174,9 +174,10 @@
             dataType: "json"
         }).done((res) => {
             if(res.data) {
+                let i = 1;
                 for(let task of res.data) {
                     table.row.add({
-                        "0": task.id,
+                        "0": i,
                         "1": task.post_id,
                         "2": task.quantity,
                         "3": `${(task.is_running == "0" && '<label class="badge badge-warning">ready</label>') || ((task.is_running == "1" && task.is_done == "0") && '<label class="badge badge-info">running</label>') || (task.is_done == "1" && '<label class="badge badge-success">done</label>')}`,
@@ -184,6 +185,7 @@
                         "5": `<button onclick="deleteTask(${task.id})" type="button" class="mb-2 btn btn-sm btn-danger mr-1"><i class="material-icons">delete</i></button>`
                         
                     });
+                    i++;
                 }
                 table.draw();
             }

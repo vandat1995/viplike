@@ -13,7 +13,7 @@ class Dashboard extends CI_Controller
         $this->load->model("taskcmt_model");
         $this->load->model("process_model");
         $this->load->model("tokenprocessmap_model");
-        $this->data['page_title'] = "Dashboard";
+        $this->data['page_title'] = "Trang chủ";
         $this->data['sub_title'] = "";
         $this->data['total_token'] = $this->session->userdata("role_id") == 1 ? $this->token_model->count() : 10000;
         $this->data['total_vip'] = $this->session->userdata("role_id") == 1 ? $this->task_model->count() + $this->taskcmt_model->count() : $this->task_model->count($this->__user_id) + $this->taskcmt_model->count($this->__user_id);

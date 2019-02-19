@@ -6,7 +6,7 @@ class User extends CI_Controller
     public function __construct()
     {
         parent::__construct();
-        $this->data['page_title'] = "User Management";
+        $this->data['page_title'] = "Quản lý user";
         $this->data['sub_title'] = "";
         if( $this->session->userdata("role_id") != 1 )
             redirect("dashboard");

@@ -2,17 +2,17 @@
     <div class="col-lg-6 mb-6">
         <div class="card card-small mb-4">
             <div class="card-header border-bottom">
-                <h6 class="m-0">Add UID Vip Like</h6>
+                <h6 class="m-0">Thêm mới vip like</h6>
             </div>
             <ul class="list-group list-group-flush">
                 <li class="list-group-item p-3">
                     <div class="form-row">
                         <div class="form-group col-md-6">
-                            <label>UID profile <span class="text-danger">*</span></label>
+                            <label>UID VIP <span class="text-danger">*</span></label>
                             <input type="text" id="uid" class="form-control" placeholder=""> 
                         </div>
                         <div class="form-group col-md-6">
-                            <label>Quantity reactions <span class="text-danger">*</span></label>
+                            <label>Số lượng cảm xúc <span class="text-danger">*</span></label>
                             <!-- <input type="number" id="quantity" class="form-control" placeholder="100" value="100">  -->
                             <select id="quantity" class="form-control">
                                 <option></option>
@@ -30,7 +30,7 @@
                     </div>
                     <div class="form-row">
                         <div class="form-group col-md-6">
-                            <label>Time (days) <span class="text-danger">*</span></label>
+                            <label>Số ngày thuê <span class="text-danger">*</span></label>
                             <select id="time" class="form-control">
                                 <option value="1">30</option>
                                 <option value="2">60</option>
@@ -39,7 +39,7 @@
                             <!-- <input type="number" id="time" class="form-control" placeholder="" min="1" value="30">  -->
                         </div>
                         <div class="form-group col-md-6">
-                            <label>Number like every 5 minutes <span class="text-danger">*</span></label>
+                            <label>Tốc độ like mỗi 5 phút <span class="text-danger">*</span></label>
                             <input type="number" id="quantity_per_cron" class="form-control" min="1" value="20"> 
                         </div>
                     </div>
@@ -85,7 +85,7 @@
     <div class="col-lg-6 mb-6">
         <div class="card card-small mb-4">
             <div class="card-header border-bottom">
-                <h6 class="m-0">Billing Information</h6>
+                <h6 class="m-0">Thông tin đơn hàng</h6>
             </div>
             <ul class="list-group list-group-flush">
                 <li class="list-group-item p-3">
@@ -96,19 +96,19 @@
                 </li>
                 <li class="list-group-item p-3">
                     <span class="d-flex mb-2">
-                        <strong class="mr-1">Quantity reactions:</strong>
+                        <strong class="mr-1">Số lượng cảm xúc:</strong>
                         <strong class="ml-auto" id="bill_quantity">0</strong>
                     </span>
                 </li>
                 <li class="list-group-item p-3">
                     <span class="d-flex mb-2">
-                        <strong class="mr-1">Expiry day:</strong>
-                        <strong class="ml-auto" id="bill_time">0</strong><strong>&nbsp;month</strong>
+                        <strong class="mr-1">Số ngày thuê:</strong>
+                        <strong class="ml-auto" id="bill_time">0</strong><strong>&nbsp;tháng</strong>
                     </span>
                 </li>
                 <li class="list-group-item p-3">
                     <span class="d-flex mb-2">
-                        <strong class="mr-1">Total amount:</strong>
+                        <strong class="mr-1">Tổng tiền phải trả:</strong>
                         <strong class="ml-auto" id="bill_amount">0</strong><strong>&nbsp;VND</strong>
                     </span>
                 </li>
@@ -120,20 +120,20 @@
 	<div class="col">
 		<div class="card card-small overflow-hidden mb-4">
 			<div class="card-header">
-				<h6 class="m-0">List Vip UID</h6>
+				<h6 class="m-0">Danh sách Vip đã cài</h6>
 			</div>
 			<div class="card-body p-0 pb-3 text-center">
 				<table class="table mb-0">
 					<thead class="bg-light">
 						<tr>
-							<th scope="col" class="border-bottom-0">id</th>
+							<th scope="col" class="border-bottom-0">#</th>
 							<th scope="col" class="border-bottom-0">uid</th>
-                            <th scope="col" class="border-bottom-0">quantity reactions</th>
-                            <th scope="col" class="border-bottom-0">like per run</th>
-                            <th scope="col" class="border-bottom-0">status</th>
-                            <th scope="col" class="border-bottom-0">start day</th>
-                            <th scope="col" class="border-bottom-0">end day</th>
-                            <th scope="col" class="border-bottom-0">actions</th>
+                            <th scope="col" class="border-bottom-0">Số lượng CX</th>
+                            <th scope="col" class="border-bottom-0">Tốc độ like / 5 phút</th>
+                            <th scope="col" class="border-bottom-0">Trạng thái</th>
+                            <th scope="col" class="border-bottom-0">Ngày bắt đầu</th>
+                            <th scope="col" class="border-bottom-0">Ngày kết thúc</th>
+                            <th scope="col" class="border-bottom-0">Hành động</th>
 						</tr>
 					</thead>
 					<tbody id="vip_uid">
@@ -276,17 +276,19 @@
             dataType: "json"
         }).done((res) => {
             if(res.data) {
+                let i = 1;
                 for(let vip of res.data) {
                     table.row.add({
-                        "0": vip.id,
+                        "0": i,
                         "1": vip.uid,
                         "2": vip.quantity,
                         "3": vip.quantity_per_cron,
-                        "4": `${parseInt(vip.expired) > 1 ? '<label class="badge badge-success">running</label>' : '<label class="badge badge-warning">done</label>'}`,
+                        "4": `${parseInt(vip.expired) > 1 ? '<label class="badge badge-success">đang chạy</label>' : '<label class="badge badge-warning">hết hạn</label>'}`,
                         "5": vip.start_day,
                         "6": vip.end_day,
                         "7": `<button onclick="deleteVip(${vip.id})" type="button" class="mb-2 btn btn-sm btn-danger mr-1"><i class="material-icons">delete</i></button>`
                     });
+                    i++;
                 }
                 table.draw();
             }
@@ -300,7 +302,7 @@
     }
 
     function deleteVip(id) {
-        if(confirm("Are you sure?")) {
+        if(confirm("Bạn có chắc muốn xóa?")) {
             $.ajax({
                 url: "<?php echo base_url('VipLikeSetting/deleteTask'); ?>",
                 type: "POST",

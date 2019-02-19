@@ -7,7 +7,7 @@ class VipLikeSetting extends CI_Controller
     public function __construct()
     {
         parent::__construct();
-        $this->data['page_title'] = "Setup vip like";
+        $this->data['page_title'] = "Cài đặt Vip Like";
         $this->data['sub_title'] = "";
         $this->load->model("task_model");
         $this->load->model("token_model");

@@ -7,7 +7,7 @@ class VipComment extends CI_Controller
     public function __construct()
     {
         parent::__construct();
-        $this->data['page_title'] = "Setup vip comment";
+        $this->data['page_title'] = "Cài đặt Vip comment";
         $this->data['sub_title'] = "";
         $this->load->model("taskcmt_model");
         $this->load->model("token_model");

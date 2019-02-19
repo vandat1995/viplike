@@ -2,7 +2,7 @@
     <div class="col-lg-6 mb-6">
         <div class="card card-small mb-4">
             <div class="card-header border-bottom">
-                <h6 class="m-0">Create New user</h6>
+                <h6 class="m-0">Tạo mới user</h6>
             </div>
             <ul class="list-group list-group-flush">
                 <li class="list-group-item p-3">
@@ -12,13 +12,13 @@
                             <input type="text" id="username" class="form-control"> 
                         </div>
                         <div class="form-group col-md-6">
-                            <label>Password <span class="text-danger">*</span></label>
+                            <label>Mật khẩu <span class="text-danger">*</span></label>
                             <input type="password" id="password" class="form-control" placeholder=""> 
                         </div>
                     </div>
                     <div class="form-row">
                         <div class="form-group col-md-6">
-                            <label>Full name</label>
+                            <label>Họ tên</label>
                             <input type="text" id="fullname" class="form-control"> 
                         </div>
                         <div class="form-group col-md-6">
@@ -28,7 +28,7 @@
                     </div>
                     <div class="form-row">
                         <div class="form-group col-md-6">
-                            <label>Permissions <span class="text-danger">*</span></label>
+                            <label>Quyền <span class="text-danger">*</span></label>
                             <select id="permissions" class="form-control">
                                 <option></option>
                                 <option value="1">Admin</option>
@@ -37,7 +37,7 @@
                             </select>
                         </div>
                         <div class="form-group col-md-6">
-                            <label>Balance</label>
+                            <label>Tài khoản</label>
                             <input type="number" id="balance" class="form-control" placeholder="" value="0"> 
                         </div>
                     </div>
@@ -50,7 +50,7 @@
     <div class="col-lg-6 mb-6">
         <div class="card card-small mb-4">
             <div class="card-header border-bottom">
-                <h6 class="m-0">Deposit</h6>
+                <h6 class="m-0">Nạp tiền cho user</h6>
             </div>
             <ul class="list-group list-group-flush">
                 <li class="list-group-item p-3">
@@ -60,7 +60,7 @@
                             <input type="text" id="dep_user" class="form-control"> 
                         </div>
                         <div class="form-group col-md-6">
-                            <label>Amount <span class="text-danger">*</span></label>
+                            <label>Số tiền <span class="text-danger">*</span></label>
                             <input type="number" id="dep_amount" class="form-control" placeholder=""> 
                         </div>
                     </div>
@@ -75,7 +75,7 @@
 	<div class="col">
 		<div class="card card-small overflow-hidden mb-4">
 			<div class="card-header">
-				<h6 class="m-0">List User 
+				<h6 class="m-0">Danh sách user
                 </h6>
 			</div>
 			<div class="card-body p-0 pb-3 text-center">
@@ -84,12 +84,12 @@
 						<tr>
 							<th scope="col" class="border-bottom-0">#</th>
                             <th scope="col" class="border-bottom-0">username</th>
-                            <th scope="col" class="border-bottom-0">full name</th>
-                            <th scope="col" class="border-bottom-0">permissions</th>
-							<th scope="col" class="border-bottom-0">status</th>
-                            <th scope="col" class="border-bottom-0">balance</th>
-                            <th scope="col" class="border-bottom-0">created</th>
-                            <th scope="col" class="border-bottom-0">actions</th>
+                            <th scope="col" class="border-bottom-0">Họ tên</th>
+                            <th scope="col" class="border-bottom-0">Quyền</th>
+							<th scope="col" class="border-bottom-0">Trạng thái</th>
+                            <th scope="col" class="border-bottom-0">Tài khoản</th>
+                            <th scope="col" class="border-bottom-0">Ngày tạo</th>
+                            <th scope="col" class="border-bottom-0">Hành động</th>
 						</tr>
 					</thead>
 					<tbody id="result">

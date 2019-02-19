@@ -1,6 +1,9 @@
 <?php 
 defined('BASEPATH') OR exit('No direct script access allowed');
-
+/**
+ * @author Nguyễn Văn Dạt
+ * @link https://www.facebook.com/datvannguyen.net
+ */
 class Authentication extends CI_Controller
 {
 	public function __construct()

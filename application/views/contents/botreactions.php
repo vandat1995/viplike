@@ -2,7 +2,7 @@
     <div class="col-lg-6 mb-6">
         <div class="card card-small mb-4">
             <div class="card-header border-bottom">
-                <h6 class="m-0">Create bot</h6>
+                <h6 class="m-0">Tạo bot mới</h6>
             </div>
             <ul class="list-group list-group-flush">
                 <li class="list-group-item p-3">
@@ -14,13 +14,13 @@
                     </div>
                     <div class="form-row">
                         <div class="form-group col-md-12">
-                            <label>Time (days) <span class="text-danger">*</span></label>
+                            <label>Số ngày thuê <span class="text-danger">*</span></label>
                             <input type="number" id="time" class="form-control" placeholder="" min="1" value="30"> 
                         </div>
                         
                     </div>
                     
-                    <label>Reactions type<span class="text-danger"> *</span></label>
+                    <label>Loại cảm xúc <span class="text-danger"> *</span></label>
                     <div class="form-row">
                         <style>
                             .custom-radio {

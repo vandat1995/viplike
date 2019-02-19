@@ -2,7 +2,7 @@
 	<div class="col">
 		<div class="card card-small overflow-hidden mb-4">
 			<div class="card-header">
-				<h6 class="m-0">Price list 
+				<h6 class="m-0">Bảng giá VIP Cảm Xúc 
                 </h6>
 			</div>
 			<div class="card-body p-0 pb-3 text-center">

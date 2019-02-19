@@ -5,7 +5,7 @@
               <a class="navbar-brand w-100 mr-0" href="dashboard" style="line-height: 25px;">
                 <div class="d-table m-auto">
                   <img id="main-logo" class="d-inline-block align-top mr-1" style="max-width: 25px;" src="assets/images/shards-dashboards-logo.svg" alt="Vip like">
-                  <span class="d-none d-md-inline ml-1">VIP LIKE</span>
+                  <span class="d-none d-md-inline ml-1">HUỲNH TÀI</span>
                 </div>
               </a>
               <a class="toggle-sidebar d-sm-inline d-md-none d-lg-none">
@@ -27,7 +27,7 @@
               <li class="nav-item">
                 <a class="nav-link <?php if(strtolower($this->uri->segment(1)) == 'dashboard') echo 'active' ?>" href="dashboard">
                   <i class="material-icons">dashboard</i>
-                  <span>Dashboard</span>
+                  <span>Trang Chủ</span>
                 </a>
               </li>
               <li class="nav-item">
@@ -45,7 +45,7 @@
               <li class="nav-item">
                 <a class="nav-link <?php if(strtolower($this->uri->segment(1)) == 'botreactions') echo 'active' ?>" href="botreactions">
                   <i class="material-icons">insert_emoticon</i>
-                  <span>BOT REACTIONS</span>
+                  <span>BOT Cảm Xúc</span>
                 </a>
               </li>
               <li class="nav-item">
@@ -57,7 +57,7 @@
               <li class="nav-item">
                 <a class="nav-link <?php if(strtolower($this->uri->segment(1)) == 'price') echo 'active' ?>" href="price">
                   <i class="material-icons">attach_money</i>
-                  <span>PRICE</span>
+                  <span>Bảng Giá</span>
                 </a>
               </li>
 
@@ -82,7 +82,7 @@
               <li class="nav-item">
                 <a class="nav-link <?php if(strtolower($this->uri->segment(1)) == 'history') echo 'active' ?>" href="history">
                   <i class="material-icons">history</i>
-                  <span>HISTORY</span>
+                  <span>LỊCH SỬ</span>
                 </a>
               </li>
 
