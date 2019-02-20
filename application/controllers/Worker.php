@@ -8,10 +8,10 @@ class Worker extends CI_Controller
     public function __construct()
     {
         parent::__construct();
-        if( !$this->input->is_cli_request() )
-        {
-            redirect("dashboard");
-        }
+        // if( !$this->input->is_cli_request() )
+        // {
+        //     redirect("dashboard");
+        // }
         $this->load->model("token_model");
         $this->load->model("task_model");
         $this->load->model("taskcmt_model");
@@ -25,13 +25,28 @@ class Worker extends CI_Controller
 
     public function index()
     {
-        $this->__runTasks();
+        if(USE_COOKIE === true)
+        {
+            $this->__runTasksCookie();
+        }
+        else 
+        {
+            $this->__runTasks();
+        }
+        
     }
 
     public function FireInTheHole()
     {
         //$this->__runTasksCmt();
-        $this->__runProcesses();
+        if(USE_COOKIE === true)
+        {
+            $this->__runProcessesCookie();
+        }
+        else
+        {
+            $this->__runProcesses();
+        }
     }
 
     public function TaskBuffLike()
@@ -308,10 +323,173 @@ class Worker extends CI_Controller
             }
         }
     }
+
     public function test()
     {
-        $this->load->model("config_model");
-        echo $this->config_model->countCurrentVip();
+        $cookie = "c_user=100004139261394; pl=n; xs=24%3Aa2_roixLI1WTlA%3A2%3A1546789745%3A19575%3A6397;";
+        $uid_vip = "100003248375743";
+        $ck_uid = "100004139261394";
+        $post_id = $this->__getNewFeedCookie("dainghia.le.35", "c_user=100031368544857;xs=9:dZWTdkOlXjA1ew:2:1547385031:1032:13376;fr=1NWZvPDKrIYwxxdrJ.AWVI5y-LL-wfvFM-aypyoZm0Vgk.BcRe0Q.tX.AAA.0.0.BcRe0Q.AWXUgXov;datr=uP0_XDeJ4Zi9SWHMCLBU4-ms;");
+        var_dump($post_id);
+        
+    }
+
+    private function __runTasksCookie()
+    {
+        $tasks = $this->task_model->getActiveTasks();
+        
+        if( !$tasks )
+        {
+            return;
+        }
+        foreach($tasks as $task)
+        {
+            $tokens = $this->token_model->getTokens(($task->quantity + 6));
+            
+            $post_id = $this->__getNewFeedCookie($task->uid, $tokens[array_rand($tokens)]->cookie);
+
+            if( $this->__checkProcessExist($post_id, "like") || !$post_id )
+            {
+                continue;
+            }
+            $total_token = count($tokens);
+
+            // Create process
+            $process_id = $this->process_model->insert(["vip_type" => "like", "task_id" => $task->id, "post_id" => $post_id]);
+            if( !$process_id ) {
+                log_message("ERROR", "Create Process Fail: [{$process_id}]");
+                continue;
+            }
+            $reactions = json_decode($task->reactions, true);
+            $tmp = 0;
+            foreach( $reactions as $key => $val )
+            {
+                for($i = $tmp; $i < ($val + $tmp); $i++)
+                {
+                    $this->tokenprocessmap_model->insert(["process_id" => $process_id, "token_id" => $tokens[$i]->id, "reaction" => $key]);
+                }
+                $tmp += $val;
+            }
+        }
+    }
+
+    private function __runProcessesCookie()
+    {
+        $processes = $this->process_model->getActiveProcesses();
+        
+        if( !$processes )
+        {
+            return;
+        }
+        foreach( $processes as $process )
+        {
+            $datas = $this->tokenprocessmap_model->getRandByProcessId($process->id, $process->quantity_per_cron);
+            if( !$datas ) {
+                // Done 1 task process
+                $this->process_model->update($process->id, ["is_done" => 1]);
+                continue;
+            }
+            
+            if( $process->vip_type == "like" )
+            {
+                foreach( $datas as $data )
+                {
+                    $res = $this->__reactionPostCookie($data->cookie, $data->uid, $data->vip_uid, $data->post_id, $data->reaction);
+                    $this->tokenprocessmap_model->update($data->id, ["status" => (int)$res, "is_runned" => 1]);
+                }
+            }
+        }
+    }
+
+    private function __getNewFeedCookie($vip_uid, $cookie)
+    {
+        $url = "https://m.facebook.com/{$vip_uid}";
+        $html = $this->request->get($url, $cookie);
+        if( $html !== false )
+        {
+            $pattern = '/story_fbid=([0-9]*)/';
+            if( preg_match($pattern, $html, $matches) )
+            {
+                return $matches[1];
+            }
+        }
+        return false;
+    }
+
+    private function __reactionPostCookie($cookie, $ck_uid, $vip_uid, $post_id, $reaction)
+    {
+        switch ($reaction) {
+            case "LIKE":
+                $reaction = "1";
+                break;
+            case "LOVE":
+                $reaction = "2";
+                break;
+            case "WOW":
+                $reaction = "3";
+                break;
+            case "HAHA":
+                $reaction = "4";
+                break;
+            case "SAD":
+                $reaction = "7";
+                break;
+            case "ANGRY":
+                $reaction = "8";
+                break;
+
+        }
+        $fb_dtsg = $this->get_fb_dtsg($cookie);
+        if ( $fb_dtsg !== false )
+        {
+            $uuid4 = $this->gen_uuid();
+            $url = "https://m.facebook.com/ufi/reaction/?ft_ent_identifier={$post_id}&story_render_location=timeline&feedback_source=0&is_sponsored=0&ext=1550929755&hash=AeRl5qtpU72zCHkR&refid=17&_ft_=mf_story_key.{$post_id}%3Atop_level_post_id.{$post_id}%3Atl_objid.{$post_id}%3Acontent_owner_id_new.{$vip_uid}%3Athrowback_story_fbid.{$post_id}%3Astory_location.4%3Athid.{$vip_uid}%3A306061129499414%3A2%3A0%3A1551427199%3A-4622699766100878414&__tn__=%3E*W-R&av={$ck_uid}&client_id=1550670584237%3A388496674&session_id={$uuid4}";
+            $data = [
+                "reaction_type" => $reaction,
+                "ft_ent_identifier" => $post_id, //post_id
+                "m_sess" => "",
+                "fb_dtsg" => $fb_dtsg,
+                "jazoest" => "22110",
+                "__dyn" => "1KQdAmm1gxu4U4ifGh28sBBgS5UqxKcwRwAxu3-UcodUbEnwjUuK1lwZxm6Uhx6484G583rx65of8dE5K260Sob852q3q5U2nwvE6W787S78gwJwWwnElzawlo3_xyeKdwGwFU6i3Kq1sxq1gwwyo",
+                "__req" => "7",
+                "__ajax__" => "AYlG62zkYhS96cdP3gIfuVN7tkPs3qzdGhPlUfFUdtO5EJ9hfKoJN93kLGFsHJIgcOVI5GjQK1EI6EuILhni2sc2XdHZ1DNrZw-Des1Dc6A9uQ",
+                "__user" => $ck_uid // owner user
+            ];
+            $data = http_build_query($data);
+            $this->request->post($url, $cookie, $data);
+            return true;
+
+        }
+        return false;
+
+    }
+
+    private function get_fb_dtsg($cookie)
+	{
+		$html = $this->request->get('https://mbasic.facebook.com/profile.php', $cookie);
+		$fb_dtsg = $this->getStringBetween($html, 'name="fb_dtsg" value="', '"');
+		return $fb_dtsg; 
+	}
+
+    private function getStringBetween($string, $start, $end)
+	{
+		$string = " {$string}";
+		$ini = strpos($string, $start);
+		if($ini == 0)
+			return "";
+		$ini += strlen($start);
+		$len = strpos($string, $end, $ini) - $ini;
+		return substr($string, $ini, $len);
+	}
+
+    private function gen_uuid() {
+        return sprintf( '%04x%04x-%04x-%04x-%04x-%04x%04x%04x',
+            mt_rand( 0, 0xffff ), mt_rand( 0, 0xffff ),
+            mt_rand( 0, 0xffff ),
+            mt_rand( 0, 0x0fff ) | 0x4000,
+            mt_rand( 0, 0x3fff ) | 0x8000,
+            mt_rand( 0, 0xffff ), mt_rand( 0, 0xffff ), mt_rand( 0, 0xffff )
+        );
     }
 
 }

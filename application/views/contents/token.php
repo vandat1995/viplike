@@ -2,14 +2,21 @@
     <div class="col-lg-12 mb-6">
         <div class="card card-small overflow-hidden mb-4">
             <div class="card-header border-bottom">
-                <h6 class="m-0">Import</h6>
+                <h6 class="m-0">Import Token or Cookie</h6>
             </div>
             <ul class="list-group list-group-flush">
                 <li class="list-group-item p-3">
                     <div class="form-row">
                         <div class="form-group col-md-12">
                             <!-- <label for="feDescription">List Token</label> -->
-                            <textarea placeholder="EAAAA..." id="list_token" class="form-control" rows="5" place></textarea>
+                            <textarea placeholder="EAAAA... hoặc c_user=000; xs=xxxxx" id="list_token" class="form-control" rows="5" place></textarea>
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label>Chọn loại dữ liệu import <span class="text-danger">*</span></label>
+                            <select id="type" class="form-control">
+                                <option value="cookie">Cookie</option>
+                                <option value="token">Token</option>
+                            </select>
                         </div>
                     </div>
                     <button type="button" id="btn_import" class="btn btn-accent">Submit</button>
@@ -31,8 +38,8 @@
 					<thead class="bg-light">
 						<tr>
 							<th scope="col" class="border-bottom-0">#</th>
-							<th scope="col" class="border-bottom-0">token</th>
-							<th scope="col" class="border-bottom-0">gender</th>
+                            <th scope="col" class="border-bottom-0">họ tên</th>
+							<th scope="col" class="border-bottom-0">token / cookie</th>
 							<th scope="col" class="border-bottom-0">status</th>
 						</tr>
 					</thead>
@@ -50,7 +57,8 @@
         $("#btn_import").on("click", async () => {
             $("#btn_import").text("Processing...").prop("disabled", true);
             let list_token = ($("#list_token").val().trim() && $("#list_token").val().trim().split("\n")) || false;
-            if(!list_token) {
+            let type = $("#type").val().trim();
+            if(!list_token || !type) {
                 Swal({
                     text: `List token is required`,
                     type: 'error',
@@ -61,14 +69,28 @@
                 return;
             }
             let live = 0, die = 0;
-            for(let token of list_token) {
-                try {
-                    let data = await checkLive(token);
-                    saveDb(token, data);
-                    live++;
+            if(type == "cookie") {
+                for(let cookie of list_token) {
+                    try {
+                        let result = await importCookie(cookie);
+                        console.log(result);
+                        live++;
+                    } catch(e) {
+                        die++;
+                        console.log(e);
+                    }
+                }
+            }
+            else {
+                for(let token of list_token) {
+                    try {
+                        let data = await checkLive(token);
+                        saveDb(token, data);
+                        live++;
 
-                } catch(e) {
-                    die++;
+                    } catch(e) {
+                        die++;
+                    }
                 }
             }
             $("#btn_import").text("Submit").prop("disabled", false);
@@ -102,6 +124,26 @@
         loadToken();
 
     });
+
+    function importCookie(cookie) {
+        return new Promise((resolve, reject) => {
+            $.ajax({
+                url: "Token/importCookie",
+                method: "POST",
+                dataType: "json",
+                data: {
+                    cookie: cookie
+                }
+            }).done((res) => {
+                if(res.error) {
+                    return reject(res.error.message);
+                }
+                else {
+                    return resolve(res.message);
+                }
+            }).fail(() => reject("Lỗi server"));
+        });
+    }
 
     function checkLive(token) {
         return new Promise((resolve, reject) => {
@@ -145,8 +187,8 @@
                 for(let token of res.data) {
                     $("#result").append($("<tr>")
                         .append($("<td>").html(i))
-                        .append($("<td>").html(`<input class="form-control" type="text" value="${token.token}">`))
-                        .append($("<td>").html(token.gender))
+                        .append($("<td>").html(token.fullname))
+                        .append($("<td>").html(`<input class="form-control" type="text" value="${token.token ? token.token : token.cookie}">`))
                         .append($("<td>").html(`${token.status == 1 ? '<label class="badge badge-success">live</label>' : '<label class="badge badge-danger">die</label>'}`))
                     );
                     i++;

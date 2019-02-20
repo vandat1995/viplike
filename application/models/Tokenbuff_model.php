@@ -36,7 +36,7 @@ class Tokenbuff_model extends CI_Model
     {
         $this->db->select("id, token, gender, status");
         $query = $this->db->get($this->__table);
-        return ($query->num_rows() > 0) ? $query->result() : false;
+        return ($query->num_rows() > 0) ? $query->result() : [];
     }
 
     

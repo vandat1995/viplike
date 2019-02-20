@@ -33,7 +33,7 @@ class Token_model extends CI_Model
 
     public function getTokens($quantity)
     {
-        $this->db->select("id, token");
+        $this->db->select("id, token, cookie");
         $this->db->order_by("RAND()");
         $this->db->limit($quantity);
         $query = $this->db->get($this->__table);
@@ -42,7 +42,7 @@ class Token_model extends CI_Model
 
     public function getAll()
     {
-        $this->db->select("id, token, gender, status");
+        $this->db->select("id, fullname, token, cookie, status");
         $query = $this->db->get($this->__table);
         return ($query->num_rows() > 0) ? $query->result() : false;
     }

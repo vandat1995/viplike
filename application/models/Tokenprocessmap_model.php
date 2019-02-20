@@ -19,10 +19,11 @@ class Tokenprocessmap_model extends CI_Model
 
     public function getRandByProcessId($process_id, $limit = 0)
     {
-        $this->db->select("tpm.id, tpm.reaction, tpm.cmt, t.token, p.post_id");
+        $this->db->select("tpm.id, tpm.reaction, tpm.cmt, ts.uid vip_uid, t.token, t.cookie, t.uid, p.post_id");
         $this->db->from("token_process_map tpm");
         $this->db->join("processes p", "tpm.process_id = p.id");
         $this->db->join("tokens t", "tpm.token_id = t.id");
+        $this->db->join("tasks ts", "ts.id = p.task_id");
         $this->db->where(["process_id" => $process_id, "is_runned" => 0]);
         $this->db->order_by("RAND()");
         $this->db->limit($limit);
