@@ -35,17 +35,17 @@ class VipLikeSetting extends CI_Controller
         $reactions = !empty($this->input->post("reactions")) ? xss_clean($this->input->post("reactions")) : false;
         if( !$uid || !$quantity || !$time || !$quantity_per_cron || !$reactions )
         {
-            echo json_encode(["error" => ["message" => "Invalid data", "code" => 0], "message" => ""]);
+            echo json_encode(["error" => ["message" => "Dữ liệu nhập vào không hợp lệ.", "code" => 0], "message" => ""]);
             return;
         }
         if( $time < 1 || $quantity < 1 || $quantity_per_cron > $quantity || $quantity_per_cron < 1 )
         {
-            echo json_encode(["error" => ["message" => "Invalid time, quantity", "code" => 0], "message" => ""]);
+            echo json_encode(["error" => ["message" => "Dữ liệu nhập vào không hợp lệ.", "code" => 0], "message" => ""]);
             return;
         }
         if( $this->task_model->checkExistUID($uid) )
         {
-            echo json_encode(["error" => ["message" => "UID was Exist", "code" => 0], "message" => ""]);
+            echo json_encode(["error" => ["message" => "UID này đã tồn tại trong hệ thống", "code" => 0], "message" => ""]);
             return;
         }
 
@@ -59,7 +59,7 @@ class VipLikeSetting extends CI_Controller
         $total_token = $this->token_model->count();
         if( ($quantity + 6) > $total_token )
         {
-            echo json_encode(["error" => ["message" => "Quantity cann't more than current total token", "code" => 0], "message" => ""]);
+            echo json_encode(["error" => ["message" => "Số lượng token trong kho không đủ", "code" => 0], "message" => ""]);
             return;
         }        
         $price_month = 0;
@@ -81,7 +81,7 @@ class VipLikeSetting extends CI_Controller
         $new_balance = $current_balance - $price;
         if( $new_balance < 0 ) 
         {
-            echo json_encode(["error" => ["message" => "Your money is not enough", "code" => 0], "message" => ""]);
+            echo json_encode(["error" => ["message" => "Tài khoản của bạn không đủ tiền.", "code" => 0], "message" => ""]);
             return;
         }
         $time = $time * 30;
@@ -157,7 +157,7 @@ class VipLikeSetting extends CI_Controller
         $task = $this->task_model->getById($task_id);
         if( !$task )
         {
-            echo json_encode(["error" => ["message" => "Task does not exist.", "code" => 0], "message" => ""]);
+            echo json_encode(["error" => ["message" => "UID không tồn tại.", "code" => 0], "message" => ""]);
             return;
         }
 

@@ -8,7 +8,7 @@
                   <div class="card-body p-0 d-flex">
                     <div class="d-flex flex-column m-auto">
                       <div class="stats-small__data text-center">
-                        <span class="stats-small__label text-uppercase">VIP UID</span>
+                        <span class="stats-small__label text-uppercase">Tổng VIP UID</span>
                         <h6 class="stats-small__value count my-3"><?= $total_vip ?></h6>
                       </div>
                       <div class="stats-small__data">
@@ -22,7 +22,7 @@
                   <div class="card-body p-0 d-flex">
                     <div class="d-flex flex-column m-auto">
                       <div class="stats-small__data text-center">
-                        <span class="stats-small__label text-uppercase">POSTS</span>
+                        <span class="stats-small__label text-uppercase">Tổng bài viết</span>
                         <h6 class="stats-small__value count my-3"><?= $total_process ?></h6>
                       </div>
                       <div class="stats-small__data">
@@ -39,7 +39,7 @@
                   <div class="card-body p-0 d-flex">
                     <div class="d-flex flex-column m-auto">
                       <div class="stats-small__data text-center">
-                        <span class="stats-small__label text-uppercase">Processes done</span>
+                        <span class="stats-small__label text-uppercase">Tổng Số lượt đã like</span>
                         <h6 class="stats-small__value count my-3"><?= $total_like_process ?></h6>
                       </div>
                       <div class="stats-small__data">
