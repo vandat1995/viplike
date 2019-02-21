@@ -112,7 +112,11 @@ class VipLikeSetting extends CI_Controller
     private function __parseReactions($reactions, $quantity) 
     {
         $result = [];
-        $count = count($reactions) == 1 ? 2 : $count;
+        $count = count($reactions);
+        if(array_key_exists("LIKE", $reactions))
+        {
+            $count -= 1;
+        }
         foreach( $reactions as $r )
         {
             if( $r != "LIKE" && $r != "LOVE" && $r != "WOW" && $r != "HAHA" && $r != "SAD" && $r != "ANGRY" )
@@ -121,7 +125,7 @@ class VipLikeSetting extends CI_Controller
             } 
             else 
             {
-                $result[$r] = $r == "LIKE" ?  ceil(0.8 * $quantity) : ceil((0.2 / ($count - 1)) * $quantity);
+                $result[$r] = $r == "LIKE" ?  ceil(0.8 * $quantity) : ceil((0.2 / ($count) * $quantity));
             }
         }
         if(count($result) == 1)
