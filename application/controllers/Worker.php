@@ -324,15 +324,6 @@ class Worker extends CI_Controller
         }
     }
 
-    public function test()
-    {
-        $cookie = "c_user=100004139261394; pl=n; xs=24%3Aa2_roixLI1WTlA%3A2%3A1546789745%3A19575%3A6397;";
-        $uid_vip = "100003248375743";
-        $ck_uid = "100004139261394";
-        $post_id = $this->__getNewFeedCookie("dainghia.le.35", "c_user=100031368544857;xs=9:dZWTdkOlXjA1ew:2:1547385031:1032:13376;fr=1NWZvPDKrIYwxxdrJ.AWVI5y-LL-wfvFM-aypyoZm0Vgk.BcRe0Q.tX.AAA.0.0.BcRe0Q.AWXUgXov;datr=uP0_XDeJ4Zi9SWHMCLBU4-ms;");
-        var_dump($post_id);
-        
-    }
 
     private function __runTasksCookie()
     {
@@ -441,7 +432,7 @@ class Worker extends CI_Controller
 
         }
         $fb_dtsg = $this->get_fb_dtsg($cookie);
-        if ( $fb_dtsg !== false )
+        if ( $fb_dtsg != "" )
         {
             $uuid4 = $this->gen_uuid();
             $url = "https://m.facebook.com/ufi/reaction/?ft_ent_identifier={$post_id}&story_render_location=timeline&feedback_source=0&is_sponsored=0&ext=1550929755&hash=AeRl5qtpU72zCHkR&refid=17&_ft_=mf_story_key.{$post_id}%3Atop_level_post_id.{$post_id}%3Atl_objid.{$post_id}%3Acontent_owner_id_new.{$vip_uid}%3Athrowback_story_fbid.{$post_id}%3Astory_location.4%3Athid.{$vip_uid}%3A306061129499414%3A2%3A0%3A1551427199%3A-4622699766100878414&__tn__=%3E*W-R&av={$ck_uid}&client_id=1550670584237%3A388496674&session_id={$uuid4}";
@@ -464,6 +455,12 @@ class Worker extends CI_Controller
 
     }
 
+    public function test()
+    {
+        $cookie = "c_user=100032901218520;xs=10:uiLbFG0JSK5eJA:2:1547530234:-1:-1;fr=24q38BJ2IyVhUvCuU.AWXrXKFctR00wP8SjE-K4KKE1_8.BcPW_4.6v.AAA.0.0.BcPW_5.AWWMB6ID;datr=-G89XDKuhXw4ACZ0XEuvlgS3";
+        var_dump($this->get_fb_dtsg($cookie));
+    }
+
     private function get_fb_dtsg($cookie)
 	{
 		$html = $this->request->get('https://mbasic.facebook.com/profile.php', $cookie);
@@ -480,7 +477,7 @@ class Worker extends CI_Controller
 		$ini += strlen($start);
 		$len = strpos($string, $end, $ini) - $ini;
 		return substr($string, $ini, $len);
-	}
+    }
 
     private function gen_uuid() {
         return sprintf( '%04x%04x-%04x-%04x-%04x-%04x%04x%04x',

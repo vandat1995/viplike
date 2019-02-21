@@ -10,7 +10,7 @@ class Token_model extends CI_Model
         return $this->db->insert($this->__table, $data) ? true : false;
     }
 
-    public function update()
+    public function update($id, $data)
     {
         $this->db->where("id", $id);
         return $this->db->update($this->__table, $data);
