@@ -395,6 +395,8 @@ class Worker extends CI_Controller
                 {
                     $res = $this->__reactionPostCookie($data->cookie, $data->uid, $data->vip_uid, $data->post_id, $data->reaction);
                     $this->tokenprocessmap_model->update($data->id, ["status" => (int)$res, "is_runned" => 1]);
+                    //nếu res = false thì cookie die;
+                    $this->token_model->update($data->token_id, ["status" => (int)$res]);
                 }
             }
         }
