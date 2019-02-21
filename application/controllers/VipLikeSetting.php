@@ -124,6 +124,13 @@ class VipLikeSetting extends CI_Controller
                 $result[$r] = $r == "LIKE" ?  ceil(0.8 * $quantity) : ceil((0.2 / ($count - 1 )) * $quantity);
             }
         }
+        if(count($result) == 1)
+        {
+            foreach($result as $key => $val)
+            {
+                $result[$key] = $quantity;
+            }
+        }
         return json_encode($result);
     }
 
