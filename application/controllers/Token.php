@@ -1,4 +1,5 @@
 <?php 
+set_time_limit(0);
 defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Token extends CI_Controller
@@ -12,9 +13,9 @@ class Token extends CI_Controller
         $this->load->library("request");
         $this->data['page_title'] = "Token Management";
         $this->data['sub_title'] = "";
-        // if( $this->session->userdata('role_id') != 1 ) {
-        //     redirect('dashboard');
-        // }
+        if( $this->session->userdata('role_id') != 1 ) {
+            redirect('dashboard');
+        }
     }
 
     public function index()
@@ -48,6 +49,22 @@ class Token extends CI_Controller
         {
             echo json_encode(["error" => ["message" => "Insert DB fail", "code" => 0], "message" => ""]);
             return;
+        }
+    }
+
+    public function update()
+    {
+        $id = !empty($this->input->post("id")) ? $this->input->post("id") : false;
+        if( !$id ) 
+        {
+            echo json_encode(["error" => ["message" => "Invalid token id", "code" => 0], "message" => ""]);
+            return;
+        }
+        if( $this->token_model->update($id, ["status" => 0]) ) {
+            echo json_encode(["error" => 0, "message" => "Update success"]);
+        }
+        else {
+            echo json_encode(["error" => ["message" => "Update fail", "code" => 0], "message" => ""]);
         }
     }
 
@@ -130,7 +147,7 @@ class Token extends CI_Controller
         echo json_encode(["error" => 0, "data" => $tokens, "message" => ""]);
     }
 
-    public function checkLiveCookie($cookie)
+    private function __checkLiveCookie($cookie)
     {
         $pattern_uid = '/profile_id=(.+?)&/';
         $pattern_name = '/<title>(.+?)<.title>/';
@@ -165,7 +182,7 @@ class Token extends CI_Controller
             echo json_encode(["error" => ["message" => "Invalid data", "code" => 0], "message" => ""]);
             return;
         }
-        $data_cookie = $this->checkLiveCookie($cookie);
+        $data_cookie = $this->__checkLiveCookie($cookie);
         if(!$data_cookie)
         {
             echo json_encode(["error" => ["message" => "Cookie die", "code" => 0], "message" => ""]);
@@ -179,12 +196,32 @@ class Token extends CI_Controller
         echo $this->token_model->insert($data) ? json_encode(["error" => 0, "message" => "Insert DB success"]) : json_encode(["error" => ["message" => "Insert DB fail", "code" => 0], "message" => ""]);
     }
 
-    public function test()
+    public function checkCookie()
     {
-        $cookie = "c_user=100031405812038;xs=14:SDPVFOqowvTZig:2:1547384882:16355:12561;fr=1RhH8f284Ucad5s6l.AWWr_z4ZAoDWcjWM6OoDxSqq5CY.BcRe0J.Y6.AAA.0.0.BcRe0J.AWUGNzZ1;datr=Pf0_XJOnn3gyDzPV0sHJIo0v;";
-        var_dump($this->checkLiveCookie($cookie));
+        $tokens = $this->token_model->getTokens();
+        if ( $tokens !== false ) 
+        {
+            $live = 0;
+            $die = 0;
+            foreach($tokens as $token)
+            {
+                if($token->cookie != "")
+                {
+                    $data_cookie = $this->__checkLiveCookie($token->cookie);
+                    if ( !$data_cookie )
+                    {
+                        $this->token_model->update($token->id, ["status" => 0]);
+                        $die++;
+                    }
+                    else
+                        $live++;
+                }
+            }
+            echo json_encode(["error" => 0, "message" => "Live: {$live}, Die: {$die}"]);
+        }
+        else
+        {
+            echo json_encode(["error" => 0, "message" => "Không có dữ liệu cookie trong database"]);
+        }
     }
-
-
-
 }

@@ -10,6 +10,12 @@ class Token_model extends CI_Model
         return $this->db->insert($this->__table, $data) ? true : false;
     }
 
+    public function update()
+    {
+        $this->db->where("id", $id);
+        return $this->db->update($this->__table, $data);
+    }
+
     public function delete($id)
     {
         $this->db->where("id", $id);
@@ -31,11 +37,15 @@ class Token_model extends CI_Model
         return ($query->num_rows() > 0) ? $query->row()->token : false;
     }
 
-    public function getTokens($quantity)
+    public function getTokens($quantity = false)
     {
         $this->db->select("id, token, cookie");
+        $this->db->where("status", 1);
         $this->db->order_by("RAND()");
-        $this->db->limit($quantity);
+        if( $quantity !== false )
+        {
+            $this->db->limit($quantity);
+        }
         $query = $this->db->get($this->__table);
         return ($query->num_rows() > 0) ? $query->result() : false;
     }

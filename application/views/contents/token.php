@@ -30,7 +30,8 @@
 		<div class="card card-small overflow-hidden mb-4">
 			<div class="card-header">
 				<h6 class="m-0">List Token 
-                <button type="button" id="btn_checkLive" class="btn btn-success">Check Live All Token and Delete if Die</button>
+                <button type="button" id="btn_checkLive" class="btn btn-success">Check Live All Token</button>
+                <button type="button" id="btn_checkLiveCookie" class="btn btn-success">Check Live All Cookie</button>
                 </h6>
 			</div>
 			<div class="card-body p-0 pb-3 text-center">
@@ -105,20 +106,48 @@
             let live = 0, die = 0;
             for(let token of tokens) {
                 try {
+                    if(token.token == "") {
+                        continue;
+                    }
                     let data = await checkLive(token.token);
-                    //saveDb(token.token, data);
                     live++;
                 } catch(e) {
                     die++;
-                    deletTokenDie(token.id);
+                    updateTokenDie(token.id);
                 }
             }
-            $("#btn_checkLive").text("Check Live All Token and Delete if Die").prop("disabled", false);
+            $("#btn_checkLive").text("Check Live All").prop("disabled", false);
             Swal({
                 text: `Live: ${live}, Die: ${die}`,
                 type: 'success',
             });
 
+        });
+        $("#btn_checkLiveCookie").on("click", () => {
+            $.ajax({
+                url: "Token/checkCookie",
+                type: "GET",
+                dataType: "json",
+                beforeSend: () => loading("btn_checkLiveCookie", "show", "Processing...")
+            }).done((res) => {
+                if(res.error) {
+                    Swal({
+                        text: res.error.message,
+                        type: 'error',
+                    });
+                }
+                else {
+                    Swal({
+                        text: res.message,
+                        type: 'success',
+                    });
+                }
+            }).fail(() => {
+                Swal({
+                    text: `Lỗi kết nối tới server`,
+                    type: 'error',
+                });
+            }).always(() => loading("btn_checkLiveCookie", "hide", "Check Live All Cookie"));
         });
 
         loadToken();
@@ -152,9 +181,9 @@
     	});
     }
 
-    function deletTokenDie(id) {
+    function updateTokenDie(id) {
         $.ajax({
-            url: "<?php echo base_url('Token/delete'); ?>",
+            url: "<?php echo base_url('Token/update'); ?>",
             type: "POST",
             dataType: "json",
             data: {
@@ -176,6 +205,7 @@
     }
 
     function loadToken() {
+        $("#result").empty();
         $.ajax({
             url: "<?php echo base_url('Token/getTokens'); ?>",
             type: "GET",

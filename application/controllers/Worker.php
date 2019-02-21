@@ -8,10 +8,10 @@ class Worker extends CI_Controller
     public function __construct()
     {
         parent::__construct();
-        // if( !$this->input->is_cli_request() )
-        // {
-        //     redirect("dashboard");
-        // }
+        if( !$this->input->is_cli_request() )
+        {
+            redirect("dashboard");
+        }
         $this->load->model("token_model");
         $this->load->model("task_model");
         $this->load->model("taskcmt_model");
@@ -352,7 +352,6 @@ class Worker extends CI_Controller
             {
                 continue;
             }
-            $total_token = count($tokens);
 
             // Create process
             $process_id = $this->process_model->insert(["vip_type" => "like", "task_id" => $task->id, "post_id" => $post_id]);
@@ -458,7 +457,6 @@ class Worker extends CI_Controller
             $data = http_build_query($data);
             $this->request->post($url, $cookie, $data);
             return true;
-
         }
         return false;
 
