@@ -56,7 +56,7 @@ class WorkerCmt extends CI_Controller
 
     public function runBotComment() 
     {
-        $limit = 20;
+        $limit = 14;
         $tokens = $this->cmttoken_model->get($limit);
         if ($tokens != false)
         {
@@ -98,7 +98,7 @@ class WorkerCmt extends CI_Controller
         $arr = explode("\n", $uids);
         foreach($arr as $uid)
         {
-            $this->uid_model->insert(["uid" => $uid]);
+            $this->uid_model->insert(["uid" => trim($uid)]);
         }
 
     }
@@ -110,7 +110,7 @@ class WorkerCmt extends CI_Controller
         $arr = explode("\n", $uids);
         foreach($arr as $uid)
         {
-            $this->cmttoken_model->insert(["token" => $uid, "last_used" => date("Y-m-d H:i:s")]);
+            $this->cmttoken_model->insert(["token" => trim($uid), "last_used" => "2019-02-23 18:00:00"]);
         }
  
     }
