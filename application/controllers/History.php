@@ -28,8 +28,4 @@ class History extends CI_Controller
         echo json_encode(["error" => 0, "data" => $list, "message" => ""]);
     }
 
-    
-
-
-
 }

@@ -2,7 +2,7 @@
 set_time_limit(0);
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class Worker extends CI_Controller
+class WorkerVip extends CI_Controller
 {
 
     public function __construct()
@@ -460,12 +460,6 @@ class Worker extends CI_Controller
 
     }
 
-    public function test()
-    {
-        $cookie = "c_user=100032901218520;xs=10:uiLbFG0JSK5eJA:2:1547530234:-1:-1;fr=24q38BJ2IyVhUvCuU.AWXrXKFctR00wP8SjE-K4KKE1_8.BcPW_4.6v.AAA.0.0.BcPW_5.AWWMB6ID;datr=-G89XDKuhXw4ACZ0XEuvlgS3";
-        var_dump($this->get_fb_dtsg($cookie));
-    }
-
     private function get_fb_dtsg($cookie)
 	{
 		$html = $this->request->get('https://mbasic.facebook.com/profile.php', $cookie);
@@ -492,6 +486,12 @@ class Worker extends CI_Controller
             mt_rand( 0, 0x3fff ) | 0x8000,
             mt_rand( 0, 0xffff ), mt_rand( 0, 0xffff ), mt_rand( 0, 0xffff )
         );
+    }
+
+    public function test()
+    {
+        $thread = $this->load->library("multi_handler");
+        $thread->start();
     }
 
 }
