@@ -1,0 +1,15 @@
+{
+	"config": {
+		"vendor-dir": "vendor"
+	},
+    "name": "dat09/worker",
+    "authors": [
+        {
+            "name": "dat.nguyen",
+            "email": "contact@datvannguyen.net"
+        }
+    ],
+    "require": {
+		"clancats/hydrahon": "1.1.10"
+	}
+}
