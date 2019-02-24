@@ -30,7 +30,7 @@ class FriendManagement extends CI_Controller
             return;
         }
         $data_token = json_decode($data_token, true);
-        $url = $type == "accept" ? "https://graph.facebook.com/me?fields=friendrequests.limit(1)&access_token={$token}" : "https://graph.facebook.com/v3.2/me?fields=friends.limit(1)&access_token={$token}";
+        $url = $type == "accept" ? "https://graph.facebook.com/me?fields=friendrequests.limit(". MAX_ACCEPT .")&access_token={$token}" : "https://graph.facebook.com/v3.2/me?fields=friends.limit(". MAX_UNFRIEND .")&access_token={$token}";
 
         $data = [
             "token"         => $token,

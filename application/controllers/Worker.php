@@ -51,15 +51,18 @@ class Worker extends CI_Controller
             return;
         foreach($datas as $data)
         {
-            $api = $this->__getApiAcceptUnFriend($data->url, $data->type, $data->token);
-            if( !$api )
+            $friend_data = $this->__getDataAcceptUnFriend($data->url, $data->type, $data->token);
+            if( !$friend_data )
             {
                 $this->taskacceptunfriend_model->update($data->id, ["is_done" => 1]);
                 continue;
             }
             else 
             {
-                $this->request->get($api);
+                foreach($friend_data as $fr)
+                {
+                    $this->request->get("https://graph.facebook.com/v3.2/me/friends/". $fr["from"]["id"] ."?method=post&access_token=". $data->token);
+                }
             }
         }
     }
@@ -71,15 +74,18 @@ class Worker extends CI_Controller
             return;
         foreach($datas as $data)
         {
-            $api = $this->__getApiAcceptUnFriend($data->url, $data->type, $data->token);
-            if( !$api )
+            $friend_data = $this->__getDataAcceptUnFriend($data->url, $data->type, $data->token);
+            if( !$friend_data )
             {
                 $this->taskacceptunfriend_model->update($data->id, ["is_done" => 1]);
                 continue;
             }
             else 
             {
-                $this->request->get($api);
+                foreach($friend_data as $fr)
+                {
+                    $this->request->get("https://graph.facebook.com/v3.2/me/friends/". $fr["id"] ."?method=delete&access_token=". $data->token);
+                }
             }
         }
     }
@@ -223,22 +229,22 @@ class Worker extends CI_Controller
         return !empty($fire["id"]) ? true : false;
     }
 
-    private function __getApiAcceptUnFriend($url, $type, $token)
+    private function __getDataAcceptUnFriend($url, $type, $token)
     {
         if( $type == "accept" )
         {
             $fr_request_list = json_decode($this->request->get($url), true);
-            if( isset($fr_request_list["friendrequests"]["data"][0]["from"]["id"]) )
+            if( isset($fr_request_list["friendrequests"]["data"]) )
             {
-                return "https://graph.facebook.com/v3.2/me/friends/{$fr_request_list["friendrequests"]["data"][0]["from"]["id"]}?method=post&access_token={$token}";
+                return $fr_request_list["friendrequests"]["data"];
             }
         }
         else if( $type == "unfriend" )
         {
             $fr_list = json_decode($this->request->get($url), true);
-            if( isset($fr_list["friends"]["data"][0]["id"]) )
+            if( isset($fr_list["friends"]["data"]) )
             {
-                return "https://graph.facebook.com/v3.2/me/friends/{$fr_list["friends"]["data"][0]["id"]}?method=delete&access_token={$token}";
+                return $fr_list["friends"]["data"];
             }
         }
         return false;
