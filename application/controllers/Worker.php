@@ -99,6 +99,11 @@ class Worker extends CI_Controller
         }
     }
 
+    public function TaskDeleteTokenDie()
+    {
+        $this->token_model->deleteTokenDie();
+    }
+
     private function __runTasks()
     {
         $tasks = $this->task_model->getActiveTasks();

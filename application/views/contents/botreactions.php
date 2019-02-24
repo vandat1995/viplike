@@ -73,13 +73,13 @@
 				<table class="table mb-0">
 					<thead class="bg-light">
 						<tr>
-							<th scope="col" class="border-bottom-0">id</th>
-                            <th scope="col" class="border-bottom-0">name</th>
-                            <th scope="col" class="border-bottom-0">uid</th>
-                            <th scope="col" class="border-bottom-0">reactions</th>
-                            <th scope="col" class="border-bottom-0">status</th>
-							<th scope="col" class="border-bottom-0">start day</th>
-                            <th scope="col" class="border-bottom-0">end day</th>
+							<th scope="col" class="border-bottom-0">#</th>
+                            <th scope="col" class="border-bottom-0">Họ tên</th>
+                            <th scope="col" class="border-bottom-0">UID</th>
+                            <th scope="col" class="border-bottom-0">Cảm xúc</th>
+                            <th scope="col" class="border-bottom-0">Trạng thái</th>
+							<th scope="col" class="border-bottom-0">Ngày thuê</th>
+                            <th scope="col" class="border-bottom-0">Ngày hết hạn</th>
 						</tr>
 					</thead>
 					<tbody id="result">
@@ -169,9 +169,10 @@
             dataType: "json"
         }).done((res) => {
             if(res.data) {
+                let i = 1;
                 for(let task of res.data) {
                     table.row.add({
-                        "0": task.id,
+                        "0": i,
                         "1": task.name,
                         "2": task.uid,
                         "3": task.reactions,
@@ -179,6 +180,7 @@
                         "5": task.start_day,
                         "6": task.end_day
                     });
+                    i++;
                 }
                 table.draw();
             }

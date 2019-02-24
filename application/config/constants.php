@@ -96,4 +96,4 @@ define('PRICE_BOT_PER_DAY', 7000); // Giá bot cảm xúc 1 ngày
 define('MAX_UID_VIP', 100);
 define('MAX_UID_BOT', 100);
 
-define('USE_COOKIE', true);
+define('USE_COOKIE', false);

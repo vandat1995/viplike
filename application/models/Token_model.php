@@ -22,6 +22,12 @@ class Token_model extends CI_Model
         return $this->db->delete($this->__table) ? true : false;
     }
 
+    public function deleteTokenDie()
+    {
+        $this->db->where("status", 0);
+        return $this->db->delete($this->__table);
+    }
+
     public function count()
     {
         $this->db->select("count(*) total");
