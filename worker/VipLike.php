@@ -26,10 +26,10 @@ class Task extends Threaded {
         $this->request->get($url);
     }
 }
-
+//$start_time = microtime(TRUE);
 $model = new DataLayer();
 $request = new Request();
-$p = new Pool(10);
+$p = new Pool(20);
 $processes = $model->getActiveProcesses();
 if(count($processes) > 0)
 {
@@ -52,3 +52,5 @@ if(count($processes) > 0)
 }
 while($p->collect());
 $p->shutdown();
+//$end_time = microtime(TRUE);
+//echo $end_time - $start_time;
