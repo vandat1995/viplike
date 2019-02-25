@@ -113,9 +113,9 @@ class VipLikeSetting extends CI_Controller
     {
         $result = [];
         $count = count($reactions);
-        if(array_key_exists("LIKE", $reactions))
+        if(in_array("LIKE", $reactions))
         {
-            $count -= 1;
+            $count = $count - 1;
         }
         foreach( $reactions as $r )
         {
@@ -125,7 +125,7 @@ class VipLikeSetting extends CI_Controller
             } 
             else 
             {
-                $result[$r] = $r == "LIKE" ?  ceil(0.8 * $quantity) : ceil((0.2 / ($count) * $quantity));
+                $result[$r] = $r == "LIKE" ?  ceil(0.8 * $quantity) : ceil(0.2 / $count * $quantity);
             }
         }
         if(count($result) == 1)

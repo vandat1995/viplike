@@ -1,5 +1,6 @@
 <?php
 require __DIR__ . "/vendor/autoload.php";
+use ClanCats\Hydrahon\Query\Expression as Ex;
 
 class DataLayer {
         
@@ -25,13 +26,6 @@ class DataLayer {
         $this->processes = $h->table("processes");
         $this->token_process_map = $h->table("token_process_map");
     }
-    
-    public function getTokens($limit)
-    {
-        return $this->tokens->select("token")
-                        
-                        ->get();
-    }
 
     public function getActiveProcesses()
     {
@@ -41,9 +35,27 @@ class DataLayer {
         ->get();
     }
 
-    public function updateStatus()
+    public function getRandByProcessId($process_id, $limit)
     {
+        return $this->token_process_map->select("token_process_map.id, token_process_map.reaction, tokens.token, processes.post_id")
+        ->join("processes", "processes.id", "=", "token_process_map.process_id")
+        ->join("tokens", "tokens.id", "=", "token_process_map.token_id")
+        ->where("processes.vip_type", "like")
+        ->where("token_process_map.process_id", $process_id)
+        ->where("token_process_map.is_runned", 0)
+        ->limit($limit)
+        ->orderBy(new Ex("RAND()"))
+        ->get();
+    }
 
+    public function updateProcess($id, $data)
+    {
+        return $this->processes->update($data)->where("id", $id)->execute();
+    }
+
+    public function updateTokenProcessMap($id, $data)
+    {
+        return $this->token_process_map->update()->set($data)->where("id", $id)->execute();
     }
     
     
