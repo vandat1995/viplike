@@ -23,8 +23,7 @@ class Task extends Threaded {
     {
         //$request = new Request();
         $url = "https://graph.facebook.com/{$post_id}/reactions?type={$reaction}&access_token={$token}&method=post";
-        $fire = json_decode($this->request->get($url), true);
-        return !empty($fire["success"]) ? $fire["success"] : false;
+        $this->request->get($url);
     }
 }
 
