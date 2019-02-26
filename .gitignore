@@ -4,6 +4,7 @@ application/cache/*
 !application/cache/index.html
 
 application/logs/*
+application/config/config.php
 !application/logs/index.html
 
 composer.lock
