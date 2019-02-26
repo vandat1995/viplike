@@ -5,7 +5,7 @@
               <a class="navbar-brand w-100 mr-0" href="dashboard" style="line-height: 25px;">
                 <div class="d-table m-auto">
                   <img id="main-logo" class="d-inline-block align-top mr-1" style="max-width: 25px;" src="assets/images/shards-dashboards-logo.svg" alt="Vip like">
-                  <span class="d-none d-md-inline ml-1">HUỲNH TÀI</span>
+                  <span class="d-none d-md-inline ml-1">Vip Yasuo</span>
                 </div>
               </a>
               <a class="toggle-sidebar d-sm-inline d-md-none d-lg-none">
@@ -33,25 +33,25 @@
               <li class="nav-item">
                 <a class="nav-link <?php if(strtolower($this->uri->segment(1)) == 'viplikesetting') echo 'active' ?>" href="viplikesetting">
                   <i class="material-icons">thumb_up</i>
-                  <span>VIP LIKE</span>
+                  <span>Vip Like</span>
                 </a>
               </li>
               <li class="nav-item">
                 <a class="nav-link <?php if(strtolower($this->uri->segment(1)) == 'bufflike') echo 'active' ?>" href="bufflike">
                   <i class="material-icons">thumb_up</i>
-                  <span>BUFF LIKE</span>
+                  <span>Buff Like</span>
                 </a>
               </li>
               <li class="nav-item">
                 <a class="nav-link <?php if(strtolower($this->uri->segment(1)) == 'botreactions') echo 'active' ?>" href="botreactions">
                   <i class="material-icons">insert_emoticon</i>
-                  <span>BOT Cảm Xúc</span>
+                  <span>Bot Cảm Xúc</span>
                 </a>
               </li>
               <li class="nav-item">
                 <a class="nav-link <?php if(strtolower($this->uri->segment(1)) == 'vipcomment') echo 'active' ?>" href="vipcomment">
                   <i class="material-icons">comment</i>
-                  <span>VIP COMMENT</span>
+                  <span>Vip Comment</span>
                 </a>
               </li>
               <li class="nav-item">
@@ -65,7 +65,7 @@
               <li class="nav-item">
                 <a class="nav-link <?php if(strtolower($this->uri->segment(1)) == 'user') echo 'active' ?>" href="user">
                   <i class="material-icons">people</i>
-                  <span>USER</span>
+                  <span>User</span>
                 </a>
               </li>
               <?php } ?>
@@ -74,7 +74,7 @@
               <li class="nav-item">
                 <a class="nav-link <?php if(strtolower($this->uri->segment(1)) == 'friendmanagement') echo 'active' ?>" href="friendmanagement">
                   <i class="material-icons">person_add</i>
-                  <span>FRIEND MANAGEMENT</span>
+                  <span>Quản lý bạn bè</span>
                 </a>
               </li>
               <?php } ?>
@@ -82,7 +82,7 @@
               <li class="nav-item">
                 <a class="nav-link <?php if(strtolower($this->uri->segment(1)) == 'history') echo 'active' ?>" href="history">
                   <i class="material-icons">history</i>
-                  <span>LỊCH SỬ</span>
+                  <span>Lịch sử</span>
                 </a>
               </li>
 
