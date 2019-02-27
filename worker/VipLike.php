@@ -28,8 +28,7 @@ class Task extends Threaded {
 }
 //$start_time = microtime(TRUE);
 $model = new DataLayer();
-$request = new Request();
-$p = new Pool(20);
+$p = new Pool(10);
 $processes = $model->getActiveProcesses();
 if(count($processes) > 0)
 {
@@ -38,6 +37,7 @@ if(count($processes) > 0)
         $datas = $model->getRandByProcessId($process["id"], $process["quantity_per_cron"]);
         if(count($datas) > 0)
         {
+            $request = new Request();
             foreach($datas as $data)
             {
                 $p->submit(new Task($data, $request));

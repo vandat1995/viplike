@@ -4,6 +4,12 @@ require_once __DIR__ . "/UserAgent.php";
 class Request
 {
     private $curl;
+    protected $userAgent;
+
+    public function __construct()
+    {
+        $this->userAgent = $this->__getRandUserAgent();
+    }
     
     public function get($url, $cookie = false)
     {
@@ -13,9 +19,11 @@ class Request
         curl_setopt($this->curl, CURLOPT_FRESH_CONNECT, true);
         curl_setopt($this->curl, CURLOPT_COOKIESESSION, true);
         if($cookie)
-			curl_setopt($this->curl, CURLOPT_COOKIE, $cookie);       
+        {
+            curl_setopt($this->curl, CURLOPT_COOKIE, $cookie);       
+        }
         curl_setopt($this->curl, CURLOPT_RETURNTRANSFER, 1);
-        curl_setopt($this->curl, CURLOPT_USERAGENT, $this->__getRandUserAgent());
+        curl_setopt($this->curl, CURLOPT_USERAGENT, $this->userAgent);
         curl_setopt($this->curl, CURLOPT_TIMEOUT, 30); 
         curl_setopt($this->curl, CURLOPT_SSL_VERIFYPEER, false);
         curl_setopt($this->curl, CURLOPT_SSL_VERIFYHOST, false);
@@ -31,7 +39,7 @@ class Request
         $this->curl = curl_init();
         curl_setopt($this->curl, CURLOPT_URL, $url);
 		curl_setopt($this->curl, CURLOPT_HEADER, 1);
-		curl_setopt($this->curl, CURLOPT_USERAGENT, $this->__getRandUserAgent()); 
+		curl_setopt($this->curl, CURLOPT_USERAGENT, $this->userAgent); 
 		curl_setopt($this->curl, CURLOPT_SSL_VERIFYPEER, false);
 		curl_setopt($this->curl, CURLOPT_COOKIESESSION, true);
 		if($cookie)
