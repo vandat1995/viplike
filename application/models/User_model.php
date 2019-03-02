@@ -32,6 +32,14 @@ class User_model extends CI_Model
 		return $this->db->delete($this->__table, ["id" => $id]);
 	}
 
+	public function find($id)
+	{
+		$this->db->select("id, username, full_name, active, balance, avatar, role_id");
+		$this->db->where("id", $id);
+		$query = $this->db->get($this->__table);
+		return $query->num_rows() > 0 ? $query->row() : false;
+	}
+
 	public function getBalance($id)
 	{
 		$this->db->select('balance');

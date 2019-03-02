@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-	<title>Đăng nhập - Hệ thống vip like</title>
+	<title>Đăng ký</title>
 	<meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <base href="<?php echo base_url(); ?>">
@@ -28,7 +28,7 @@
     <link rel="stylesheet" type="text/css" href="assets/login/css/main.css">
     <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/7.33.1/sweetalert2.min.css">
 <!--===============================================================================================-->
-
+    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
 </head>
 <body>
 	
@@ -37,17 +37,8 @@
 			<div class="wrap-login100 p-l-110 p-r-110 p-t-62 p-b-33">
 				<form class="login100-form validate-form flex-sb flex-w">
 					<span class="login100-form-title p-b-53">
-						Sign In
+						Đăng Ký
 					</span>
-
-					<!-- <a href="javascript:void(0)" class="btn-face m-b-20">
-						<i class="fa fa-facebook-official"></i>
-						FB Admin
-					</a>
-
-					<a href="javascript:void(0)" class="btn-google m-b-20">
-						Bảng giá
-					</a> -->
 					
 					<div class="p-t-31 p-b-9">
 						<span class="txt1">
@@ -61,7 +52,7 @@
 					
 					<div class="p-t-13 p-b-9">
 						<span class="txt1">
-							Password
+							Mật khẩu
 						</span>
 					</div>
 					<div class="wrap-input100 validate-input" data-validate = "Password is required">
@@ -69,15 +60,40 @@
 						<span class="focus-input100"></span>
                     </div>
 
-					<div class="container-login100-form-btn m-t-17">
-						<button type="button" class="login100-form-btn" id="btn_signin">
-							Sign In
-						</button>
+                    <div class="p-t-13 p-b-9">
+						<span class="txt1">
+							Nhập lại mật khẩu
+						</span>
+					</div>
+					<div class="wrap-input100 validate-input" data-validate = "Password is required">
+						<input class="input100" type="password" name="re_password" id="re_password">
+						<span class="focus-input100"></span>
+                    </div>
+
+                    <div class="p-t-31 p-b-9">
+						<span class="txt1">
+							Họ tên
+						</span>
+					</div>
+					<div class="wrap-input100 validate-input" data-validate = "Full name is required">
+						<input class="input100" type="text" name="fullname" id="fullname">
+						<span class="focus-input100"></span>
 					</div>
 
+                    <div class="p-t-31 p-b-9">
+                        <div class="g-recaptcha" data-sitekey="6LctA5UUAAAAALSdpbtnU773bUc0EgDbpHl2Q_aY"></div>
+					</div>
+                                        
+
+					<div class="container-login100-form-btn m-t-17">
+						<button type="button" class="login100-form-btn" id="btn_register">
+							Đăng Ký
+						</button>
+					</div>
+                    
 					<div class="w-full text-center p-t-55">
-						<a href="register" class="txt2 bo1">
-							Đăng ký
+						<a href="login" class="txt2 bo1">
+							Đăng nhập
 						</a>
 					</div>
 				</form>
@@ -105,48 +121,45 @@
     
     <script>
         $(document).ready(() => {
-            $("#btn_signin").on("click", () => {
-                signin();
+            $("#btn_register").on("click", () => {
+                register();
             });
-
-            $("#password").keypress((e) => {
-				if(e.which == 13)
-                    signin();
-			});
         });
 
-        function signin() {
-            let username = $("#username").val().trim();
-            let password = $("#password").val();
+        const register = function() {
+
             $.ajax({
-                url: "<?php echo base_url('Authentication/validate'); ?>",
-                type: "POST",
+                method: "POST",
+                url: "Register/newUser",
                 dataType: "json",
                 data: {
-                    username: username,
-                    password: password
+                    username: $("#username").val().trim(),
+                    password: $("#password").val().trim(),
+                    re_password: $("#re_password").val().trim(),
+                    fullname: $("#fullname").val().trim(),
+                    captcha: $("#g-recaptcha-response").val()
                 }
             }).done((res) => {
                 if(res.error) {
                     Swal({
                         html: res.error.message,
-                        type: 'error',
-                        animation: false,
-                        customClass: 'animated tada'
+                        type: 'error'
+                    });
+                } else {
+                    Swal({
+                        html: `Đăng ký thành công. Bạn có thể đăng nhập ngay bây giờ`,
+                        type: 'success'
                     });
                 }
-                else {
-                    window.location = `<?php echo base_url('${res.url}'); ?>`;
-                }
-            }).fail((xhr, textStatus) => {
+            }).fail(() => {
                 Swal({
-                    text: `Server error: ${textStatus}`,
-                    type: 'error',
-                    animation: false,
-                    customClass: 'animated tada'
+                    html: `Không thể kết nối tới máy chủ. Vui lòng thử lại sau.`,
+                    type: 'error'
                 });
             });
         }
+
+        
         
     </script>
 

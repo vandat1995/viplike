@@ -41,7 +41,7 @@ class BotReactions extends CI_Controller
         $new_balance = $current_balance - $price;
         if( $new_balance < 0 ) 
         {
-            echo json_encode(["error" => ["message" => "Your money is not enough", "code" => 0], "message" => ""]);
+            echo json_encode(["error" => ["message" => "Tài khoản của bạn không đủ", "code" => 0], "message" => ""]);
             return;
         }
 
@@ -86,6 +86,7 @@ class BotReactions extends CI_Controller
             echo json_encode(["error" => ["message" => "Invalid input"], "message" => ""]);
             return;
         }
+
         $success = 0;
         $fail = 0;
         foreach($list_id as $id)

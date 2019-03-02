@@ -55,6 +55,7 @@ $route['translate_uri_dashes'] = FALSE;
 
 $route['(?i)login'] = 'Authentication/Login';
 $route['(?i)logout'] = 'Authentication/Logout';
+$route['(?i)register'] = 'Register';
 $route['(?i)viplikesetting'] = 'VipLikeSetting';
 $route['(?i)friendmanagement'] = 'FriendManagement';
 $route['(?i)vipcomment'] = 'VipComment';

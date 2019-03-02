@@ -1,3 +1,4 @@
+<?php if ($this->session->userdata("role_id") == 1) { ?>
 <div class="row">
     <div class="col-lg-6 mb-6">
         <div class="card card-small mb-4">
@@ -68,6 +69,51 @@
                 </li>
             </ul>
         </div>
+        <div class="card card-small mb-4">
+            <div class="card-header border-bottom">
+                <h6 class="m-0">Chỉnh sửa user</h6>
+            </div>
+            <ul class="list-group list-group-flush">
+                <li class="list-group-item p-3">
+                    <div class="form-row">
+                        <div class="form-group col-md-6">
+                            <label>Username <span class="text-danger">*</span></label>
+                            <input type="text" id="e_username" class="form-control" disabled> 
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label>Mật khẩu <span class="text-danger">*</span></label>
+                            <input type="password" id="e_password" class="form-control" placeholder="" disabled> 
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group col-md-6">
+                            <label>Họ tên</label>
+                            <input type="text" id="e_fullname" class="form-control"> 
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label>Link avatar</label>
+                            <input type="text" id="e_avatar" class="form-control" placeholder=""> 
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group col-md-6">
+                            <label>Quyền <span class="text-danger">*</span></label>
+                            <select id="e_permissions" class="form-control">
+                                <option></option>
+                                <option value="1">Admin</option>
+                                <option value="2">CTV</option>
+                                <option value="3">Member</option>
+                            </select>
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label>Tài khoản</label>
+                            <input type="number" id="e_balance" class="form-control" placeholder="" value="0"> 
+                        </div>
+                    </div>
+                    <button type="button" id="btn_edit" class="btn btn-accent">Submit</button>
+                </li>
+            </ul>
+        </div>
     </div>
 </div>
 
@@ -110,6 +156,10 @@
 
         $("#btn_deposit").on("click", () => {
             deposit();
+        });
+
+        $("#btn_edit").on("click", () => {
+            submitEditUser();
         });
     });
 
@@ -233,10 +283,8 @@
                 }
             }).fail((xhr, textStatus, errorThrown) => {
                 Swal({
-                    html: `${xhr.status} ${textStatus}: ${errorThrown}`,
+                    html: `${xhr} ${textStatus}: ${errorThrown}`,
                     type: 'error',
-                    animation: false,
-                    customClass: 'animated tada'
                 });
             }).always(() => {
                 loadListUser(); 
@@ -265,4 +313,88 @@
             }
         });
     }
+
+    function editUser(user_id) {
+        $.ajax({
+            url: "User/getInfoById",
+            method: "GET", 
+            dataType: "json",
+            data: {
+                user_id: user_id
+            }
+        }).done((res) => {
+            if (res.error) {
+                Swal({
+                    html: `${res.error.message}`,
+                    type: 'error',
+                });
+            } else {
+                $("#e_username").val(res.data.username);
+                $("#e_fullname").val(res.data.full_name);
+                $("#e_avatar").val(res.data.avatar);
+                $("#e_permissions").val(res.data.role_id);
+                $("#e_balance").val(res.data.balance);
+                $("#e_password").val("xxxxxx");
+            }
+        }).fail((xhr, textStatus, errorThrown) => {
+            Swal({
+                html: `${status} ${textStatus}: ${errorThrown}`,
+                type: 'error',
+            });
+        });
+    }
+
+    function submitEditUser() {
+        let username    = $("#e_username").val().trim();
+        let fullname    = $("#e_fullname").val().trim();
+        let avatar      = $("#e_avatar").val().trim();
+        let per         = $("#e_permissions").val().trim();
+        let bl          = parseInt($("#e_balance").val().trim());
+        if( !username || !fullname || !per || bl < 0 ) {
+            Swal({
+                text: `Invalid data`,
+                type: 'error',
+            });
+            return;
+        }
+        $.ajax({
+            url: "User/edit",
+            type: "POST",
+            dataType: "json",
+            data: {
+                username: username,
+                fullname: fullname,
+                avatar: avatar,
+                permissions: per,
+                balance: bl
+            },
+            beforeSend: () => loading("btn_edit", "show", "Processing")
+        }).done((res) => {
+            if(res.error) {
+                Swal({
+                    html: `${res.error.message}`,
+                    type: 'error'
+                });
+            } else {
+                Swal({
+                    html: `${res.message}`,
+                    type: 'success'
+                });
+            }
+        }).fail((xhr, textStatus, errorThrown) => {
+            Swal({
+                html: `${xhr.status} ${textStatus}: ${errorThrown}`,
+                type: 'error'
+            });
+        }).always(() => {
+            loadListUser();
+            loading("btn_edit", "hide", "Submit");
+        });
+    }
+
 </script>
+
+<?php } else { ?>
+
+
+<?php } ?>

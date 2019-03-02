@@ -172,7 +172,7 @@
                 let i = 1;
                 for(let task of res.data) {
                     table.row.add({
-                        "0": i,
+                        "0": task.id,
                         "1": task.name,
                         "2": task.uid,
                         "3": task.reactions,

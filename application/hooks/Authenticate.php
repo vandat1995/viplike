@@ -4,13 +4,12 @@ class Authenticate
 {
 	protected $CI;
 	private $current_controller;
-	private $exclude_controller = ['Authentication'];
+	private $exclude_controller = ['Authentication', 'Register'];
 
 	public function __construct()
 	{
 		$this->CI =& get_instance();
 		$this->current_controller = $this->CI->router->class;
-		
 	}
 
 	public function checkUserLogin()
