@@ -223,7 +223,14 @@ class WorkerVip extends CI_Controller
             {
                 return false;
             }
-            return $feed["data"][0]["id"];
+            if (isset($feed["data"][0]["story"]))
+            {
+                return explode("_", $feed["data"][0]["id"])[1];
+            }
+            else 
+            {
+                return $feed["data"][0]["id"];
+            }
         }
         return false;
     }
@@ -490,8 +497,7 @@ class WorkerVip extends CI_Controller
 
     public function test()
     {
-        $thread = $this->load->library("multi_handler");
-        $thread->start();
+        
     }
 
 }
