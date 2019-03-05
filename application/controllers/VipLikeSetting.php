@@ -13,6 +13,7 @@ class VipLikeSetting extends CI_Controller
         $this->load->model("token_model");
         $this->load->model("user_model");
         $this->load->model("setting_model");
+        $this->load->library("collections");
         $this->data["prices"] = $this->setting_model->getAll();
     }
 
@@ -43,6 +44,14 @@ class VipLikeSetting extends CI_Controller
             echo json_encode(["error" => ["message" => "Dữ liệu nhập vào không hợp lệ.", "code" => 0], "message" => ""]);
             return;
         }
+
+        $uid = $this->collections->convertUrlToUid($uid);
+        if( $uid === false )
+        {
+            echo json_encode(["error" => ["message" => "UID hoặc link profile không đúng. Vui lòng kiểm tra lại", "code" => 0], "message" => ""]);
+            return;
+        }
+
         if( $this->task_model->checkExistUID($uid) )
         {
             echo json_encode(["error" => ["message" => "UID này đã tồn tại trong hệ thống", "code" => 0], "message" => ""]);
@@ -193,5 +202,6 @@ class VipLikeSetting extends CI_Controller
             return;
         }
     }
+
 
 }

@@ -8,7 +8,7 @@
                 <li class="list-group-item p-3">
                     <div class="form-row">
                         <div class="form-group col-md-6">
-                            <label>UID VIP <span class="text-danger">*</span></label>
+                            <label>UID hoặc link profile <span class="text-danger">*</span></label>
                             <input type="text" id="uid" class="form-control" placeholder=""> 
                         </div>
                         <div class="form-group col-md-6">
