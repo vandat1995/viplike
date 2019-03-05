@@ -225,12 +225,12 @@ class WorkerVip extends CI_Controller
             }
             if (isset($feed["data"][0]["story"]))
             {
-                return explode("_", $feed["data"][0]["id"])[1];
+                if (preg_match('/profile.picture/', $feed["data"][0]["story"]))
+                {
+                    return explode("_", $feed["data"][0]["id"])[1];
+                }
             }
-            else 
-            {
-                return $feed["data"][0]["id"];
-            }
+            return $feed["data"][0]["id"];
         }
         return false;
     }
