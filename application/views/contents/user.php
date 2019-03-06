@@ -395,6 +395,108 @@
 </script>
 
 <?php } else { ?>
+    
+    <div class="col-lg-6 mb-6">
+        
+        <div class="card card-small mb-4">
+            <div class="card-header border-bottom">
+                <h6 class="m-0">Chỉnh sửa thông tin cá nhân</h6>
+            </div>
+            <ul class="list-group list-group-flush">
+                <li class="list-group-item p-3">
+                    <div class="form-row">
+                        <div class="form-group col-md-6">
+                            <label>Username <span class="text-danger">*</span></label>
+                            <input type="text" id="e_username" class="form-control" disabled> 
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label>Mật khẩu <span class="text-danger">*</span></label>
+                            <input type="password" id="e_password" class="form-control" placeholder=""> 
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group col-md-6">
+                            <label>Họ tên</label>
+                            <input type="text" id="e_fullname" class="form-control"> 
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label>Link avatar</label>
+                            <input type="text" id="e_avatar" class="form-control" placeholder=""> 
+                        </div>
+                    </div>
+                    
+                    <button type="button" id="btn_edit" class="btn btn-accent">Submit</button>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
 
+<script>
+    $(() => {
+        loadInfo();
+        $("#btn_edit").on("click", () => {
+            changeInfo();
+        });
+    });
+
+    function loadInfo() {
+        $.ajax({
+            method: "GET",
+            url: "User/info",
+            dataType: "json"
+        }).done(res => {
+            if (res.error) {
+                Swal({
+                    html: `${res.error.message}`,
+                    type: 'error'
+                });
+            } else {
+                $("#e_username").val(res.data.username);
+                $("#e_fullname").val(res.data.full_name);
+                $("#e_avatar").val(res.data.avatar);
+            }
+        }).fail(() => {
+            Swal({
+                html: `Kết nối tới server thất bại. Vui lòng thử lại`,
+                type: 'error'
+            });
+        });
+    }
+
+    function changeInfo() {
+        let password    = $("#e_password").val().trim();
+        let fullname    = $("#e_fullname").val().trim();
+        let avatar      = $("#e_avatar").val().trim();
+        $.ajax({
+            method: "POST",
+            url: "User/changeInfoProfile",
+            dataType: "json",
+            data: {
+                password: password,
+                fullname: fullname,
+                avatar: avatar
+            }
+        }).done(res => {
+            if (res.error) {
+                Swal({
+                    html: `${res.error.message}`,
+                    type: 'error'
+                });
+            } else {
+                Swal({
+                    html: `Cập nhật thông tin thành công`,
+                    type: 'success'
+                });
+            }
+        }).fail(() => {
+            Swal({
+                html: `Kết nối tới server thất bại. Vui lòng thử lại`,
+                type: 'error'
+            });
+        });
+    }
+
+</script>
 
 <?php } ?>

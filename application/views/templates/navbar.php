@@ -45,7 +45,7 @@
                   <div class="dropdown-menu dropdown-menu-small">
                     <a class="dropdown-item" href="javascript:void(0)">
                       <i class="material-icons">attach_money</i> <label class="badge badge-success"><?= $this->session->userdata("balance") ?> VND</label></a>
-                    <a class="dropdown-item" href="javascript:void(0)">
+                    <a class="dropdown-item" href="user">
                       <i class="material-icons">&#xE7FD;</i> Profile</a>
                     <?php if($this->session->userdata('role_id') == 1) { ?>
                     <a class="dropdown-item" href="Token">
