@@ -40,6 +40,7 @@ class Tokenprocessmap_model extends CI_Model
             $this->db->join("processes p", "p.id = tpm.process_id");
             $this->db->join("tasks t", "t.id = p.task_id");
             $this->db->where("t.user_id", $user_id);
+            $this->db->where("tpm.is_runned", "1");
         }
         else {
             $this->db->from($this->__table);
