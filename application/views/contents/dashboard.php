@@ -43,7 +43,7 @@
                         <h6 class="stats-small__value count my-3"><?= $total_like_process ?></h6>
                       </div>
                       <div class="stats-small__data">
-                        <span class="stats-small__percentage stats-small__percentage--decrease">2.4%</span>
+                        
                       </div>
                     </div>
                     <canvas height="120" class="blog-overview-stats-small-5"></canvas>
