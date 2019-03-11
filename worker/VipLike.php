@@ -33,6 +33,7 @@ class Task extends Threaded {
             }
             
         }
+        else
         {
             $this->updateTokenDieAndStatus(false, $tpm_id, 1);
         }
