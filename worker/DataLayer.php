@@ -32,15 +32,16 @@ class DataLayer {
         return $this->processes->select("processes.id, processes.vip_type, processes.task_id, processes.post_id, tasks.quantity, tasks.quantity_per_cron")
         ->join("tasks", "tasks.id", "=", "processes.task_id")
         ->where("processes.is_done", 0)
+        ->where("processes.vip_type", "like")
         ->get();
     }
 
     public function getRandByProcessId($process_id, $limit)
     {
-        return $this->token_process_map->select("token_process_map.id, token_process_map.reaction, tokens.token, processes.post_id")
+        return $this->token_process_map->select("token_process_map.id, token_process_map.reaction, tokens.id as token_id, tokens.token, processes.post_id")
         ->join("processes", "processes.id", "=", "token_process_map.process_id")
         ->join("tokens", "tokens.id", "=", "token_process_map.token_id")
-        ->where("processes.vip_type", "like")
+        //->where("processes.vip_type", "like")
         ->where("token_process_map.process_id", $process_id)
         ->where("token_process_map.is_runned", 0)
         ->limit($limit)

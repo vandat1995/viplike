@@ -37,6 +37,7 @@ class Token_model extends CI_Model
     public function getRandOneToken()
     {
         $this->db->select("token");
+        $this->db->where("status", 1);
         $this->db->order_by("RAND()");
         $this->db->limit(1);
         $query = $this->db->get($this->__table);

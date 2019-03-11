@@ -50,10 +50,10 @@ class Request
 		curl_setopt($this->curl, CURLOPT_RETURNTRANSFER, 1); 
 		curl_setopt($this->curl, CURLOPT_FOLLOWLOCATION, 1); 
 		$result = curl_exec($this->curl);
-        $httpcode = curl_getinfo($this->curl, CURLINFO_HTTP_CODE);
+        //$httpcode = curl_getinfo($this->curl, CURLINFO_HTTP_CODE);
         curl_close($this->curl);
         $this->curl = null;
-        return $httpcode == 200 ? $result : false;
+        return $result;
     }
     
     private function __getRandUserAgent()

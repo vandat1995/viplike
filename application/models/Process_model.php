@@ -54,4 +54,17 @@ class Process_model extends CI_Model
         return $this->db->get()->row()->total;
     }
 
+    public function reCheckProcess()
+    {
+        $this->db->select("p.id, p.task_id, p.post_id, t.quantity");
+        $this->db->from("$this->__table p");
+        $this->db->join("tasks t", "t.id = p.task_id");
+        $this->db->where("p.had_enough", 0);
+        $this->db->where("p.vip_type", "like");
+        $this->db->where("p.is_done", 1);
+        $this->db->where("p.created_at BETWEEN '". date("Y-m-d") . " 00:00:00' AND '". date("Y-m-d") . " 23:59:59'");
+        $query = $this->db->get();
+        return $query->num_rows() > 0 ? $query->result() : false;
+    }
+
 }

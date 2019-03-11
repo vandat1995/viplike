@@ -99,6 +99,35 @@ class WorkerVip extends CI_Controller
         }
     }
 
+    public function TaskReCheckLikeEnough()
+    {
+        $processes = $this->process_model->reCheckProcess();
+        if ($processes) 
+        {
+            foreach ($processes as $process) 
+            {
+                $token = $this->token_model->getRandOneToken();
+                $check = $this->__countLikePost($process->post_id, $token);
+                if ($check)
+                {
+                    if ((int)$check < (int)$process->quantity) {
+                        $count = (int)$process->quantity - (int)$check;
+                        $tokens = $this->token_model->getTokens($count);
+                        foreach($tokens as $t)
+                        {
+                            $this->tokenprocessmap_model->insert(["process_id" => $process->id, "token_id" => $t->id, "reaction" => "LIKE"]);
+                        }
+                        $this->process_model->update($process->id, ["had_enough" => 1]);
+                    }
+                }
+                else
+                {
+                    $this->process_model->update($process->id, ["had_enough" => 1]);
+                }
+            }
+        }
+    }
+
     public function TaskDeleteTokenDie()
     {
         $this->token_model->deleteTokenDie();
@@ -209,6 +238,18 @@ class WorkerVip extends CI_Controller
     private function __checkProcessExist($post_id, $type)
     {
         return $this->process_model->checkExistPostId($post_id, $type);
+    }
+
+    private function __countLikePost($post_id, $token)
+    {
+        $url = "https://graph.facebook.com/v3.2/{$post_id}?fields=likes&access_token={$token}";
+        $response = json_decode($this->request->get($url), true);
+        if (isset($response["likes"])) {
+            if (isset($response["likes"]["count"])) {
+                return $response["likes"]["count"];
+            }
+        }
+        return false;
     }
 
     private function __getNewFeed($vip_uid, $token)
