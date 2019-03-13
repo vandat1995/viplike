@@ -117,7 +117,7 @@ class WorkerVip extends CI_Controller
                         {
                             $this->tokenprocessmap_model->insert(["process_id" => $process->id, "token_id" => $t->id, "reaction" => "LIKE"]);
                         }
-                        $this->process_model->update($process->id, ["had_enough" => 1]);
+                        $this->process_model->update($process->id, ["had_enough" => 0, "is_done" => 0]);
                     }
                 }
                 else

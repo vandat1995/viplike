@@ -9,21 +9,26 @@ class Collections
         $this->_CI->load->library("request");
     }
 
-    public function convertUrlToUid($urlProfile)
+    public function convertUrlToUid($urlProfile, $token)
     {
-        $pattern = '/facebook\.com\/(.+)/';
-        if (preg_match($pattern, $urlProfile, $matches)) {
-            $linkMobile = "https://mbasic." . $matches[0];
-            $htmlRaw = $this->_CI->request->get($linkMobile);
-            $patternUid = '/rid=([0-9]+)/';
-            if (preg_match($patternUid, $htmlRaw, $matches2)) {
-                return $matches2[1];
-            } else {
-                return false;
-            }
-        } else {
+        if (is_numeric($urlProfile)) 
+        {
             return $urlProfile;
         }
+        
+        $pattern = '/facebook\.com\/(.+)(\?)*/';
+        if (preg_match($pattern, $urlProfile, $matches)) 
+        {
+            $username = explode("?", $matches[1])[0];
+            $url = "https://graph.facebook.com/v3.2/{$username}?access_token={$token}";
+            $data = json_decode($this->_CI->request->get($url), true);
+            if (isset($data["id"])) 
+            {
+                return $data["id"];
+            }
+        }
+        return false;
+        
     }
     
     

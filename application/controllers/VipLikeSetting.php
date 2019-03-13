@@ -24,9 +24,9 @@ class VipLikeSetting extends CI_Controller
 
     public function addTask()
     {
-        if( $this->config_model->countCurrentVip() >= MAX_UID_VIP )
+        if( $this->config_model->countCurrentVip() >= (int)file_get_contents(APPPATH . 'config/maxuid.txt') )
         {
-            echo json_encode(["error" => ["message" => "Has reached the system threshold", "code" => 0], "message" => ""]);
+            echo json_encode(["error" => ["message" => "Hệ thống đã đạt ngưỡng VIP UID", "code" => 0], "message" => ""]);
             return;
         }
         $uid = !empty($this->input->post("uid")) ? xss_clean($this->input->post("uid")) : false;
@@ -45,7 +45,8 @@ class VipLikeSetting extends CI_Controller
             return;
         }
 
-        $uid = $this->collections->convertUrlToUid($uid);
+        $token = $this->token_model->getRandOneToken();
+        $uid = $this->collections->convertUrlToUid($uid, $token);
         if( $uid === false )
         {
             echo json_encode(["error" => ["message" => "UID hoặc link profile không đúng. Vui lòng kiểm tra lại", "code" => 0], "message" => ""]);

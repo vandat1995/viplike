@@ -22,6 +22,26 @@
             </ul>
         </div>
     </div>
+    <div class="col-lg-6 mb-6">
+        <div class="card card-small mb-4">
+            <div class="card-header border-bottom">
+                <h6 class="m-0">Cài đặt MAX UID VIP LIKE</h6>
+            </div>
+            <ul class="list-group list-group-flush">
+                <li class="list-group-item p-3">
+                    <div class="form-row">
+                        <div class="form-group col-md-6">
+                            <label>Số lượng UID VIP tối đa <span class="text-danger">*</span></label>
+                            <input type="number" id="max_uid_vip" class="form-control"> 
+                        </div>
+                        
+                    </div>
+                    
+                    <button type="button" id="btn_submitMaxUid" class="btn btn-accent">Cài đặt</button>
+                </li>
+            </ul>
+        </div>
+    </div>
 </div>
 
 <div class="row">
@@ -55,8 +75,48 @@
         $("#btn_submit").on("click", () => {
             createUser();
         });
+
+        $("#btn_submitMaxUid").on("click", () => {
+            setMaxUid();
+        });
         loadListPrice();
+        loadMaxUid();
     });
+
+    function loadMaxUid() {
+        $.getJSON('Setting/loadMaxUidVip', (res) => {
+            
+            $("#max_uid_vip").val(res.data);
+        });
+    }
+
+    function setMaxUid() {
+        $.ajax({
+            method: 'POST',
+            dataType: 'json',
+            url: 'Setting/setMaxUidVip',
+            data: {
+                maxUid : $("#max_uid_vip").val()
+            }
+        }).done(res => {
+            if (res.error) {
+                Swal({
+                    html: res.error.message,
+                    type: 'error'
+                });
+            } else {
+                Swal({
+                    html: 'Thiết lập Max UID Vip thành công.',
+                    type: 'success'
+                });
+            }
+        }).fail(() => {
+            Swal({
+                html: `Không thể kết nối tới server`,
+                type: 'error'
+            });
+        });
+    }
 
     function createUser() {
         let quantity = $("#quantity").val().trim();

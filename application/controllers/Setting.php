@@ -58,6 +58,24 @@ class Setting extends CI_Controller
         echo $this->setting_model->delete($id) ? json_encode(["error" => 0, "message" => "Delete success"]) : json_encode(["error" => ["message" => "Delete fail", "code" => 0], "message" => ""]);
     }
 
+    public function loadMaxUidVip()
+    {
+        $maxUid = file_get_contents(APPPATH . 'config/maxuid.txt');
+        echo json_encode(["data" => $maxUid]);
+    }
+
+    public function setMaxUidVip()
+    {
+        $maxUid = !empty($this->input->post("maxUid")) ? $this->input->post("maxUid") : "";
+        if ($maxUid < 1 || $maxUid == "")
+        {
+            echo json_decode(["error" => ["message" => "Dữ liệu nhập vào không họp lệ"]]);
+            return;
+        }
+        file_put_contents(APPPATH . 'config/maxuid.txt', $maxUid);
+        echo json_encode(["message" => "Thành công"]);
+    }
+
     
 
 
