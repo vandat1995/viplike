@@ -26,8 +26,21 @@ class Task_model extends CI_Model
         return $this->db->delete($this->__table) ? true : false;
     }
 
-    public function getById($id)
+    public function update($id, $data)
     {
+        if (!$this->__isOwner($id, $this->session->userdata("user_id"))) return false;
+        return $this->db->update($this->__table, $data, ["id" => $id]);
+    }
+
+    public function getById($id, $user_id = false)
+    {
+        if ($user_id) 
+        {
+            if (!$this->__isOwner($id, $user_id))
+            {
+                return false;
+            }
+        }
         $this->db->where("id", $id);
         $query = $this->db->get($this->__table);
         return $query->num_rows() ? $query->row() : false;

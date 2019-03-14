@@ -204,5 +204,43 @@ class VipLikeSetting extends CI_Controller
         }
     }
 
+    public function getTaskById()
+    {
+        $task_id = !empty($this->input->get("task_id")) ? $this->input->get("task_id") : "";
+        $task_data = $this->task_model->getById($task_id, $this->session->userdata("user_id"));
+        if (!$task_data) 
+        {
+            echo json_encode(["error" => ["message" => "Hành động không hợp lệ nhé người anh em thiện lành."]]);
+            return;
+        }
+
+        echo json_encode(["data" => ["id" => $task_data->id, "reactions" => $task_data->reactions, "quantity_per_cron" => $task_data->quantity_per_cron]]);
+
+    }
+
+    public function updateTask()
+    {
+        $task_id = !empty($this->input->post("task_id")) ? $this->input->post("task_id") : "";
+        $quantity_per_cron = !empty($this->input->post("quantity_per_cron")) ? $this->input->post("quantity_per_cron") : "";
+        $reactions = !empty($this->input->post("reactions")) ? xss_clean($this->input->post("reactions")) : "";
+        $task_data = $this->task_model->getById($task_id, $this->session->userdata("user_id"));
+        
+        if ($task_id == "" || $reactions == "" || $task_data == false || $quantity_per_cron == "") 
+        {
+            echo json_encode(["error" => ["message" => "Dữ liệu nhập vào không hợp lệ nhé người anh em."]]);
+            return;
+        }
+        if ($quantity_per_cron > $task_data->quantity)
+        {
+            echo json_encode(["error" => ["message" => "Tốc độ lên like không được lớn hơn tổng like."]]);
+            return;
+        }
+
+        $reactions = $this->__parseReactions($reactions, $task_data->quantity);
+        echo $this->task_model->update($task_id, ["quantity_per_cron" => $quantity_per_cron, "reactions" => $reactions]) ? json_encode(["success" => true]) : json_encode(["error" => ["message" => "Chỉnh sửa thất bại, vui lòng thử lại sau"]]);
+
+
+    }
+
 
 }

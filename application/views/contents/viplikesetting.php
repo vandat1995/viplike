@@ -1,3 +1,4 @@
+
 <div class="row">
     <div class="col-lg-6 mb-6">
         <div class="card card-small mb-4">
@@ -144,10 +145,70 @@
 	</div>
 </div>
 
+<div id="myModal" class="modal fade" role="dialog">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h4 class="modal-title">Chỉnh sửa gói vip</h4>
+			</div>
+			<div class="modal-body">
+				<div class="form-row">
+					<div class="form-group col-md-12">
+						<label>Tốc độ like mỗi 5 phút <span class="text-danger">*</span></label>
+						<input type="number" id="equantity_per_cron" class="form-control" min="1">
+                        <input type="hidden" id="eid" class="form-control"> 
+					</div>
+				</div>
+				<label>Loại cảm xúc <span class="text-danger">*</span></label>
+				<div class="form-row">
+					<style>
+					.custom-checkbox {
+						margin-left: 20px;
+					}
+					.custom-checkbox img{
+						margin-left: -10px;
+					}
+				</style>
+				<div class="custom-control custom-checkbox mb-1">
+					<input type="checkbox" class="custom-control-input" id="elike" value="LIKE" name="ereactions" checked>
+					<label class="custom-control-label" for="elike"><img src="assets/images/reactions/like.gif" height="50px" width="50px"></label>
+				</div>
+				<div class="custom-control custom-checkbox mb-1">
+					<input type="checkbox" class="custom-control-input" id="elove" value="LOVE" name="ereactions">
+					<label class="custom-control-label" for="elove"><img src="assets/images/reactions/love.gif" height="50px" width="50px"></label>
+				</div>
+				<div class="custom-control custom-checkbox mb-1">
+					<input type="checkbox" class="custom-control-input" id="ewow" value="WOW" name="ereactions">
+					<label class="custom-control-label" for="ewow"><img src="assets/images/reactions/wow.gif" height="50px" width="50px"></label>
+				</div>
+				<div class="custom-control custom-checkbox mb-1">
+					<input type="checkbox" class="custom-control-input" id="ehaha" value="HAHA" name="ereactions">
+					<label class="custom-control-label" for="ehaha"><img src="assets/images/reactions/haha.gif" height="50px" width="50px"></label>
+				</div>
+				<div class="custom-control custom-checkbox mb-1">
+					<input type="checkbox" class="custom-control-input" id="esad" value="SAD" name="ereactions">
+					<label class="custom-control-label" for="esad"><img src="assets/images/reactions/sad.gif" height="50px" width="50px"></label>
+				</div>
+				<div class="custom-control custom-checkbox mb-1">
+					<input type="checkbox" class="custom-control-input" id="eangry" value="ANGRY" name="ereactions">
+					<label class="custom-control-label" for="eangry"><img src="assets/images/reactions/angry.gif" height="50px" width="50px"></label>
+				</div>
+			</div>
+		</div>
+		<div class="modal-footer">
+			<button type="button" class="btn btn-default" data-dismiss="modal">Đóng</button>
+			<button type="button" onclick="editVip('btn_edit')" id="btn_edit" class="btn btn-primary">Xác nhận</button>
+		</div>
+	</div>
+</div>
+</div>
+
 <script>
     const prices = JSON.parse('<?php echo json_encode($prices); ?>');
     let table;
     $(document).ready(() => {
+        $("#elike").prop("disabled",true);
+        $("#like").prop("disabled",true);
         $("#btn_submit").on("click", () => {
             main();
         });
@@ -169,7 +230,7 @@
         });
 
         table = $(".table").DataTable({
-            dom: '<"datatable-header"B><"datatable-scroll"t>ip<"datatable-footer">',
+            dom: '<"datatable-header"Bf><"datatable-scroll"t>ip<"datatable-footer">',
             columnDefs: [{
                 className: "text-center",
                 targets: "_all"
@@ -194,6 +255,11 @@
                 }     
             ]
         });
+
+        $("#btn_edit").on("click", () => {
+
+        });
+        
         loadListVip();
 
     });
@@ -286,7 +352,7 @@
                         "4": `${parseInt(vip.expired) > 1 ? '<label class="badge badge-success">đang chạy</label>' : '<label class="badge badge-warning">hết hạn</label>'}`,
                         "5": vip.start_day,
                         "6": vip.end_day,
-                        "7": `<button onclick="deleteVip(${vip.id})" type="button" class="mb-2 btn btn-sm btn-danger mr-1"><i class="material-icons">delete</i></button>`
+                        "7": `<button type="button" onclick="showEditVip(${vip.id})" class="mb-2 btn btn-sm btn-warning mr-1"><i class="material-icons">edit</i></button><button onclick="deleteVip(${vip.id})" type="button" class="mb-2 btn btn-sm btn-danger mr-1"><i class="material-icons">delete</i></button>`
                     });
                     i++;
                 }
@@ -336,8 +402,66 @@
         }
     }
 
-    function editVip(id) {
-        console.log("edit");
+    function showEditVip(id) {
+        $.getJSON(`VipLikeSetting/getTaskById?task_id=${id}`, (res) => {
+            if (res.error) {
+                Swal({
+                    text: res.error.message,
+                    type: 'error'
+                });
+            } else {
+                $("#elike, #ewow, #elove, #ehaha, #esad, #eangry").prop("checked", false);
+                $("#equantity_per_cron").val(res.data.quantity_per_cron);
+                $("#eid").val(res.data.id);
+                $reactions = Object.keys(JSON.parse(res.data.reactions));
+                for (react of $reactions) {
+                    $(`#e${react.toLocaleLowerCase()}`).prop("checked", true);
+                }
+                $('#myModal').modal('show');
+            }
+        }).fail(() => alert("Lỗi server, thử lại sau."));
+
+    }
+
+    function editVip(btn_id) {
+        let id = $("#eid").val();
+        let quantity_per_cron = $("#equantity_per_cron").val();
+        let reactions = [];
+        $('input[name="ereactions"]:checked').map((i, e) => {
+            return reactions.push($(e).val());
+        });
+        $.ajax({
+            url: "VipLikeSetting/updateTask",
+            method: "POST",
+            dataType: "json",
+            data: {
+                task_id: id,
+                quantity_per_cron : quantity_per_cron,
+                reactions: reactions
+            },
+            beforSend: () => loading(btn_id, "show", "Processing")
+        }).done((res) => {
+            if (res.error) {
+                Swal({
+                    text: res.error.message,
+                    type: 'error'
+                });
+            } else {
+                Swal({
+                    text: 'Chỉnh sửa thành công.',
+                    type: 'success'
+                });
+                $('#myModal').modal('hide');
+            }
+        }).fail(() => {
+            Swal({
+                text: "Server đang gặp lỗi vui lòng thử lại sau",
+                type: 'error'
+            });
+        }).always(() => {
+            loading(btn_id, "hide", "Xác nhận");
+            
+        });
     }
 
 
