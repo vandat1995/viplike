@@ -1,14 +1,16 @@
 <?php 
 
-require __DIR__ . "/DataLayer.php" ;
-require __DIR__. "/libs/Request.php";
+require __DIR__ . "/DataLayer.php";
+require __DIR__ . "/libs/Request.php";
 
-class Task extends Threaded {
+class Task extends Threaded
+{
 
     public $data;
     public $request;
 
-    public function __construct($val, $request) {
+    public function __construct($val, $request)
+    {
         $this->data = $val;
         $this->request = $request;
     }
@@ -16,7 +18,6 @@ class Task extends Threaded {
     public function run()
     {
         $this->__reactionPost($this->data["post_id"], $this->data["reaction"], $this->data["token"], $this->data["token_id"], $this->data["id"]);
-        
     }
 
     public function __reactionPost($post_id, $reaction, $token, $token_id, $tpm_id)
@@ -26,31 +27,23 @@ class Task extends Threaded {
         if (isset($response["error"])) {
             if (isset($response["error"]["code"]) && $response["error"]["code"] == 190) {
                 $this->updateTokenDieAndStatus($token_id, $tpm_id, 0);
-            }
-            else 
-            {
+            } else {
                 $this->updateTokenDieAndStatus(false, $tpm_id, 0);
             }
-            
-        }
-        else
-        {
+        } else {
             $this->updateTokenDieAndStatus(false, $tpm_id, 1);
         }
-        
     }
 
-    public function updateTokenDieAndStatus($token_id = false, $tpm_id, $tpm_status) 
+    public function updateTokenDieAndStatus($token_id = false, $tpm_id, $tpm_status)
     {
         $conn = mysqli_connect("localhost", "viplikesim", "viplikesim", "viplikesim");
         if ($token_id) {
             mysqli_query($conn, "UPDATE tokens set status = 0 where id = " . $token_id);
         }
-        mysqli_query($conn, "UPDATE token_process_map set status = ". $tpm_status .", is_runned = 1 where id = " . $tpm_id);
+        mysqli_query($conn, "UPDATE token_process_map set status = " . $tpm_status . ", is_runned = 1 where id = " . $tpm_id);
         mysqli_close($conn);
     }
-
-    
 }
 
 // $p = new Pool(1);
@@ -64,30 +57,23 @@ $model = new DataLayer();
 $p = new Pool(5);
 $processes = $model->getActiveProcesses();
 
-if(count($processes) > 0)
-{
-    foreach($processes as $process)
-    {
+if (count($processes) > 0) {
+    foreach ($processes as $process) {
         $datas = $model->getRandByProcessId($process["id"], $process["quantity_per_cron"]);
-        
-        if(count($datas) > 0)
-        {
+
+        if (count($datas) > 0) {
             $request = new Request();
-            foreach($datas as $data)
-            {
+            foreach ($datas as $data) {
                 $p->submit(new Task($data, $request));
                 // $model->updateTokenProcessMap($data["id"], ["status" => 1, "is_runned" => 1]);
             }
-        }
-        else
-        {
+        } else {
             $model->updateProcess($process["id"], ["is_done" => 1]);
         }
     }
 }
-while($p->collect());
+while ($p->collect());
 $p->shutdown();
 
 
 //$end_time = microtime(TRUE);
-//echo $end_time - $start_time;

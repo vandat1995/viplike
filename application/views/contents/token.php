@@ -54,6 +54,7 @@
 
 <script>
     var tokens;
+    var table;
     $(document).ready(() => {
         $("#btn_import").on("click", async () => {
             $("#btn_import").text("Processing...").prop("disabled", true);
@@ -150,6 +151,33 @@
             }).always(() => loading("btn_checkLiveCookie", "hide", "Check Live All Cookie"));
         });
 
+        table = $(".table").DataTable({
+            dom: '<"datatable-header"Bf><"datatable-scroll"t>ip<"datatable-footer">',
+            columnDefs: [{
+                className: "text-center",
+                targets: "_all"
+            }],
+            lengthMenu: [
+                [ 10, 25, 50, -1 ],
+                [ '10 rows', '25 rows', '50 rows', 'Show all' ]
+            ],
+            paging: true,
+            select: true,
+            pageLength: 25,
+            ordering: false,
+            responsive: true,
+            buttons: [
+                'pageLength',
+                {
+                    text: 'Load Data',
+                    className: 'btn btn-success',
+                    action: (e, dt, node, config) => {
+                        loadToken();
+                    }
+                }     
+            ]
+        });
+
         loadToken();
 
     });
@@ -205,28 +233,53 @@
     }
 
     function loadToken() {
-        $("#result").empty();
+        table.clear().draw();
         $.ajax({
-            url: "<?php echo base_url('Token/getTokens'); ?>",
+            url: "Token/getTokens",
             type: "GET",
             dataType: "json"
         }).done((res) => {
-            if( ! res.error) {
+            if(res.data) {
                 tokens = res.data;
                 let i = 1;
                 for(let token of res.data) {
-                    $("#result").append($("<tr>")
-                        .append($("<td>").html(i))
-                        .append($("<td>").html(token.fullname))
-                        .append($("<td>").html(`<input class="form-control" type="text" value="${token.token ? token.token : token.cookie}">`))
-                        .append($("<td>").html(`${token.status == 1 ? '<label class="badge badge-success">live</label>' : '<label class="badge badge-danger">die</label>'}`))
-                    );
+                    table.row.add({
+                        "0": i,
+                        "1": token.fullname,
+                        "2": `<input class="form-control" type="text" value="${token.token ? token.token : token.cookie}">`,
+                        "3": `${token.status == 1 ? '<label class="badge badge-success">live</label>' : '<label class="badge badge-danger">die</label>'}`
+                    });
                     i++;
                 }
+                table.draw();
             }
-        }).fail((xhr, textStatus) => {
-            console.log(`${xhr}: ${textStatus}`);
+        }).fail((xhr, textStatus, errorThrown) => {
+            Swal({
+                text: `${xhr} ${textStatus}: ${errorThrown}`,
+                type: 'error'
+            });
         });
+        // $.ajax({
+        //     url: "<?php echo base_url('Token/getTokens'); ?>",
+        //     type: "GET",
+        //     dataType: "json"
+        // }).done((res) => {
+        //     if( ! res.error) {
+        //         tokens = res.data;
+        //         let i = 1;
+        //         for(let token of res.data) {
+        //             $("#result").append($("<tr>")
+        //                 .append($("<td>").html(i))
+        //                 .append($("<td>").html(token.fullname))
+        //                 .append($("<td>").html(`<input class="form-control" type="text" value="${token.token ? token.token : token.cookie}">`))
+        //                 .append($("<td>").html(`${token.status == 1 ? '<label class="badge badge-success">live</label>' : '<label class="badge badge-danger">die</label>'}`))
+        //             );
+        //             i++;
+        //         }
+        //     }
+        // }).fail((xhr, textStatus) => {
+        //     console.log(`${xhr}: ${textStatus}`);
+        // });
     }
 
 
