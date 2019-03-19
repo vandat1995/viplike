@@ -24,7 +24,7 @@ class Task extends Threaded {
         $url = "https://graph.facebook.com/{$post_id}/reactions?type={$reaction}&access_token={$token}&method=post";
         $response = json_decode($this->request->get($url), true);
         if (isset($response["error"])) {
-            if (isset($response["error"]["code"]) && response["error"]["code"] == 190) {
+            if (isset($response["error"]["code"]) && $response["error"]["code"] == 190) {
                 $this->updateTokenDieAndStatus($token_id, $tpm_id, 0);
             }
             else 
