@@ -25,8 +25,12 @@ class Task extends Threaded
         $url = "https://graph.facebook.com/{$post_id}/reactions?type={$reaction}&access_token={$token}&method=post";
         $response = json_decode($this->request->get($url), true);
         if (isset($response["error"])) {
-            if (isset($response["error"]["code"]) && $response["error"]["code"] == 190) {
-                $this->updateTokenDieAndStatus($token_id, $tpm_id, 0);
+            if (isset($response["error"]["code"])) {
+                if ($response["error"]["code"] == 190) {
+                    $this->updateTokenDieAndStatus($token_id, $tpm_id, 0);
+                } else {
+                    $this->updateTokenDieAndStatus(false, $tpm_id, 0);
+                }                
             } else {
                 $this->updateTokenDieAndStatus(false, $tpm_id, 0);
             }
@@ -59,7 +63,8 @@ $processes = $model->getActiveProcesses();
 
 if (count($processes) > 0) {
     foreach ($processes as $process) {
-        $datas = $model->getRandByProcessId($process["id"], $process["quantity_per_cron"]);
+        $q = $process["quantity_per_cron"] < 50 ? $process["quantity_per_cron"] : 50;
+        $datas = $model->getRandByProcessId($process["id"], $q);
 
         if (count($datas) > 0) {
             $request = new Request();

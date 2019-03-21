@@ -120,10 +120,10 @@ class WorkerVip extends CI_Controller
                         $this->process_model->update($process->id, ["had_enough" => 0, "is_done" => 0]);
                     }
                 }
-                else
-                {
-                    $this->process_model->update($process->id, ["had_enough" => 1]);
-                }
+                // else
+                // {
+                //     $this->process_model->update($process->id, ["had_enough" => 1]);
+                // }
             }
         }
     }
