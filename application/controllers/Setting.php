@@ -60,19 +60,23 @@ class Setting extends CI_Controller
 
     public function loadMaxUidVip()
     {
-        $maxUid = file_get_contents(APPPATH . 'config/maxuid.txt');
-        echo json_encode(["data" => $maxUid]);
+        $config = json_decode(file_get_contents(APPPATH . 'config/maxuid.txt'), true);
+
+        echo json_encode(["data" => $config]);
     }
 
     public function setMaxUidVip()
     {
         $maxUid = !empty($this->input->post("maxUid")) ? $this->input->post("maxUid") : "";
-        if ($maxUid < 1 || $maxUid == "")
+        $maintanceMode = $this->input->post("maintanceMode");
+        if ($maxUid < 1 || $maxUid == "" || $maintanceMode == "")
         {
-            echo json_decode(["error" => ["message" => "Dữ liệu nhập vào không họp lệ"]]);
+            echo json_encode(["error" => ["message" => "Dữ liệu nhập vào không họp lệ"]]);
             return;
         }
-        file_put_contents(APPPATH . 'config/maxuid.txt', $maxUid);
+        $config = json_encode(["maxUid" => $maxUid, "maintanceMode" => (int)$maintanceMode]);
+        file_put_contents(APPPATH . 'config/maxuid.txt', $config);
+        
         echo json_encode(["message" => "Thành công"]);
     }
 

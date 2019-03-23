@@ -19,6 +19,7 @@ class Dashboard extends CI_Controller
         $this->data['total_vip'] = $this->session->userdata("role_id") == 1 ? $this->task_model->count() + $this->taskcmt_model->count() : $this->task_model->count($this->__user_id) + $this->taskcmt_model->count($this->__user_id);
         $this->data['total_process'] = $this->session->userdata("role_id") == 1 ? $this->process_model->count() : $this->process_model->count($this->__user_id);
         $this->data['total_like_process'] = $this->session->userdata("role_id") == 1 ? $this->tokenprocessmap_model->count() : $this->tokenprocessmap_model->count($this->__user_id);
+        $this->data['maintanceMode'] = json_decode(file_get_contents(APPPATH . 'config/maxuid.txt'), true)['maintanceMode'];
     }
 
     public function index()

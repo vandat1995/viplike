@@ -34,9 +34,16 @@
                             <label>Số lượng UID VIP tối đa <span class="text-danger">*</span></label>
                             <input type="number" id="max_uid_vip" class="form-control"> 
                         </div>
-                        
+
+                        <div class="form-group col-md-6">
+                            <label>On/Off thông báo bảo trì <span class="text-danger">*</span></label>
+                            <select class="form-control" id="maintanceMode">
+                                <option value="1">On</option>
+                                <option value="0">Off</option>
+                            </select>
+                        </div>
                     </div>
-                    
+                                        
                     <button type="button" id="btn_submitMaxUid" class="btn btn-accent">Cài đặt</button>
                 </li>
             </ul>
@@ -86,7 +93,8 @@
     function loadMaxUid() {
         $.getJSON('Setting/loadMaxUidVip', (res) => {
             
-            $("#max_uid_vip").val(res.data);
+            $("#max_uid_vip").val(res.data.maxUid);
+            $("#maintanceMode").val(res.data.maintanceMode)
         });
     }
 
@@ -96,7 +104,8 @@
             dataType: 'json',
             url: 'Setting/setMaxUidVip',
             data: {
-                maxUid : $("#max_uid_vip").val()
+                maxUid : $("#max_uid_vip").val(),
+                maintanceMode: $("#maintanceMode").val()
             }
         }).done(res => {
             if (res.error) {
@@ -106,7 +115,7 @@
                 });
             } else {
                 Swal({
-                    html: 'Thiết lập Max UID Vip thành công.',
+                    html: 'Thiết lập thành công.',
                     type: 'success'
                 });
             }
