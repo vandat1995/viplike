@@ -24,7 +24,7 @@ class VipLikeSetting extends CI_Controller
 
     public function addTask()
     {
-        if( $this->config_model->countCurrentVip() >= (int)file_get_contents(APPPATH . 'config/maxuid.txt') )
+        if( $this->config_model->countCurrentVip() >= (int)json_decode(file_get_contents(APPPATH . 'config/maxuid.txt'), true)["maxUid"] )
         {
             echo json_encode(["error" => ["message" => "Hệ thống đã đạt ngưỡng VIP UID", "code" => 0], "message" => ""]);
             return;
