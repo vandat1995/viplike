@@ -63,7 +63,7 @@ $processes = $model->getActiveProcesses();
 
 if (count($processes) > 0) {
     foreach ($processes as $process) {
-        $q = $process["quantity_per_cron"] < 50 ? $process["quantity_per_cron"] : 50;
+        $q = $process["quantity_per_cron"] < 25 ? $process["quantity_per_cron"] : 25;
         $datas = $model->getRandByProcessId($process["id"], $q);
 
         if (count($datas) > 0) {

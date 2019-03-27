@@ -207,7 +207,7 @@ class VipLikeSetting extends CI_Controller
     public function getTaskById()
     {
         $task_id = !empty($this->input->get("task_id")) ? $this->input->get("task_id") : "";
-        $task_data = $this->task_model->getById($task_id, $this->session->userdata("user_id"));
+        $task_data = $this->task_model->getById($task_id, $this->session->userdata("role_id") == 1 ? false : $this->session->userdata("user_id"));
         if (!$task_data) 
         {
             echo json_encode(["error" => ["message" => "Hành động không hợp lệ nhé người anh em thiện lành."]]);
