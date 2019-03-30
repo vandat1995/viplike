@@ -206,6 +206,7 @@
 <script>
     const prices = JSON.parse('<?php echo json_encode($prices); ?>');
     let table;
+    var list_id = [];
     $(document).ready(() => {
         $("#elike").prop("disabled",true);
         $("#like").prop("disabled",true);
@@ -252,7 +253,14 @@
                     action: (e, dt, node, config) => {
                         loadListVip();
                     }
-                }     
+                },
+                {
+                    text: 'Delete All',
+                    className: 'btn btn-danger btn-delete',
+                    action: async (e, dt, node, config) => {
+                        await deleteMulti();
+                    }
+                }        
             ]
         });
 
@@ -344,6 +352,7 @@
             if(res.data) {
                 let i = 1;
                 for(let vip of res.data) {
+                    list_id.push(vip.id);
                     table.row.add({
                         "0": i,
                         "1": vip.uid,
@@ -369,6 +378,7 @@
 
     function deleteVip(id) {
         if(confirm("Bạn có chắc muốn xóa?")) {
+            
             $.ajax({
                 url: "<?php echo base_url('VipLikeSetting/deleteTask'); ?>",
                 type: "POST",
@@ -400,6 +410,31 @@
                 });
             }).always(() => loadListVip());
         }
+    }
+
+    async function deleteMulti() {
+        if(confirm(`Bạn có chắc muốn xóa ${list_id.length} uid ?`)) {
+            $(".btn-delete").text("Đang xoá, vui lòng chờ trong giây lát...");
+            for (let id of list_id) {
+                await deleteall(id);
+            }
+            loadListVip();
+            alert("Xoa thanh cong.");
+            $(".btn-delete").text("Delete all");
+        }
+    }
+
+    function deleteall(id) {
+        return new Promise(resolve => {
+            $.ajax({
+                url: "<?php echo base_url('VipLikeSetting/deleteTask'); ?>",
+                type: "POST",
+                data: {
+                    task_id: id
+                },
+                dataType: "json"
+            }).done(() => resolve());
+        });
     }
 
     function showEditVip(id) {

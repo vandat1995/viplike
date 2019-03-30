@@ -82,7 +82,7 @@ $db['default'] = array(
 	'dbdriver' => 'pdo',
 	'port'	   => '3306',
 	'dbprefix' => '',
-	'pconnect' => FALSE,
+	'pconnect' => TRUE,
 	'db_debug' => (ENVIRONMENT !== 'production'),
 	'cache_on' => FALSE,
 	'cachedir' => '',
