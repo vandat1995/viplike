@@ -46,7 +46,7 @@ class Token_model extends CI_Model
 
     public function getTokens($quantity = false)
     {
-        $this->db->select("id, token, cookie");
+        $this->db->select("id, token, cookie, uid");
         $this->db->where("status", 1);
         $this->db->order_by("RAND()");
         if( $quantity !== false )

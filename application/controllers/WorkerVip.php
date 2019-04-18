@@ -538,7 +538,24 @@ class WorkerVip extends CI_Controller
 
     public function test()
     {
-        
+        //$data = $this->tokenprocessmap_model->getRandByProcessId(19528, 10);
+        $datas = $this->tokenprocessmap_model->getRandByProcessId(19528, 10);
+            if( !$datas ) {
+                // Done 1 task process
+                $this->process_model->update($process->id, ["is_done" => 1]);
+                return;
+            }
+            
+            if( true )
+            {
+                foreach( $datas as $data )
+                {
+                    $res = $this->__reactionPostCookie($data->cookie, $data->uid, $data->vip_uid, $data->post_id, $data->reaction);
+                    $this->tokenprocessmap_model->update($data->id, ["status" => (int)$res, "is_runned" => 1]);
+                    //nếu res = false thì cookie die;
+                    $this->token_model->update($data->token_id, ["status" => (int)$res]);
+                }
+            }
     }
 
 }
