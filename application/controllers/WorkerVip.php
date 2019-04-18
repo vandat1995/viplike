@@ -392,7 +392,8 @@ class WorkerVip extends CI_Controller
             
             $post_id = $this->__getNewFeedCookie($task->uid, $tokens[array_rand($tokens)]->cookie);
 
-            if( $this->__checkProcessExist($post_id, "like") || !$post_id )
+            $count_post = $this->process_model->countPost1Day($task->id);
+            if( $this->__checkProcessExist($post_id, "like") || !$post_id || $count_post >= MAX_POST_PER_DAY)
             {
                 continue;
             }

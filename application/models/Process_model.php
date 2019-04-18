@@ -67,4 +67,14 @@ class Process_model extends CI_Model
         return $query->num_rows() > 0 ? $query->result() : false;
     }
 
+    public function countPost1Day($task_id) 
+    {
+        $this->db->select("count(*) total");
+        $this->db->from($this->__table);
+        $this->db->where("task_id", $task_id);
+        $this->db->where("created_at BETWEEN '". date("Y-m-d") . " 00:00:00' AND '". date("Y-m-d") . " 23:59:59'");
+        $query = $this->db->get();
+        return !empty($query->row()->total) ? $query->row()->total : 0;
+    }
+
 }

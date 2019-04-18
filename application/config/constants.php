@@ -97,3 +97,4 @@ define('MAX_UID_VIP', 100);
 define('MAX_UID_BOT', 100);
 
 define('USE_COOKIE', false);
+define('MAX_POST_PER_DAY', 5);
