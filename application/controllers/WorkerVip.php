@@ -101,31 +101,55 @@ class WorkerVip extends CI_Controller
 
     public function TaskReCheckLikeEnough()
     {
-        $processes = $this->process_model->reCheckProcess();
-        if ($processes) 
-        {
-            foreach ($processes as $process) 
+        if (USE_COOKIE == false) {
+            $processes = $this->process_model->reCheckProcess();
+            if ($processes) 
             {
-                $token = $this->token_model->getRandOneToken();
-                $check = $this->__countLikePost($process->post_id, $token);
-                if ($check)
+                foreach ($processes as $process) 
                 {
-                    if ((int)$check < (int)$process->quantity) {
-                        $count = (int)$process->quantity - (int)$check;
-                        $tokens = $this->token_model->getTokens($count);
-                        foreach($tokens as $t)
-                        {
-                            $this->tokenprocessmap_model->insert(["process_id" => $process->id, "token_id" => $t->id, "reaction" => "LIKE"]);
+                    $token = $this->token_model->getRandOneToken();
+                    $check = $this->__countLikePost($process->post_id, $token);
+                    if ($check)
+                    {
+                        if ((int)$check < (int)$process->quantity) {
+                            $count = (int)$process->quantity - (int)$check;
+                            $tokens = $this->token_model->getTokens($count);
+                            foreach($tokens as $t)
+                            {
+                                $this->tokenprocessmap_model->insert(["process_id" => $process->id, "token_id" => $t->id, "reaction" => "LIKE"]);
+                            }
+                            $this->process_model->update($process->id, ["had_enough" => 0, "is_done" => 0]);
                         }
-                        $this->process_model->update($process->id, ["had_enough" => 0, "is_done" => 0]);
                     }
+                    
                 }
-                // else
-                // {
-                //     $this->process_model->update($process->id, ["had_enough" => 1]);
-                // }
+            }
+        } 
+        else {
+            $processes = $this->process_model->reCheckProcess();
+            if ($processes) 
+            {
+                foreach ($processes as $process) 
+                {
+                    $cookie = $this->token_model->getRandOneCookie();
+                    $check = $this->__countLikePostCookie($process->post_id, $cookie);
+                    if ($check)
+                    {
+                        if ((int)$check < (int)$process->quantity) {
+                            $count = (int)$process->quantity - (int)$check;
+                            $tokens = $this->token_model->getTokens($count);
+                            foreach($tokens as $t)
+                            {
+                                $this->tokenprocessmap_model->insert(["process_id" => $process->id, "token_id" => $t->id, "reaction" => "LIKE"]);
+                            }
+                            $this->process_model->update($process->id, ["had_enough" => 0, "is_done" => 0]);
+                        }
+                    }
+                    
+                }
             }
         }
+        
     }
 
     public function TaskDeleteTokenDie()
@@ -248,6 +272,17 @@ class WorkerVip extends CI_Controller
             if (isset($response["likes"]["count"])) {
                 return $response["likes"]["count"];
             }
+        }
+        return false;
+    }
+
+    private function __countLikePostCookie($post_id, $cookie)
+    {
+        $url = "https://mbasic.facebook.com/ufi/reaction/profile/browser/?ft_ent_identifier={$post_id}";
+        $html_raw = $this->request->get($url, $cookie);
+        $pattern = "/total_count=([0-9]+)&/";
+        if (preg_match($pattern, $html_raw, $matches)) {
+            return $matches[1];
         }
         return false;
     }
@@ -539,24 +574,10 @@ class WorkerVip extends CI_Controller
 
     public function test()
     {
-        //$data = $this->tokenprocessmap_model->getRandByProcessId(19528, 10);
-        $datas = $this->tokenprocessmap_model->getRandByProcessId(19528, 10);
-            if( !$datas ) {
-                // Done 1 task process
-                $this->process_model->update($process->id, ["is_done" => 1]);
-                return;
-            }
-            
-            if( true )
-            {
-                foreach( $datas as $data )
-                {
-                    $res = $this->__reactionPostCookie($data->cookie, $data->uid, $data->vip_uid, $data->post_id, $data->reaction);
-                    $this->tokenprocessmap_model->update($data->id, ["status" => (int)$res, "is_runned" => 1]);
-                    //nếu res = false thì cookie die;
-                    $this->token_model->update($data->token_id, ["status" => (int)$res]);
-                }
-            }
+        $cookie = "datr=QgiuXIOKSPyfJw12saRxvZzJ;locale=en_US;c_user=100027572603293;xs=44%3AQfc3gKLaPnG_-g%3A2%3A1555314725%3A19239%3A6235;";
+        $post = "1274554972692466";
+        $this->__countLikePostCookie($post, $cookie);
+        
     }
 
 }

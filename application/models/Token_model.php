@@ -44,6 +44,16 @@ class Token_model extends CI_Model
         return ($query->num_rows() > 0) ? $query->row()->token : false;
     }
 
+    public function getRandOneCookie()
+    {
+        $this->db->select("cookie");
+        $this->db->where("status", 1);
+        $this->db->order_by("RAND()");
+        $this->db->limit(1);
+        $query = $this->db->get($this->__table);
+        return ($query->num_rows() > 0) ? $query->row()->cookie : false;
+    }
+
     public function getTokens($quantity = false)
     {
         $this->db->select("id, token, cookie, uid");
