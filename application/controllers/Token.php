@@ -151,27 +151,29 @@ class Token extends CI_Controller
     {
         $pattern_uid = '/profile_id=(.+?)&/';
         $pattern_name = '/<title>(.+?)<.title>/';
-        $html = $this->request->get("https://mbasic.facebook.com/profile.php", $cookie);
+        $html = json_decode($this->request->get("https://www.facebook.com/ajax/flash/user_info.php", $cookie), true);
+       // print_r($html);
         //echo $html;
-        if ($html === false )
-        {
-            return false;
+        if (!empty($html["user"])) {
+            return ["uid" => (string)$html["user"]];
         }
-        if( preg_match($pattern_uid, $html, $matches) )
-        {
-            $uid = !empty($matches[1]) ? $matches[1] : "0";
-            if( preg_match($pattern_name, $html, $matches2) )
-            {
-                $name = isset($matches2[1]) ? $matches2[1] : "";
-                if($uid == "0") 
-                {
-                    return false;
-                }
-                $data = ["name" => $name, "uid" => $uid];
-                return $data;
-            }
-        }
-        return false;
+        return false; 
+
+        // if( preg_match($pattern_uid, $html, $matches) )
+        // {
+        //     $uid = !empty($matches[1]) ? $matches[1] : "0";
+        //     if( preg_match($pattern_name, $html, $matches2) )
+        //     {
+        //         $name = isset($matches2[1]) ? $matches2[1] : "";
+        //         if($uid == "0") 
+        //         {
+        //             return false;
+        //         }
+        //         $data = ["name" => $name, "uid" => $uid];
+        //         return $data;
+        //     }
+        // }
+        // return false;
     }
 
     public function importCookie()
@@ -191,7 +193,7 @@ class Token extends CI_Controller
         $data =  [
             "cookie" => $cookie,
             "uid" => $data_cookie["uid"],
-            "fullname" => $data_cookie["name"]
+            //"fullname" => $data_cookie["name"]
         ];
         echo $this->token_model->insert($data) ? json_encode(["error" => 0, "message" => "Insert DB success"]) : json_encode(["error" => ["message" => "Insert DB fail", "code" => 0], "message" => ""]);
     }
@@ -223,5 +225,9 @@ class Token extends CI_Controller
         {
             echo json_encode(["error" => 0, "message" => "Không có dữ liệu cookie trong database"]);
         }
+    }
+
+    public function test() {
+        var_dump($this->__checkLiveCookie("datr=oPVsXEPNoAmPPg5Asif8_dHJ;locale=en_US;c_user=100014836291862;xs=49%3Aw7617IS2IS7eTw%3A2%3A1555273674%3A8788%3A6177;"));
     }
 }
