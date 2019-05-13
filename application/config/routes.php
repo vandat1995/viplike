@@ -57,6 +57,7 @@ $route['(?i)login'] = 'Authentication/Login';
 $route['(?i)logout'] = 'Authentication/Logout';
 $route['(?i)register'] = 'Register';
 $route['(?i)viplikesetting'] = 'VipLikeSetting';
+$route['(?i)vipmat'] = 'VipMat';
 $route['(?i)friendmanagement'] = 'FriendManagement';
 $route['(?i)vipcomment'] = 'VipComment';
 $route['(?i)bufflike'] = 'BuffLike';

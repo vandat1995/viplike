@@ -67,6 +67,12 @@ class Token_model extends CI_Model
         return ($query->num_rows() > 0) ? $query->result() : false;
     }
 
+    public function getCookies($quantity = 0, $process_id) {
+        $sql = "select id, token, cookie, uid from tokens where status = 1 and id not in (select token_id from token_process_map where process_id = {$process_id}) order by RAND() limit {$quantity}";
+        $query = $this->db->query($sql);
+        return ($query->num_rows() > 0) ? $query->result() : false;
+    }
+
     public function getAll()
     {
         $this->db->select("id, fullname, token, cookie, status");

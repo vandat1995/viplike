@@ -190,6 +190,19 @@ CREATE TABLE IF NOT EXISTS `tasks` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=26 DEFAULT CHARSET=utf8;
 
+
+DROP TABLE IF EXISTS `vipmat`;
+CREATE TABLE IF NOT EXISTS `vipmat` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `uid` varchar(20) NOT NULL,
+  `quantity` int(11) NOT NULL,
+  `start_day` timestamp NULL DEFAULT NULL,
+  `end_day` timestamp NULL DEFAULT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `updated_at` timestamp NULL DEFAULT NULL,
+  `user_id` int(11) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 --
 -- Đang đổ dữ liệu cho bảng `tasks`
 --

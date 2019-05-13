@@ -8,12 +8,19 @@
                 <li class="list-group-item p-3">
                     <div class="form-row">
                         <div class="form-group col-md-6">
-                            <label>Số lượng cảm xúc <span class="text-danger">*</span></label>
+                            <label>Số lượng <span class="text-danger">*</span></label>
                             <input type="number" id="quantity" class="form-control"> 
                         </div>
                         <div class="form-group col-md-6">
                             <label>Giá / 1 tháng <span class="text-danger">*</span></label>
                             <input type="number" id="price" class="form-control" placeholder=""> 
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label>Loai <span class="text-danger">*</span></label>
+                            <select class="form-control" id="type">
+                                <option value="viplike">Vip Like</option>
+                                <option value="vipmat">Vip Mat</option>
+                            </select> 
                         </div>
                     </div>
                     
@@ -64,6 +71,7 @@
 						<tr>
 							<th scope="col" class="border-bottom-0">#</th>
                             <th scope="col" class="border-bottom-0">Số lượng cảm xúc</th>
+                            <th scope="col" class="border-bottom-0">Loai Vip</th>
                             <th scope="col" class="border-bottom-0">Giá / 1 tháng</th>
                             <th scope="col" class="border-bottom-0">created</th>
                             <th scope="col" class="border-bottom-0">actions</th>
@@ -130,7 +138,8 @@
     function createUser() {
         let quantity = $("#quantity").val().trim();
         let price    = $("#price").val().trim();
-        if( !quantity || !price || price < 1) {
+        let type     = $("#type").val();
+        if( !quantity || !price || price < 1 || !type) {
             Swal({
                 text: `Invalid data`,
                 type: 'error'
@@ -143,7 +152,8 @@
             dataType: "json",
             data: {
                 quantity: quantity,
-                price: price
+                price: price,
+                type: type
             },
             beforeSend: () => loading("btn_submit", "show", "Processing")
         }).done((res) => {
@@ -178,6 +188,7 @@
                     $("#result").append($("<tr>")
                         .append($("<td>").html(i))
                         .append($("<td>").html(data.quantity))
+                        .append($("<td>").html(`${data.type == 'viplike' ? 'Vip Like' : 'Vip Mat'}`))
                         .append($("<td>").html(new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(data.price_per_month)))
                         .append($("<td>").html(data.created_at))
                         .append($("<td>").html(`<button onclick="deletePrice(${data.id})" type="button" class="mb-2 btn btn-sm btn-danger mr-1"><i class="material-icons">delete</i></button>`))

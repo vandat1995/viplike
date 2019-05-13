@@ -37,6 +37,12 @@
                 </a>
               </li>
               <li class="nav-item">
+                <a class="nav-link <?php if(strtolower($this->uri->segment(1)) == 'vipmat') echo 'active' ?>" href="vipmat">
+                  <i class="material-icons">visibility</i>
+                  <span>Vip Mat</span>
+                </a>
+              </li>
+              <li class="nav-item">
                 <a class="nav-link <?php if(strtolower($this->uri->segment(1)) == 'bufflike') echo 'active' ?>" href="bufflike">
                   <i class="material-icons">thumb_up</i>
                   <span>Buff Like</span>

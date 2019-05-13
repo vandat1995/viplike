@@ -14,7 +14,7 @@ class VipLikeSetting extends CI_Controller
         $this->load->model("user_model");
         $this->load->model("setting_model");
         $this->load->library("collections");
-        $this->data["prices"] = $this->setting_model->getAll();
+        $this->data["prices"] = $this->setting_model->getAll("viplike");
     }
 
     public function index()

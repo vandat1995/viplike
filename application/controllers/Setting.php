@@ -24,7 +24,7 @@ class Setting extends CI_Controller
     {
         $this->form_validation->set_rules("quantity", "Số cảm xúc", "required|max_length[11]|numeric");
         $this->form_validation->set_rules("price", "Giá", "required|max_length[20]");
-        
+        $this->form_validation->set_rules("type", "Loai Vip", "required|max_length[20]");
         if( $this->form_validation->run() == false )
         {
             echo json_encode(["error" => ["message" => validation_errors(), "code" => 0], "message" => ""]);
@@ -34,7 +34,7 @@ class Setting extends CI_Controller
         $data = [
             "quantity"          => (int)xss_clean($this->input->post("quantity")),
             "price_per_month"   => xss_clean($this->input->post("price")),
-            "type" => "viplike"
+            "type" => $this->input->post("type")
         ];
 
         echo $this->setting_model->insert($data) ? json_encode(["error" => 0, "message" => "Create price success"]) : json_encode(["error" => ["message" => "Create price fail", "code" => 0], "message" => ""]);     
@@ -80,6 +80,7 @@ class Setting extends CI_Controller
         echo json_encode(["message" => "Thành công"]);
     }
 
+     
     
 
 

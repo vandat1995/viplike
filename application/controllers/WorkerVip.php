@@ -137,7 +137,7 @@ class WorkerVip extends CI_Controller
                     {
                         if ((int)$check < (int)$process->quantity) {
                             $count = (int)$process->quantity - (int)$check;
-                            $tokens = $this->token_model->getTokens($count);
+                            $tokens = $this->token_model->getCookies($count, $process->id);
                             foreach($tokens as $t)
                             {
                                 $this->tokenprocessmap_model->insert(["process_id" => $process->id, "token_id" => $t->id, "reaction" => "LIKE"]);
@@ -574,9 +574,7 @@ class WorkerVip extends CI_Controller
 
     public function test()
     {
-        $cookie = "datr=QgiuXIOKSPyfJw12saRxvZzJ;locale=en_US;c_user=100027572603293;xs=44%3AQfc3gKLaPnG_-g%3A2%3A1555314725%3A19239%3A6235;";
-        $post = "1274554972692466";
-        $this->__countLikePostCookie($post, $cookie);
+        var_dump($this->token_model->getCookies(10, 19777));
         
     }
 

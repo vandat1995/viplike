@@ -16,8 +16,11 @@ class Setting_model extends CI_Model
         return $this->db->delete($this->__table) ? true : false;
     }
 
-    public function getAll()
+    public function getAll($type = '')
     {
+        if ($type != '') {
+            $this->db->where(["type" => $type]);
+        }
         $this->db->order_by("quantity", "asc");
         $query = $this->db->get($this->__table);
         return $query->num_rows() > 0 ? $query->result() : false;
